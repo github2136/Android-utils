@@ -7,7 +7,8 @@ import com.google.gson.JsonSyntaxException;
 import java.lang.reflect.Type;
 
 /**
- * Json工具类
+ * Json工具类JsonUtilCompat
+ * 如果需要使用其他的GsonBuilder，继承该类重写<b>getInstance</b> <b>getGson</b>
  */
 public class JsonUtil {
     private Gson mGson;
@@ -16,7 +17,7 @@ public class JsonUtil {
         return new JsonUtil();
     }
 
-    private JsonUtil() {
+    protected JsonUtil() {
         mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     }
 
@@ -24,7 +25,7 @@ public class JsonUtil {
         return mGson;
     }
 
-    public <T> T getByStr(String json, Class<T> cls) {
+    public <T> T getObjectByStr(String json, Class<T> cls) {
         try {
             return mGson.fromJson(json, cls);
         } catch (Exception e) {
@@ -33,12 +34,16 @@ public class JsonUtil {
         }
     }
 
-    public <T> T getByStr(String json, Type typeOfT) {
+    public <T> T getObjectByStr(String json, Type typeOfT) {
         try {
             return mGson.fromJson(json, typeOfT);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public String toJsonStr(Object src) {
+        return mGson.toJson(src);
     }
 }
