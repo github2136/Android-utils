@@ -9,24 +9,30 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * 文件工具 返回的所有根目录都不带斜杠
+ * 如果要使用 外部存储项目目录，请先设置外部目录setProjectPath，不然默认地址为根目录
+ *  MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀
+ *  MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+ *  mimeTypeMap.getMimeTypeFromExtension(suffix);//通过后缀获取MIME
  */
 public class FileUtil {
     private static final String PATH_LOG = "Log";
     private static final String PATH_DOC = "Documents";
+    private static SPUtil mSpUtil;
     //<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     ///////////////////////////////////////////////////////////////////////////
     // 外部存储状态及目录路径
@@ -66,8 +72,11 @@ public class FileUtil {
      *
      * @return
      */
-    public static String externalStorageProjectPath() {
-        return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + "/" + BuildConfig.APPLICATION_ID;
+    public static String externalStorageProjectPath(Context context) {
+        if (mSpUtil == null) {
+            mSpUtil = SPUtil.getInstance(context, "FileUtil");
+        }
+        return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + mSpUtil.getString("projectPath");
     }
 
     /**
@@ -119,6 +128,18 @@ public class FileUtil {
         return path;
     }
 
+    /**
+     * 设置外部目录
+     *
+     * @param path
+     */
+    public static void setProjectPath(Context context, String path) {
+        if (mSpUtil == null) {
+            mSpUtil = SPUtil.getInstance(context, "FileUtil");
+        }
+        mSpUtil.edit().putValue("projectPath", path).apply();
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // 创建文件名称、创建文件
     ///////////////////////////////////////////////////////////////////////////
@@ -158,7 +179,7 @@ public class FileUtil {
                 String[] split = docId.split(":");
                 String type = split[0];
                 if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                    return Environment.getExternalStorageDirectory() + File.separator + split[1];
                 }
             } else if (isDownloadsDocument(imageUri)) {
                 String id = DocumentsContract.getDocumentId(imageUri);
@@ -252,7 +273,42 @@ public class FileUtil {
             e.printStackTrace();
             Log.e("获取文件大小", "获取失败!");
         }
-        return FormatFileSize(blockSize, sizeType);
+        return getFileOrFilesSize(blockSize, sizeType);
+    }
+
+    /**
+     * 按长度获取大小类型
+     * 返回长度单位 B KB MB 等
+     *
+     * @param fileS
+     * @return
+     */
+    public static int getFileSizeTypeInt(long fileS) {
+        if (fileS < 1024) return SIZETYPE_B;
+        else if (fileS < 1048576) return SIZETYPE_KB;
+        else if (fileS < 1073741824) return SIZETYPE_MB;
+        else return SIZETYPE_GB;
+    }
+
+    /**
+     * 按类型返回B/KB/MB
+     *
+     * @param sizeType
+     * @return
+     */
+    public static String getFileSizeTypeStr(int sizeType) {
+        switch (sizeType) {
+            case SIZETYPE_B:
+                return "B";
+            case SIZETYPE_KB:
+                return "KB";
+            case SIZETYPE_MB:
+                return "MB";
+            case SIZETYPE_GB:
+                return "GB";
+            default:
+                return "错误的类型";
+        }
     }
 
     /**
@@ -274,7 +330,7 @@ public class FileUtil {
             e.printStackTrace();
             Log.e("获取文件大小", "获取失败!");
         }
-        return FormatFileSize(blockSize);
+        return getFileOrFilesSize(blockSize);
     }
 
     /**
@@ -305,25 +361,24 @@ public class FileUtil {
     }
 
     /**
-     * 转换文件大小
+     * 根据文件长度获取大小 1B 2KB 5MB等
      */
-    private static String FormatFileSize(long fileS) {
+    public static String getFileOrFilesSize(long fileS) {
         DecimalFormat df = new DecimalFormat("#.00");
         String fileSizeString = "";
         String wrongSize = "0B";
         if (fileS == 0) return wrongSize;
         if (fileS < 1024) fileSizeString = df.format((double) fileS) + "B";
-        else if (fileS < 1048576)
-            fileSizeString = df.format((double) fileS / 1024) + "KB";
+        else if (fileS < 1048576) fileSizeString = df.format((double) fileS / 1024) + "KB";
         else if (fileS < 1073741824) fileSizeString = df.format((double) fileS / 1048576) + "MB";
         else fileSizeString = df.format((double) fileS / 1073741824) + "GB";
         return fileSizeString;
     }
 
     /**
-     * 转换文件大小,指定转换的类型
+     * 根据文件长度获取大小 1B 2KB 5MB等,指定转换的类型
      */
-    private static double FormatFileSize(long fileS, int sizeType) {
+    public static double getFileOrFilesSize(long fileS, int sizeType) {
         DecimalFormat df = new DecimalFormat("#.00");
         double fileSizeLong = 0;
         switch (sizeType) {
@@ -343,5 +398,113 @@ public class FileUtil {
                 break;
         }
         return fileSizeLong;
+    }
+    ///////////////////////////////////////////////////////////////////////////
+    // 文件操作
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 从本地或网络地址获取文件后缀如 jpg  txt
+     *
+     * @param str
+     * @return
+     */
+    public static String getSuffix(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            int fragment = str.lastIndexOf('#');
+            if (fragment > 0) {
+                str = str.substring(0, fragment);
+            }
+
+            int query = str.lastIndexOf('?');
+            if (query > 0) {
+                str = str.substring(0, query);
+            }
+
+            int filenamePos = str.lastIndexOf('/');
+            String filename =
+                    0 <= filenamePos ? str.substring(filenamePos + 1) : str;
+
+            // if the filename contains special characters, we don't
+            // consider it valid for our matching purposes:
+            if (!filename.isEmpty()) {
+                int dotPos = filename.lastIndexOf('.');
+                if (0 <= dotPos) {
+                    return filename.substring(dotPos + 1);
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
+     * 复制单个文件
+     *
+     * @param oldPath 原文件路径 如：c:/fqf.txt
+     * @param newPath 复制后路径 如：f:/fqf.txt
+     * @return boolean
+     */
+    public static boolean copyFile(String oldPath, String newPath) {
+        try {
+            int bytesum = 0;
+            int byteread = 0;
+            File oldfile = new File(oldPath);
+            if (oldfile.exists()) { // 文件存在时
+                InputStream inStream = new FileInputStream(oldPath); // 读入原文件
+                FileOutputStream fs = new FileOutputStream(newPath);
+                byte[] buffer = new byte[1444];
+                while ((byteread = inStream.read(buffer)) != -1) {
+                    bytesum += byteread; // 字节数 文件大小
+                    System.out.println(bytesum);
+                    fs.write(buffer, 0, byteread);
+                }
+                fs.close();
+                inStream.close();
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 清理指定目录下所有文件
+     *
+     * @param path
+     * @return
+     */
+    public static boolean cleanFolder(String path) {
+        File folder = new File(path);
+        if (folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            for (File f : files) {
+                f.delete();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 保存文字至指定文件
+     *
+     * @param path
+     * @param text
+     */
+    public static void saveToFile(String path, String text) {
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter fw = new FileWriter(file);
+            fw.write(text);
+            fw.flush();
+            fw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
