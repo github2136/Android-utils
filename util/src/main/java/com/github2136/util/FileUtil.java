@@ -24,15 +24,17 @@ import java.util.regex.Pattern;
 
 /**
  * 文件工具 返回的所有根目录都不带斜杠
- * 如果要使用 外部存储项目目录，请先设置外部目录setProjectPath，不然默认地址为根目录
- *  MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀
- *  MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
- *  mimeTypeMap.getMimeTypeFromExtension(suffix);//通过后缀获取MIME
+ * 默认项目目录为com.github2136.util
+ * 如果需要更换继承FileUtil重写externalStorageProjectPath
+ * getSuffix(urlStr);//获取文件后缀
+ * MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀
+ * MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+ * mimeTypeMap.getMimeTypeFromExtension(suffix);//通过后缀获取MIME
  */
 public class FileUtil {
     private static final String PATH_LOG = "Log";
     private static final String PATH_DOC = "Documents";
-    private static SPUtil mSpUtil;
+//    protected static String PATH_PROJECT = BuildConfig.APPLICATION_ID;
     //<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     ///////////////////////////////////////////////////////////////////////////
     // 外部存储状态及目录路径
@@ -72,18 +74,19 @@ public class FileUtil {
      *
      * @return
      */
-    public static String externalStorageProjectPath(Context context) {
-        if (mSpUtil == null) {
-            mSpUtil = SPUtil.getInstance(context, "FileUtil");
-        }
-        return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + mSpUtil.getString("projectPath");
-    }
+//    public static String externalStorageProjectPath(Context context) {
+//        return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + PATH_PROJECT;
+//    }
 
     /**
      * 外部存储私有根目录
      */
-    public static String externalStoragePrivateRootPath(Context context) {
-        return context.getExternalFilesDir(null).toString();
+    public static String externalStoragePrivateRootPath(Context context, String... path) {
+        String rootPath = context.getExternalFilesDir(null).toString();
+        if (CollectionsUtil.isNotEmpty(path)) {
+            rootPath += "/" + path[0];
+        }
+        return rootPath;
     }
 
     /**
@@ -126,18 +129,6 @@ public class FileUtil {
             log.mkdirs();
         }
         return path;
-    }
-
-    /**
-     * 设置外部目录
-     *
-     * @param path
-     */
-    public static void setProjectPath(Context context, String path) {
-        if (mSpUtil == null) {
-            mSpUtil = SPUtil.getInstance(context, "FileUtil");
-        }
-        mSpUtil.edit().putValue("projectPath", path).apply();
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.Set;
-
-
 /**
  * SharedPreferences
+ * 默认SP的文件名为com.github2136.util.xml最好是重新设置
  */
 public class SPUtil {
+
     private volatile static SPUtil ourInstance;
 
     public static SPUtil getInstance(Context context) {
@@ -37,11 +37,11 @@ public class SPUtil {
     private SharedPreferences sp;
     private Edit edit;
 
-    private SPUtil(Context context, String name) {
+    protected SPUtil(Context context, String name) {
         sp = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    private SPUtil(Context context) {
+    protected SPUtil(Context context) {
         this(context, BuildConfig.APPLICATION_ID);
     }
 

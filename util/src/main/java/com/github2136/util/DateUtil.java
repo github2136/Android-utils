@@ -8,6 +8,7 @@ import java.util.Locale;
 /**
  * 日期
  * Created by yubin on 2016/3/11.
+ * 日期格式化参数说明 http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
  */
 public class DateUtil {
     public static final long SECOND = 1000;

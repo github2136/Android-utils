@@ -21,6 +21,7 @@ import java.util.Locale;
 
 /**
  * Created by yubin on 2017/1/18.
+ * 下载工具类，可取消删除文件
  */
 public class DownLoadFileUtil {
     private static boolean isDownLoad;
