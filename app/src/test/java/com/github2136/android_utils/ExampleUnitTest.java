@@ -1,7 +1,13 @@
 package com.github2136.android_utils;
 
+import android.graphics.Bitmap;
+
+import com.github2136.util.BitmapUtil;
 import com.github2136.util.DateUtil;
+import com.github2136.util.DownLoadFileUtil;
+import com.github2136.util.FileUtil;
 import com.github2136.util.JsonUtil;
+import com.github2136.util.SPUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -22,6 +28,10 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() throws Exception {
+//        SPUtilCompat spUtilCompat = SPUtilCompat.getInstance()
+
+String s= DateUtil.date2str(new Date(),"yyyy MM dd HH mm ss s");
+
         JsonUtil jsonUtilCompat = JsonUtilCompat.getInstance();
         Date date = new Date();
         String d1 = jsonUtilCompat.getGson().toJson(date);
@@ -66,6 +76,14 @@ public class ExampleUnitTest {
         String j = JsonUtil.getInstance().getGson().toJson(test);
         ExampleUnitTest test2 = JsonUtil.getInstance().getObjectByStr(j, ExampleUnitTest.class);
         ExampleUnitTest test1 = JsonUtil.getInstance().getObjectByStr(j, new TypeToken<ExampleUnitTest>() {}.getType());
+
+        String filePath="";
+        BitmapUtil.getInstance(filePath).rotation().limit(1024).get(new BitmapUtil.BitmapGetCallBack() {
+            @Override
+            public void callback(Bitmap bitmap) {
+
+            }
+        });
 
     }
 
