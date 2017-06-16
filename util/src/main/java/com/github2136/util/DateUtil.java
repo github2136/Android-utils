@@ -40,6 +40,9 @@ public class DateUtil {
      * 文字转日期
      */
     public static Date str2date(String dateStr, String... pattern) {
+        if (dateStr == null) {
+            return null;
+        }
         try {
             SimpleDateFormat sdf;
             if (pattern != null && pattern.length > 0) {
