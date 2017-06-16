@@ -24,6 +24,9 @@ public class DateUtil {
      * 日期转文字
      */
     public static String date2str(Date date, String... pattern) {
+        if (date == null) {
+            return null;
+        }
         SimpleDateFormat sdf;
         if (pattern != null && pattern.length > 0) {
             sdf = new SimpleDateFormat(pattern[0], Locale.CHINA);
