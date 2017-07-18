@@ -20,17 +20,13 @@ public abstract class BaseMVPModel {
         mActivity = activity;
         mTag = activity.getClass().getSimpleName();
         mSpUtil = SPUtil.getInstance(mActivity);
-        initModel();
     }
 
     public BaseMVPModel(Fragment fragment) {
         mFragment = fragment;
         mTag = fragment.getClass().getSimpleName();
         mSpUtil = SPUtil.getInstance(mFragment.getContext());
-        initModel();
     }
 
     public abstract void cancelRequest();
-
-    public abstract void initModel();
 }
