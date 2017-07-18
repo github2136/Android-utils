@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -480,18 +481,7 @@ public class FileUtil {
      * @param text
      */
     public static void saveFile(String path, String text) {
-        try {
-            File file = new File(path);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileWriter fw = new FileWriter(file);
-            fw.write(text);
-            fw.flush();
-            fw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        saveFile(path, text.getBytes());
     }
 
     /**
@@ -501,17 +491,7 @@ public class FileUtil {
      * @param text
      */
     public static void appendFile(String path, String text) {
-        try {
-            File file = new File(path);
-            if (file.exists()) {
-                FileWriter fw = new FileWriter(file, true);
-                fw.write(text);
-                fw.flush();
-                fw.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        appendFile(path, text.getBytes());
     }
 
     /**
