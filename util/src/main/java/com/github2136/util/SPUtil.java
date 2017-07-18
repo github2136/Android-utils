@@ -2,11 +2,15 @@ package com.github2136.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
 import java.util.Set;
+
 /**
- * SharedPreferences
- * 默认SP的文件名为com.github2136.util.xml最好是重新设置
+ * SharedPreferences<br>
+ * 默认SP的文件名为android-util<br>
+ * 如果需要更换可先在application中添加名为sp_name的&lt;meta-data/&#62;
  */
 public class SPUtil {
 
@@ -42,7 +46,14 @@ public class SPUtil {
     }
 
     protected SPUtil(Context context) {
-        this(context, BuildConfig.APPLICATION_ID);
+        String name = "android-util";
+        try {
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            name = appInfo.metaData.getString("sp_name");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        sp = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
     public SharedPreferences get() {
