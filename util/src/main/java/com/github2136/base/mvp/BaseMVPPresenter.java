@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * presenter基础类
  */
-public abstract class BasePresenter<V extends IBaseView> {
+public abstract class BaseMVPPresenter<V extends IBaseMVPView> {
     protected V mView;
     protected AppCompatActivity mActivity;
     protected Fragment mFragment;
@@ -20,12 +20,12 @@ public abstract class BasePresenter<V extends IBaseView> {
     protected JsonUtil mJsonUtil;
     protected SPUtil mSpUtil;
 
-    public BasePresenter(AppCompatActivity activity, V view) {
+    public BaseMVPPresenter(AppCompatActivity activity, V view) {
         mActivity = activity;
         initPresenter(view);
     }
 
-    public BasePresenter(Fragment fragment, V view) {
+    public BaseMVPPresenter(Fragment fragment, V view) {
         mFragment = fragment;
         initPresenter(view);
     }

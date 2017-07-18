@@ -5,7 +5,7 @@ import android.support.annotation.StringRes;
 /**
  * view基础接口
  */
-public interface IBaseView {
+public interface IBaseMVPView {
     void showProgressDialog(@StringRes int resId);
 
     // 显示进度框
