@@ -3,6 +3,8 @@ package com.github2136.util;
 import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -20,35 +22,28 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 /**
- * 文件工具 返回的所有根目录都不带斜杠
- * 默认项目目录为com.github2136.util
- * 如果需要更换继承FileUtil重写externalStorageProjectPath
- * getSuffix(urlStr);//获取文件后缀
- * MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀
- * MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
- * mimeTypeMap.getMimeTypeFromExtension(suffix);//通过后缀获取MIME
+ * 文件工具 返回的所有根目录都不带斜杠<br>
+ * 默认项目目录为android-util<br>
+ * 如果需要更换可先在application中添加名为project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取，默认为android-util
+ * getSuffix(urlStr);//获取文件后缀<br>
+ * MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀<br>
+ * MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();<br>
+ * mimeTypeMap.getMimeTypeFromExtension(suffix);//通过后缀获取MIME<br>
+ *所需权限&lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/&#62;
  */
 public class FileUtil {
     private static final String PATH_LOG = "Log";
     private static final String PATH_DOC = "Documents";
-//    protected static String PATH_PROJECT = BuildConfig.APPLICATION_ID;
-    //<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    ///////////////////////////////////////////////////////////////////////////
-    // 外部存储状态及目录路径
-    ///////////////////////////////////////////////////////////////////////////
+
 
     /**
      * 外部存储可写
      */
     public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /**
@@ -56,16 +51,13 @@ public class FileUtil {
      */
     public static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
     /**
      * 外部存储根目录
      */
-    public static String externalStorageRootPath() {
+    public static String getExternalStorageRootPath() {
         return Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
     }
 
@@ -74,32 +66,38 @@ public class FileUtil {
      *
      * @return
      */
-//    public static String externalStorageProjectPath(Context context) {
-//        return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + PATH_PROJECT;
-//    }
+    public static String getExternalStorageProjectPath(Context context) {
+        String projectPath = "android-util";
+        try {
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            projectPath = appInfo.metaData.getString("project_path");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + projectPath;
+    }
 
     /**
      * 外部存储私有根目录
      */
-    public static String externalStoragePrivateRootPath(Context context, String... path) {
+    public static String getExternalStoragePrivateRootPath(Context context, String... path) {
         String rootPath = context.getExternalFilesDir(null).toString();
         if (CollectionsUtil.isNotEmpty(path)) {
             rootPath += "/" + path[0];
         }
         return rootPath;
     }
-
     /**
      * 外部存储私有缓存目录
      */
-    public static String externalStoragePrivateCachePath(Context context) {
+    public static String getExternalStoragePrivateCachePath(Context context) {
         return context.getExternalCacheDir().toString();
     }
 
     /**
      * 外部存储私有文档目录
      */
-    public static String externalStoragePrivateDocPath(Context context) {
+    public static String getExternalStoragePrivateDocPath(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             String path = context.getExternalFilesDir(null).getAbsolutePath() + File.separator + PATH_DOC;
             File doc = new File(path);
@@ -115,14 +113,14 @@ public class FileUtil {
     /**
      * 外部存储私有图片目录
      */
-    public static String externalStoragePrivatePicPath(Context context) {
+    public static String getExternalStoragePrivatePicPath(Context context) {
         return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
     /**
      * 外部存储私有日志目录
      */
-    public static String externalStoragePrivateLogPath(Context context) {
+    public static String getExternalStoragePrivateLogPath(Context context) {
         String path = context.getExternalFilesDir(null).getAbsolutePath() + File.separator + PATH_LOG;
         File log = new File(path);
         if (!log.exists()) {

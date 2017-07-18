@@ -4,20 +4,13 @@ import android.graphics.Bitmap;
 
 import com.github2136.util.BitmapUtil;
 import com.github2136.util.DateUtil;
-import com.github2136.util.DownLoadFileUtil;
-import com.github2136.util.FileUtil;
 import com.github2136.util.JsonUtil;
-import com.github2136.util.SPUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
