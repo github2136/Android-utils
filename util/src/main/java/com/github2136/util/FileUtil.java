@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -31,7 +32,7 @@ import java.util.Date;
  * MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀<br>
  * MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();<br>
  * mimeTypeMap.getMimeTypeFromExtension(suffix);//通过后缀获取MIME<br>
- *所需权限&lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/&#62;
+ * 所需权限&lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/&#62;
  */
 public class FileUtil {
     private static final String PATH_LOG = "Log";
@@ -87,6 +88,7 @@ public class FileUtil {
         }
         return rootPath;
     }
+
     /**
      * 外部存储私有缓存目录
      */
@@ -393,7 +395,8 @@ public class FileUtil {
     ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * 从本地或网络地址获取文件后缀如 jpg  txt
+     * 从本地或网络地址获取文件后缀如 jpg  txt<br>
+     * MimeTypeMap.getFileExtensionFromUrl(urlStr);
      *
      * @param str
      * @return
@@ -404,18 +407,12 @@ public class FileUtil {
             if (fragment > 0) {
                 str = str.substring(0, fragment);
             }
-
             int query = str.lastIndexOf('?');
             if (query > 0) {
                 str = str.substring(0, query);
             }
-
             int filenamePos = str.lastIndexOf('/');
-            String filename =
-                    0 <= filenamePos ? str.substring(filenamePos + 1) : str;
-
-            // if the filename contains special characters, we don't
-            // consider it valid for our matching purposes:
+            String filename = 0 <= filenamePos ? str.substring(filenamePos + 1) : str;
             if (!filename.isEmpty()) {
                 int dotPos = filename.lastIndexOf('.');
                 if (0 <= dotPos) {
@@ -482,7 +479,7 @@ public class FileUtil {
      * @param path
      * @param text
      */
-    public static void saveToFile(String path, String text) {
+    public static void saveFile(String path, String text) {
         try {
             File file = new File(path);
             if (!file.exists()) {
@@ -493,6 +490,65 @@ public class FileUtil {
             fw.flush();
             fw.close();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 内容追加
+     *
+     * @param path
+     * @param text
+     */
+    public static void appendFile(String path, String text) {
+        try {
+            File file = new File(path);
+            if (file.exists()) {
+                FileWriter fw = new FileWriter(file, true);
+                fw.write(text);
+                fw.flush();
+                fw.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 存文字至指定文件
+     *
+     * @param path
+     * @param bytes
+     */
+    public static void saveFile(String path, byte[] bytes) {
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream.write(bytes);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 内容追加
+     *
+     * @param path
+     * @param bytes
+     */
+    public static void appendFile(String path, byte[] bytes) {
+        try {
+            File file = new File(path);
+            if (file.exists()) {
+                FileOutputStream outputStream = new FileOutputStream(file, true);
+                outputStream.write(bytes);
+                outputStream.close();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
