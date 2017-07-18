@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="RecyclerView_Linear">LinearLayoutManager</string>
+    <string name="RecyclerView_Grid">GridLayoutManager</string>
+    <string name="RecyclerView_Staggered">StaggeredGridLayoutManager</string>
+</resources>
