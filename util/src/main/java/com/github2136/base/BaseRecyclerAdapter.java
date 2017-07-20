@@ -83,4 +83,14 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
     public interface OnItemLongClickListener {
         void onItemClick(BaseRecyclerAdapter adapter, int position);
     }
+
+    public void setListData(List<T> list) {
+        mList = list;
+        notifyDataSetChanged();
+    }
+
+    public void appendListData(List<T> list) {
+        mList.addAll(list);
+        notifyDataSetChanged();
+    }
 }
