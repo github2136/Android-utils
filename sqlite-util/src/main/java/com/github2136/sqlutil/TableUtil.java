@@ -29,7 +29,7 @@ public class TableUtil {
         if (table == null) {
             throw new RuntimeException("No Table annotations in class " + clazz.getName());
         }
-        if (table.toString().trim().equals("")) {
+        if (table.tableName().trim().equals("")) {
             tableName = clazz.getSimpleName();
         } else {
             tableName = table.tableName();
