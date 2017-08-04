@@ -51,30 +51,23 @@ public class EnetiyProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         System.out.println("---process---");
-        //类
         Set<? extends Element> eleClasses = roundEnv.getElementsAnnotatedWith(Table.class);
-        //字段
         Set<? extends Element> eleFields = roundEnv.getElementsAnnotatedWith(Column.class);
         System.out.println("---class.size():" + eleClasses.size() + "---");
         System.out.println("---field.size():" + eleFields.size() + "---");
-        TypeElement eleClass = null;//类对象
-        VariableElement eleField = null;//变量对象
-        Map<String, List<FieldSpec>> varMap = new HashMap<>();//按包名+类名分别存储变量
+        TypeElement eleClass;
+        VariableElement eleField;
+        Map<String, List<FieldSpec>> varMap = new HashMap<>();
 
         System.out.println("---field get start---");
         for (Element ele : eleFields) {
-            //判断为变量类型
             if (ele.getKind() == ElementKind.FIELD) {
-                //强转为变量
                 eleField = (VariableElement) ele;
                 TypeElement enclosingElement = (TypeElement) eleField.getEnclosingElement();
-                //注解字段所在的包名+类
                 String className = enclosingElement.getQualifiedName().toString();
                 System.out.println("---className:" + className + "---");
-                //注解字段名
                 String fieldName = eleField.getSimpleName().toString();
                 System.out.println("---field:" + fieldName + "---");
-                //注解字段类型
                 String type = eleField.asType().toString();
                 System.out.println("---type:" + type + "---");
                 List<FieldSpec> var = varMap.get(className);
@@ -83,14 +76,11 @@ public class EnetiyProcessor extends AbstractProcessor {
                     varMap.put(className, var);
                 }
                 FieldSpec fs = FieldSpec.
-                        //设置数据类型
-                                builder(String.class, "DATA_" + fieldName, Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC).
-                        //初始化值
-                                initializer(CodeBlock.of("\"" + fieldName + "\""))
+                        builder(String.class, "DATA_" + fieldName, Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC).
+                        initializer(CodeBlock.of("\"" + fieldName + "\""))
                         .build();
                 var.add(fs);
             }
-            //方法添加
 //            MethodSpec creaedMethod = MethodSpec.methodBuilder(ele.getSimpleName() +"_")
 //                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
 //                    .returns(void.class)
@@ -108,10 +98,8 @@ public class EnetiyProcessor extends AbstractProcessor {
                 sbName.deleteCharAt(sbName.length() - 1);
             }
             FieldSpec fs = FieldSpec.
-                    //设置数据类型
-                            builder(String[].class, "Columns", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC).
-                    //初始化值
-                            initializer(CodeBlock.of(" { " + sbName.toString() + " }"))
+                    builder(String[].class, "Columns", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC).
+                    initializer(CodeBlock.of(" { " + sbName.toString() + " }"))
                     .build();
             entry.getValue().add(fs);
         }
@@ -121,16 +109,12 @@ public class EnetiyProcessor extends AbstractProcessor {
         for (Element ele : eleClasses) {
             if (ele.getKind() == ElementKind.CLASS) {
                 eleClass = (TypeElement) ele;
-                //注解字段所在的包名+类
                 String packClassName = eleClass.getQualifiedName().toString();
                 System.out.println("---packClassName:" + packClassName + "---");
-                //类名
                 String className = eleClass.getSimpleName().toString();
                 System.out.println("---class:" + className + "---");
-                //创建类信息
                 TypeSpec.Builder builder = TypeSpec.classBuilder(className + "_")
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-                //添加变量
                 List<FieldSpec> var = varMap.get(packClassName);
                 if (var != null) {
                     for (FieldSpec fieldSpec : var) {
@@ -138,7 +122,6 @@ public class EnetiyProcessor extends AbstractProcessor {
                     }
                 }
                 TypeSpec typeSpec = builder.build();
-                //生成文件
                 JavaFile javaFile = JavaFile.builder(getPackageName(eleClass), typeSpec).build();
                 try {
                     javaFile.writeTo(processingEnv.getFiler());
@@ -157,12 +140,6 @@ public class EnetiyProcessor extends AbstractProcessor {
         return SourceVersion.RELEASE_6;
     }
 
-    /**
-     * 获取包名
-     *
-     * @param type
-     * @return
-     */
     private String getPackageName(TypeElement type) {
         return elementUtils.getPackageOf(type).getQualifiedName().toString();
     }
