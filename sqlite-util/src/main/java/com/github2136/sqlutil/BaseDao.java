@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.github2136.util.CommonUtil;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +47,7 @@ public abstract class BaseDao<T extends Class<?>, D> {
         if (table == null) {
             throw new RuntimeException("No Table annotations in class " + t.getName());
         }
-        if (table.tableName().trim().equals("")) {
+        if (CommonUtil.isEmpty(table.tableName())) {
             tableName = t.getSimpleName();
         } else {
             tableName = table.tableName();
@@ -78,7 +80,7 @@ public abstract class BaseDao<T extends Class<?>, D> {
         if (table == null) {
             throw new RuntimeException("No Table annotations in class " + t.getName());
         }
-        if (table.tableName().trim().equals("")) {
+        if (CommonUtil.isEmpty(table.tableName())) {
             tableName = t.getSimpleName();
         } else {
             tableName = table.tableName();
@@ -117,7 +119,7 @@ public abstract class BaseDao<T extends Class<?>, D> {
         if (table == null) {
             throw new RuntimeException("No Table annotations in class " + t.getName());
         }
-        if (table.tableName().trim().equals("")) {
+        if (CommonUtil.isEmpty(table.tableName())) {
             tableName = t.getSimpleName();
         } else {
             tableName = table.tableName();
@@ -157,7 +159,7 @@ public abstract class BaseDao<T extends Class<?>, D> {
                 if (field.isAnnotationPresent(Column.class)) {
                     Column column = field.getAnnotation(Column.class);
                     String columnName = column.columnName();
-                    if (columnName.trim().equals("") ) {
+                    if (CommonUtil.isEmpty(columnName)) {
                         columnName = field.getName();
                     }
                     Column.Type columnType = column.columnType();
@@ -280,7 +282,7 @@ public abstract class BaseDao<T extends Class<?>, D> {
             if (field.isAnnotationPresent(Column.class)) {
                 Column column = field.getAnnotation(Column.class);
                 String columnName = column.columnName();
-                if (columnName.trim().equals("") ) {
+                if (CommonUtil.isEmpty(columnName)) {
                     columnName = field.getName();
                 }
                 columns.add(columnName);
@@ -304,7 +306,7 @@ public abstract class BaseDao<T extends Class<?>, D> {
             if (field.isAnnotationPresent(Column.class)) {
                 Column column = field.getAnnotation(Column.class);
                 String columnName = column.columnName();
-                if (columnName.trim().equals("") ) {
+                if (CommonUtil.isEmpty(columnName)) {
                     columnName = field.getName();
                 }
                 columnIndex.put(columnName, cursor.getColumnIndex(columnName));
@@ -322,7 +324,7 @@ public abstract class BaseDao<T extends Class<?>, D> {
             if (field.isAnnotationPresent(Column.class)) {
                 Column column = field.getAnnotation(Column.class);
                 String columnName = column.columnName();
-                if (columnName.trim().equals("") ) {
+                if (CommonUtil.isEmpty(columnName)) {
                     columnName = field.getName();
                 }
                 Column.Type columnType = column.columnType();
