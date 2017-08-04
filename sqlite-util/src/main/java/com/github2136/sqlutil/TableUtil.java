@@ -1,7 +1,5 @@
 package com.github2136.sqlutil;
 
-import com.github2136.util.CommonUtil;
-
 import java.lang.reflect.Field;
 
 
@@ -30,7 +28,7 @@ public class TableUtil {
         if (table == null) {
             throw new RuntimeException("No Table annotations in class " + clazz.getName());
         }
-        if (CommonUtil.isEmpty(table.tableName())) {
+        if (table.tableName().equals("")) {
             tableName = clazz.getSimpleName();
         } else {
             tableName = table.tableName();
@@ -43,7 +41,7 @@ public class TableUtil {
             if (field.isAnnotationPresent(Column.class)) {
                 Column column = field.getAnnotation(Column.class);
                 String columnName = column.columnName();
-                if (CommonUtil.isEmpty(columnName)) {
+                if (columnName.equals("")) {
                     columnName = field.getName();
                 }
                 Column.Type columnType = column.columnType();
