@@ -26,6 +26,9 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 
+/**
+ * Created by yubin on 2017/8/4.
+ */
 @AutoService(Processor.class)
 public class EnetiyProcessor extends AbstractProcessor {
     Elements elementUtils;
@@ -48,30 +51,30 @@ public class EnetiyProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         System.out.println("---process---");
-        //Àà
+        //ç±»
         Set<? extends Element> eleClasses = roundEnv.getElementsAnnotatedWith(Table.class);
-        //×Ö¶Î
+        //å­—æ®µ
         Set<? extends Element> eleFields = roundEnv.getElementsAnnotatedWith(Column.class);
         System.out.println("---class.size():" + eleClasses.size() + "---");
         System.out.println("---field.size():" + eleFields.size() + "---");
-        TypeElement eleClass = null;//Àà¶ÔÏó
-        VariableElement eleField = null;//±äÁ¿¶ÔÏó
-        Map<String, List<FieldSpec>> varMap = new HashMap<>();//°´°üÃû+ÀàÃû·Ö±ğ´æ´¢±äÁ¿
+        TypeElement eleClass = null;//ç±»å¯¹è±¡
+        VariableElement eleField = null;//å˜é‡å¯¹è±¡
+        Map<String, List<FieldSpec>> varMap = new HashMap<>();//æŒ‰åŒ…å+ç±»ååˆ†åˆ«å­˜å‚¨å˜é‡
 
         System.out.println("---field get start---");
         for (Element ele : eleFields) {
-            //ÅĞ¶ÏÎª±äÁ¿ÀàĞÍ
+            //åˆ¤æ–­ä¸ºå˜é‡ç±»å‹
             if (ele.getKind() == ElementKind.FIELD) {
-                //Ç¿×ªÎª±äÁ¿
+                //å¼ºè½¬ä¸ºå˜é‡
                 eleField = (VariableElement) ele;
                 TypeElement enclosingElement = (TypeElement) eleField.getEnclosingElement();
-                //×¢½â×Ö¶ÎËùÔÚµÄ°üÃû+Àà
+                //æ³¨è§£å­—æ®µæ‰€åœ¨çš„åŒ…å+ç±»
                 String className = enclosingElement.getQualifiedName().toString();
                 System.out.println("---className:" + className + "---");
-                //×¢½â×Ö¶ÎÃû
+                //æ³¨è§£å­—æ®µå
                 String fieldName = eleField.getSimpleName().toString();
                 System.out.println("---field:" + fieldName + "---");
-                //×¢½â×Ö¶ÎÀàĞÍ
+                //æ³¨è§£å­—æ®µç±»å‹
                 String type = eleField.asType().toString();
                 System.out.println("---type:" + type + "---");
                 List<FieldSpec> var = varMap.get(className);
@@ -80,14 +83,14 @@ public class EnetiyProcessor extends AbstractProcessor {
                     varMap.put(className, var);
                 }
                 FieldSpec fs = FieldSpec.
-                        //ÉèÖÃÊı¾İÀàĞÍ
+                        //è®¾ç½®æ•°æ®ç±»å‹
                                 builder(String.class, "DATA_" + fieldName, Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC).
-                        //³õÊ¼»¯Öµ
+                        //åˆå§‹åŒ–å€¼
                                 initializer(CodeBlock.of("\"" + fieldName + "\""))
                         .build();
                 var.add(fs);
             }
-            //·½·¨Ìí¼Ó
+            //æ–¹æ³•æ·»åŠ 
 //            MethodSpec creaedMethod = MethodSpec.methodBuilder(ele.getSimpleName() +"_")
 //                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
 //                    .returns(void.class)
@@ -105,9 +108,9 @@ public class EnetiyProcessor extends AbstractProcessor {
                 sbName.deleteCharAt(sbName.length() - 1);
             }
             FieldSpec fs = FieldSpec.
-                    //ÉèÖÃÊı¾İÀàĞÍ
+                    //è®¾ç½®æ•°æ®ç±»å‹
                             builder(String[].class, "Columns", Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC).
-                    //³õÊ¼»¯Öµ
+                    //åˆå§‹åŒ–å€¼
                             initializer(CodeBlock.of(" { " + sbName.toString() + " }"))
                     .build();
             entry.getValue().add(fs);
@@ -118,16 +121,16 @@ public class EnetiyProcessor extends AbstractProcessor {
         for (Element ele : eleClasses) {
             if (ele.getKind() == ElementKind.CLASS) {
                 eleClass = (TypeElement) ele;
-                //×¢½â×Ö¶ÎËùÔÚµÄ°üÃû+Àà
+                //æ³¨è§£å­—æ®µæ‰€åœ¨çš„åŒ…å+ç±»
                 String packClassName = eleClass.getQualifiedName().toString();
                 System.out.println("---packClassName:" + packClassName + "---");
-                //ÀàÃû
+                //ç±»å
                 String className = eleClass.getSimpleName().toString();
                 System.out.println("---class:" + className + "---");
-                //´´½¨ÀàĞÅÏ¢
+                //åˆ›å»ºç±»ä¿¡æ¯
                 TypeSpec.Builder builder = TypeSpec.classBuilder(className + "_")
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-                //Ìí¼Ó±äÁ¿
+                //æ·»åŠ å˜é‡
                 List<FieldSpec> var = varMap.get(packClassName);
                 if (var != null) {
                     for (FieldSpec fieldSpec : var) {
@@ -135,7 +138,7 @@ public class EnetiyProcessor extends AbstractProcessor {
                     }
                 }
                 TypeSpec typeSpec = builder.build();
-                //Éú³ÉÎÄ¼ş
+                //ç”Ÿæˆæ–‡ä»¶
                 JavaFile javaFile = JavaFile.builder(getPackageName(eleClass), typeSpec).build();
                 try {
                     javaFile.writeTo(processingEnv.getFiler());
@@ -155,7 +158,7 @@ public class EnetiyProcessor extends AbstractProcessor {
     }
 
     /**
-     * »ñÈ¡°üÃû
+     * è·å–åŒ…å
      *
      * @param type
      * @return
