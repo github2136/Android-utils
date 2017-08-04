@@ -1,1 +1,1 @@
-include ':app', ':utils', ':sqlite-util', ':sqlite-util-compiler'
+include ':app', ':util', ':sqlite-util', ':sqlite-util-compiler'
