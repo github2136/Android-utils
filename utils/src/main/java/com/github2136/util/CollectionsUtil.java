@@ -2,6 +2,7 @@ package com.github2136.util;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 集合工具类
@@ -21,6 +22,14 @@ public class CollectionsUtil {
 
     public static boolean isNotEmpty(Map map) {
         return !isEmpty(map);
+    }
+
+    public static boolean isEmpty(Set set) {
+        return (set == null || set.isEmpty());
+    }
+
+    public static boolean isNotEmpty(Set set) {
+        return !isEmpty(set);
     }
 
     public static <T> boolean isEmpty(T[] t) {
