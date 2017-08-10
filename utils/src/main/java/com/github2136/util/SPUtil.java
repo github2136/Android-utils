@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.content.SharedPreferencesCompat;
 
 import java.util.Set;
 
 /**
  * SharedPreferences<br>
  * 默认SP的文件名为android-util<br>
- * 如果需要更换可先在application中添加名为sp_name的&lt;meta-data/&#62;
+ * 如果需要更换可先在application中添加名为util_sp_name的&lt;meta-data/&#62;
  */
 public class SPUtil {
 
@@ -49,9 +52,13 @@ public class SPUtil {
         String name = "android-util";
         try {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-            name = appInfo.metaData.getString("sp_name");
+            Bundle metaData = appInfo.metaData;
+            if (metaData != null) {
+                name = metaData.getString("util_sp_name", name);
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            name = "android-util";
         }
         sp = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
@@ -98,13 +105,9 @@ public class SPUtil {
             return this;
         }
 
-        public void commit() {
-            editor.commit();
-        }
-
         //保存数据，建议使用apply
         public void apply() {
-            editor.apply();
+            SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
         }
     }
 
@@ -123,12 +126,12 @@ public class SPUtil {
 
     //删除某值
     public void remove(String key) {
-        sp.edit().remove(key).apply();
+        SharedPreferencesCompat.EditorCompat.getInstance().apply(sp.edit().remove(key));
     }
 
     //清理所有
     public void clear() {
-        sp.edit().clear();
+        SharedPreferencesCompat.EditorCompat.getInstance().apply(sp.edit().clear());
     }
 
     public String getString(String key) {

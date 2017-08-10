@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -28,7 +29,7 @@ import java.util.Date;
 /**
  * 文件工具 返回的所有根目录都不带斜杠<br>
  * 默认项目目录为android-util<br>
- * 如果需要更换可先在application中添加名为project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取，默认为android-util
+ * 如果需要更换可先在application中添加名为util_project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取，默认为android-util
  * getSuffix(urlStr);//获取文件后缀<br>
  * MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀<br>
  * MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();<br>
@@ -72,9 +73,13 @@ public class FileUtil {
         String projectPath = "android-util";
         try {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-            projectPath = appInfo.metaData.getString("project_path");
+            Bundle metaData = appInfo.metaData;
+            if (metaData != null) {
+                projectPath = metaData.getString("util_project_path", projectPath);
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            projectPath = "android-util";
         }
         return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + projectPath;
     }

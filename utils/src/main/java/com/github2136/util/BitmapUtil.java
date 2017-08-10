@@ -19,7 +19,7 @@ import java.io.IOException;
  * 图片处理<br>
  * 首先设置图片路径BitmapUtil.getInstance(filePath)<br>
  * 然后就可以在通过其他方法来对图片进行处理<br>
- *  rotation//图片旋转为正<br>
+ * rotation//图片旋转为正<br>
  * limit(int max)//显示图片最大宽高 0 表示不限制<br>
  * get***()//获取图片的bitmap、base64、byte[]<br>
  * correct()//图片是否为正的<br>
@@ -81,7 +81,25 @@ public class BitmapUtil {
         if (mMax != 0) {
             int[] values = getBitmapValue(mFilePath);
             int scaleFactor = (int) Math.max(Math.ceil((double) values[0] / mMax), Math.ceil((double) values[1] / mMax));
-            mBitmap = getBitmap(mFilePath, scaleFactor);
+            int scaleSize;
+            if (scaleFactor > 1) {
+                int inSampleSize = 1;
+                while (inSampleSize << 1 < scaleFactor) {
+                    inSampleSize = inSampleSize << 1;
+                }
+                scaleSize = inSampleSize;
+            } else {
+                scaleSize = scaleFactor;
+            }
+            //使用inSampleSize压缩图片
+            mBitmap = getBitmap(mFilePath, scaleSize);
+            //如果图片高宽比限制大则使用Matrix再次缩小
+            if (mBitmap.getWidth() > mMax || mBitmap.getHeight() > mMax) {
+                float scaleW = (float) mMax / mBitmap.getWidth();
+                float scaleH = (float) mMax / mBitmap.getHeight();
+                float scale = scaleW > scaleH ? scaleH : scaleW;
+                mBitmap = getBitmap(mBitmap, scale);
+            }
         } else {
             mBitmap = getBitmap(mFilePath, 1);
         }
@@ -140,6 +158,27 @@ public class BitmapUtil {
         // 根据旋转角度，生成旋转矩阵
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
+        // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
+        retBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight(),
+                matrix, true);
+        sourceBitmap.recycle();
+        sourceBitmap = null;
+        System.gc();
+        return retBitmap;
+    }
+
+    /**
+     * 压缩至指定尺寸
+     *
+     * @param sourceBitmap
+     * @param scale
+     * @return
+     */
+    private Bitmap getBitmap(Bitmap sourceBitmap, float scale) {
+        Bitmap retBitmap;
+        // 根据旋转角度，生成旋转矩阵
+        Matrix matrix = new Matrix();
+        matrix.setScale(scale, scale);
         // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
         retBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight(),
                 matrix, true);
