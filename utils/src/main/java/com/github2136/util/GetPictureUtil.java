@@ -17,11 +17,12 @@ import java.io.File;
 /**
  * 图片选择拍摄工具<br>
  * 选择或拍摄的图片可以设置压缩尺寸<br>
- *getPictureUtil = new GetPictureUtil(this, GetPictureUtil.PIC_LIMIT_DISPLAY);<br>
+ * getPictureUtil = new GetPictureUtil(this, GetPictureUtil.PIC_LIMIT_DISPLAY);<br>
  * PIC_LIMIT_NO 不压缩 PIC_LIMIT_DISPLAY按屏幕尺寸压缩<br>
+ * 重写Activity或Fragment的onActivityResult方法调用getPictureUtil.onActivityResult(requestCode, resultCode, data);<br>
  * 所有选择或拍摄的照片都会将图片转正，防止出现错误方向的图片<br>
  * 默认拍摄、转正、缩小处理过的照片都保存在项目默认外部私有图片路径/Android/data包名/files/Pictures <br>
- * 如果需要更换可先在application中添加名为util_project_path的&lt;meta-data/&#62;
+ * 如果需要更换可先在application中添加名为util_project_path的&lt;meta-data/&#62;<br>
  * requestCode 789不可使用
  */
 public class GetPictureUtil {
@@ -36,10 +37,12 @@ public class GetPictureUtil {
     private static final String KEY_MAX_VALUE = "MAX_VALUE";
     private static final String KEY_SHOOT_URI = "SHOOT_URI";
     private static final String KEY_CROP_IMG = "CROP_IMG";
+    private static final String KEY_PIC_CODE = "PIC_CODE";
     private SPUtil mSPUtil;
     private Activity mAct;
     private Fragment mFra;
-    private int mRequestCode = 789;
+    private final int mRequestCode = 789;
+    private int mPicCode;//用来区分回调返回的路径来自哪个方法
     private boolean isCrop;// 是否需要裁剪
     private boolean isShoot;// 是否是拍摄的照片
     private Uri mShootUri;//拍摄的图片的保存路径
@@ -93,9 +96,10 @@ public class GetPictureUtil {
     /**
      * 拍摄照片
      */
-    public void getShoot() {
+    public void getShoot(int picCode) {
         isCrop = false;
         isShoot = true;
+        mPicCode = picCode;
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mShootUri = Uri.fromFile(
                 new File(
@@ -105,6 +109,7 @@ public class GetPictureUtil {
         mSPUtil.edit()
                 .putValue(KEY_IS_CROP, isCrop)
                 .putValue(KEY_IS_SHOOT, isShoot)
+                .putValue(KEY_PIC_CODE, mPicCode)
                 .putValue(KEY_SHOOT_URI, mShootUri.getPath())
                 .apply();
         startActivityForResult(intent, mRequestCode);
@@ -113,9 +118,10 @@ public class GetPictureUtil {
     /**
      * 拍摄并裁剪
      */
-    public void getShoot(int aspectX, int aspectY, int outputX, int outputY) {
+    public void getShoot(int picCode, int aspectX, int aspectY, int outputX, int outputY) {
         isCrop = true;
         isShoot = true;
+        mPicCode = picCode;
         mCropImg = null;
         this.mAspectX = aspectX;
         this.mAspectY = aspectY;
@@ -130,6 +136,7 @@ public class GetPictureUtil {
         mSPUtil.edit()
                 .putValue(KEY_IS_CROP, isCrop)
                 .putValue(KEY_IS_SHOOT, isShoot)
+                .putValue(KEY_PIC_CODE, mPicCode)
                 .putValue(KEY_ASPECT_X, mAspectX)
                 .putValue(KEY_ASPECT_Y, mAspectY)
                 .putValue(KEY_OUTPUT_X, mOutputX)
@@ -143,12 +150,14 @@ public class GetPictureUtil {
     /**
      * 选择图片
      */
-    public void getPic() {
+    public void getPic(int picCode) {
         isCrop = false;
         isShoot = false;
+        mPicCode = picCode;
         mSPUtil.edit()
                 .putValue(KEY_IS_CROP, isCrop)
                 .putValue(KEY_IS_SHOOT, isShoot)
+                .putValue(KEY_PIC_CODE, mPicCode)
                 .apply();
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -159,10 +168,11 @@ public class GetPictureUtil {
     /**
      * 选择并裁剪
      */
-    public void getPic(int aspectX, int aspectY, int outputX, int outputY) {
+    public void getPic(int picCode, int aspectX, int aspectY, int outputX, int outputY) {
         isCrop = true;
         isShoot = false;
         mCropImg = null;
+        mPicCode = picCode;
         this.mAspectX = aspectX;
         this.mAspectY = aspectY;
         this.mOutputX = outputX;
@@ -170,6 +180,7 @@ public class GetPictureUtil {
         mSPUtil.edit()
                 .putValue(KEY_IS_CROP, isCrop)
                 .putValue(KEY_IS_SHOOT, isShoot)
+                .putValue(KEY_PIC_CODE, mPicCode)
                 .putValue(KEY_ASPECT_X, mAspectX)
                 .putValue(KEY_ASPECT_Y, mAspectY)
                 .putValue(KEY_OUTPUT_X, mOutputX)
@@ -185,6 +196,7 @@ public class GetPictureUtil {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         isCrop = mSPUtil.getBoolean(KEY_IS_CROP);
         isShoot = mSPUtil.getBoolean(KEY_IS_SHOOT);
+        mPicCode = mSPUtil.getInt(KEY_PIC_CODE);
         mAspectX = mSPUtil.getInt(KEY_ASPECT_X);
         mAspectY = mSPUtil.getInt(KEY_ASPECT_Y);
         mOutputX = mSPUtil.getInt(KEY_OUTPUT_X);
@@ -211,7 +223,7 @@ public class GetPictureUtil {
                         }
                     } else {
                         //裁剪完成 图片
-                        callBack(mCropImg.getPath());
+                        callBack(mPicCode, mCropImg.getPath());
                     }
                     return;
                 } else {
@@ -220,7 +232,7 @@ public class GetPictureUtil {
                         if (mMaxValue == PIC_LIMIT_NO) {
                             //图片不做缩小
                             if (BitmapUtil.getInstance(mShootUri.getPath()).correct()) {
-                                callBack(mShootUri.getPath());
+                                callBack(mPicCode, mShootUri.getPath());
                             } else {
                                 File rotationFile = new File(
                                         getPhotoPath(),
@@ -233,7 +245,7 @@ public class GetPictureUtil {
                                                     @Override
                                                     public void callback(String filePath) {
                                                         mProgressDialog.dismiss();
-                                                        callBack(filePath);
+                                                        callBack(mPicCode, filePath);
                                                     }
                                                 });
                             }
@@ -251,7 +263,7 @@ public class GetPictureUtil {
                                                 @Override
                                                 public void callback(String filePath) {
                                                     mProgressDialog.dismiss();
-                                                    callBack(filePath);
+                                                    callBack(mPicCode, filePath);
                                                 }
                                             });
                         }
@@ -264,7 +276,7 @@ public class GetPictureUtil {
                             if (mMaxValue == PIC_LIMIT_NO) {
                                 //图片不做缩小
                                 if (BitmapUtil.getInstance(filePath).correct()) {
-                                    callBack(filePath);
+                                    callBack(mPicCode, filePath);
                                 } else {
                                     File rotationFile = new File(
                                             getPhotoPath(),
@@ -277,7 +289,7 @@ public class GetPictureUtil {
                                                         @Override
                                                         public void callback(String filePath) {
                                                             mProgressDialog.dismiss();
-                                                            callBack(filePath);
+                                                            callBack(mPicCode, filePath);
                                                         }
                                                     });
                                 }
@@ -295,12 +307,12 @@ public class GetPictureUtil {
                                                     @Override
                                                     public void callback(String filePath) {
                                                         mProgressDialog.dismiss();
-                                                        callBack(filePath);
+                                                        callBack(mPicCode, filePath);
                                                     }
                                                 });
                             }
                         } else {
-                            callBack("");
+                            callBack(mPicCode, "");
                         }
                     }
                 }
@@ -366,12 +378,12 @@ public class GetPictureUtil {
     }
 
     public interface GetCallBack {
-        void callback(String filePath);
+        void callback(int picCode, String filePath);
     }
 
-    private void callBack(String file) {
+    private void callBack(int picCode, String file) {
         if (mCallBack != null) {
-            mCallBack.callback(file);
+            mCallBack.callback(picCode, file);
         }
     }
 }
