@@ -38,6 +38,7 @@ public class GetPictureUtil {
     private static final String KEY_SHOOT_URI = "SHOOT_URI";
     private static final String KEY_CROP_IMG = "CROP_IMG";
     private static final String KEY_PIC_CODE = "PIC_CODE";
+    private static final String KEY_EXTRA = "EXTRA";
     private SPUtil mSPUtil;
     private Activity mAct;
     private Fragment mFra;
@@ -52,6 +53,7 @@ public class GetPictureUtil {
     private int mOutputY;// 输出图片大小
     private Uri mCropImg;//裁剪出来的图片
     private int mMaxValue;//图片宽高最大值 0表示把屏幕宽度当最大值，-1表示不限制
+    private String extraStr;//原样返回内容
     private ProgressDialog mProgressDialog;//保存图片时的提示
     private GetCallBack mCallBack;
     private String mPhotoPath;//图片保存路径
@@ -96,10 +98,14 @@ public class GetPictureUtil {
     /**
      * 拍摄照片
      */
-    public void getShoot(int picCode) {
+    public void getShoot(int picCode, String... extra) {
         isCrop = false;
         isShoot = true;
         mPicCode = picCode;
+        extraStr = null;
+        if (CollectionsUtil.isNotEmpty(extra)) {
+            extraStr = extra[0];
+        }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mShootUri = Uri.fromFile(
                 new File(
@@ -111,6 +117,7 @@ public class GetPictureUtil {
                 .putValue(KEY_IS_SHOOT, isShoot)
                 .putValue(KEY_PIC_CODE, mPicCode)
                 .putValue(KEY_SHOOT_URI, mShootUri.getPath())
+                .putValue(KEY_EXTRA, extraStr)
                 .apply();
         startActivityForResult(intent, mRequestCode);
     }
@@ -118,7 +125,7 @@ public class GetPictureUtil {
     /**
      * 拍摄并裁剪
      */
-    public void getShoot(int picCode, int aspectX, int aspectY, int outputX, int outputY) {
+    public void getShoot(int picCode, int aspectX, int aspectY, int outputX, int outputY, String... extra) {
         isCrop = true;
         isShoot = true;
         mPicCode = picCode;
@@ -127,6 +134,10 @@ public class GetPictureUtil {
         this.mAspectY = aspectY;
         this.mOutputX = outputX;
         this.mOutputY = outputY;
+        extraStr = null;
+        if (CollectionsUtil.isNotEmpty(extra)) {
+            extraStr = extra[0];
+        }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mShootUri = Uri.fromFile(
                 new File(
@@ -142,6 +153,7 @@ public class GetPictureUtil {
                 .putValue(KEY_OUTPUT_X, mOutputX)
                 .putValue(KEY_OUTPUT_Y, mOutputY)
                 .putValue(KEY_SHOOT_URI, mShootUri.getPath())
+                .putValue(KEY_EXTRA, extraStr)
                 .apply();
         mSPUtil.remove(KEY_CROP_IMG);
         startActivityForResult(intent, mRequestCode);
@@ -150,14 +162,19 @@ public class GetPictureUtil {
     /**
      * 选择图片
      */
-    public void getPic(int picCode) {
+    public void getPic(int picCode, String... extra) {
         isCrop = false;
         isShoot = false;
         mPicCode = picCode;
+        extraStr = null;
+        if (CollectionsUtil.isNotEmpty(extra)) {
+            extraStr = extra[0];
+        }
         mSPUtil.edit()
                 .putValue(KEY_IS_CROP, isCrop)
                 .putValue(KEY_IS_SHOOT, isShoot)
                 .putValue(KEY_PIC_CODE, mPicCode)
+                .putValue(KEY_EXTRA, extraStr)
                 .apply();
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -168,7 +185,7 @@ public class GetPictureUtil {
     /**
      * 选择并裁剪
      */
-    public void getPic(int picCode, int aspectX, int aspectY, int outputX, int outputY) {
+    public void getPic(int picCode, int aspectX, int aspectY, int outputX, int outputY, String... extra) {
         isCrop = true;
         isShoot = false;
         mCropImg = null;
@@ -177,6 +194,10 @@ public class GetPictureUtil {
         this.mAspectY = aspectY;
         this.mOutputX = outputX;
         this.mOutputY = outputY;
+        extraStr = null;
+        if (CollectionsUtil.isNotEmpty(extra)) {
+            extraStr = extra[0];
+        }
         mSPUtil.edit()
                 .putValue(KEY_IS_CROP, isCrop)
                 .putValue(KEY_IS_SHOOT, isShoot)
@@ -185,6 +206,7 @@ public class GetPictureUtil {
                 .putValue(KEY_ASPECT_Y, mAspectY)
                 .putValue(KEY_OUTPUT_X, mOutputX)
                 .putValue(KEY_OUTPUT_Y, mOutputY)
+                .putValue(KEY_EXTRA, extraStr)
                 .apply();
         mSPUtil.remove(KEY_CROP_IMG);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -203,6 +225,7 @@ public class GetPictureUtil {
         mOutputY = mSPUtil.getInt(KEY_OUTPUT_Y);
         mMaxValue = mSPUtil.getInt(KEY_MAX_VALUE);
         String shootUri = mSPUtil.getString(KEY_SHOOT_URI);
+        extraStr = mSPUtil.getString(KEY_EXTRA);
         if (CommonUtil.isNotEmpty(shootUri)) {
             mShootUri = Uri.fromFile(new File(shootUri));
         }
@@ -223,7 +246,7 @@ public class GetPictureUtil {
                         }
                     } else {
                         //裁剪完成 图片
-                        callBack(mPicCode, mCropImg.getPath());
+                        callBack(mPicCode, mCropImg.getPath(), extraStr);
                     }
                     return;
                 } else {
@@ -232,7 +255,7 @@ public class GetPictureUtil {
                         if (mMaxValue == PIC_LIMIT_NO) {
                             //图片不做缩小
                             if (BitmapUtil.getInstance(mShootUri.getPath()).correct()) {
-                                callBack(mPicCode, mShootUri.getPath());
+                                callBack(mPicCode, mShootUri.getPath(), extraStr);
                             } else {
                                 File rotationFile = new File(
                                         getPhotoPath(),
@@ -245,7 +268,7 @@ public class GetPictureUtil {
                                                     @Override
                                                     public void callback(String filePath) {
                                                         mProgressDialog.dismiss();
-                                                        callBack(mPicCode, filePath);
+                                                        callBack(mPicCode, filePath, extraStr);
                                                     }
                                                 });
                             }
@@ -263,7 +286,7 @@ public class GetPictureUtil {
                                                 @Override
                                                 public void callback(String filePath) {
                                                     mProgressDialog.dismiss();
-                                                    callBack(mPicCode, filePath);
+                                                    callBack(mPicCode, filePath, extraStr);
                                                 }
                                             });
                         }
@@ -276,7 +299,7 @@ public class GetPictureUtil {
                             if (mMaxValue == PIC_LIMIT_NO) {
                                 //图片不做缩小
                                 if (BitmapUtil.getInstance(filePath).correct()) {
-                                    callBack(mPicCode, filePath);
+                                    callBack(mPicCode, filePath, extraStr);
                                 } else {
                                     File rotationFile = new File(
                                             getPhotoPath(),
@@ -289,7 +312,7 @@ public class GetPictureUtil {
                                                         @Override
                                                         public void callback(String filePath) {
                                                             mProgressDialog.dismiss();
-                                                            callBack(mPicCode, filePath);
+                                                            callBack(mPicCode, filePath, extraStr);
                                                         }
                                                     });
                                 }
@@ -307,12 +330,12 @@ public class GetPictureUtil {
                                                     @Override
                                                     public void callback(String filePath) {
                                                         mProgressDialog.dismiss();
-                                                        callBack(mPicCode, filePath);
+                                                        callBack(mPicCode, filePath, extraStr);
                                                     }
                                                 });
                             }
                         } else {
-                            callBack(mPicCode, "");
+                            callBack(mPicCode, "", extraStr);
                         }
                     }
                 }
@@ -378,12 +401,12 @@ public class GetPictureUtil {
     }
 
     public interface GetCallBack {
-        void callback(int picCode, String filePath);
+        void callback(int picCode, String filePath, String extraStr);
     }
 
-    private void callBack(int picCode, String file) {
+    private void callBack(int picCode, String file, String extraStr) {
         if (mCallBack != null) {
-            mCallBack.callback(picCode, file);
+            mCallBack.callback(picCode, file, extraStr);
         }
     }
 }
