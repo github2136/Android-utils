@@ -85,7 +85,7 @@ public class BitmapUtil {
             if (scaleFactor > 1) {
                 int inSampleSize = 1;
                 while (inSampleSize << 1 < scaleFactor) {
-                    inSampleSize = inSampleSize << 1;
+                    inSampleSize <<= 1;
                 }
                 scaleSize = inSampleSize;
             } else {
