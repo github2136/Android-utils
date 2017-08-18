@@ -74,12 +74,12 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
         getItemView(getItem(position), holder, position, convertView);
         return convertView;
     }
-    public void setListData(List<T> list) {
+    public void setData(List<T> list) {
         mList = list;
         notifyDataSetChanged();
     }
 
-    public void appendListData(List<T> list) {
+    public void appendData(List<T> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }
