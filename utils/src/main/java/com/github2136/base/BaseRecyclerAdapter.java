@@ -59,8 +59,8 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
         onBindView(getItem(position), holder, position);
     }
 
-    private OnItemClickListener itemClickListener;
-    private OnItemLongClickListener itemLongClickListener;
+    protected OnItemClickListener itemClickListener;
+    protected OnItemLongClickListener itemLongClickListener;
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
