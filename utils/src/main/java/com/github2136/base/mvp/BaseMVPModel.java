@@ -21,7 +21,7 @@ public abstract class BaseMVPModel {
     public BaseMVPModel(AppCompatActivity activity) {
         mActivity = activity;
         mTag = activity.getClass().getSimpleName();
-
+        initMode();
     }
 
     public BaseMVPModel(Fragment fragment) {
