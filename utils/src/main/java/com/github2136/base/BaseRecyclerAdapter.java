@@ -85,7 +85,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
     }
 
     public void setData(List<T> list) {
-        mList = list;
+        this.mList = list == null ? new ArrayList<T>() : list;
         notifyDataSetChanged();
     }
 
