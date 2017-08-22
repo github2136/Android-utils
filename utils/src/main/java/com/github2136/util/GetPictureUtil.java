@@ -98,14 +98,18 @@ public class GetPictureUtil {
     /**
      * 拍摄照片
      */
-    public void getShoot(int picCode, String... extra) {
+    public void getShoot(int picCode) {
+        getShoot(picCode, null);
+    }
+
+    /**
+     * 拍摄照片
+     */
+    public void getShoot(int picCode, String extra) {
         isCrop = false;
         isShoot = true;
         mPicCode = picCode;
-        extraStr = null;
-        if (CollectionsUtil.isNotEmpty(extra)) {
-            extraStr = extra[0];
-        }
+        extraStr = extra;
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mShootUri = Uri.fromFile(
                 new File(
@@ -125,7 +129,14 @@ public class GetPictureUtil {
     /**
      * 拍摄并裁剪
      */
-    public void getShoot(int picCode, int aspectX, int aspectY, int outputX, int outputY, String... extra) {
+    public void getShoot(int picCode, int aspectX, int aspectY, int outputX, int outputY) {
+        getShoot(picCode, aspectX, aspectY, outputX, outputY, null);
+    }
+
+    /**
+     * 拍摄并裁剪
+     */
+    public void getShoot(int picCode, int aspectX, int aspectY, int outputX, int outputY, String extra) {
         isCrop = true;
         isShoot = true;
         mPicCode = picCode;
@@ -134,10 +145,7 @@ public class GetPictureUtil {
         this.mAspectY = aspectY;
         this.mOutputX = outputX;
         this.mOutputY = outputY;
-        extraStr = null;
-        if (CollectionsUtil.isNotEmpty(extra)) {
-            extraStr = extra[0];
-        }
+        extraStr = extra;
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mShootUri = Uri.fromFile(
                 new File(
@@ -162,14 +170,18 @@ public class GetPictureUtil {
     /**
      * 选择图片
      */
-    public void getPic(int picCode, String... extra) {
+    public void getPic(int picCode) {
+        getPic(picCode, null);
+    }
+
+    /**
+     * 选择图片
+     */
+    public void getPic(int picCode, String extra) {
         isCrop = false;
         isShoot = false;
         mPicCode = picCode;
-        extraStr = null;
-        if (CollectionsUtil.isNotEmpty(extra)) {
-            extraStr = extra[0];
-        }
+        extraStr = extra;
         mSPUtil.edit()
                 .putValue(KEY_IS_CROP, isCrop)
                 .putValue(KEY_IS_SHOOT, isShoot)
@@ -185,7 +197,14 @@ public class GetPictureUtil {
     /**
      * 选择并裁剪
      */
-    public void getPic(int picCode, int aspectX, int aspectY, int outputX, int outputY, String... extra) {
+    public void getPic(int picCode, int aspectX, int aspectY, int outputX, int outputY) {
+        getPic(picCode, aspectX, aspectY, outputX, outputY, null);
+    }
+
+    /**
+     * 选择并裁剪
+     */
+    public void getPic(int picCode, int aspectX, int aspectY, int outputX, int outputY, String extra) {
         isCrop = true;
         isShoot = false;
         mCropImg = null;
@@ -194,10 +213,7 @@ public class GetPictureUtil {
         this.mAspectY = aspectY;
         this.mOutputX = outputX;
         this.mOutputY = outputY;
-        extraStr = null;
-        if (CollectionsUtil.isNotEmpty(extra)) {
-            extraStr = extra[0];
-        }
+        extraStr = extra;
         mSPUtil.edit()
                 .putValue(KEY_IS_CROP, isCrop)
                 .putValue(KEY_IS_SHOOT, isShoot)
