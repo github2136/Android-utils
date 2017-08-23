@@ -115,7 +115,7 @@ public abstract class BaseListActivity<T> extends AppCompatActivity {
         }
     };
 
-    protected void getDataSuccessful(List<T> list, int... total) {
+    protected void getDataSuccessful(List<T> list) {
         //获取成功
         srContent.setRefreshing(false);
         srContent.setEnabled(true);

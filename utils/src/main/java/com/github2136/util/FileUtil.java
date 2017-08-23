@@ -87,10 +87,17 @@ public class FileUtil {
     /**
      * 外部存储私有根目录
      */
-    public static String getExternalStoragePrivateRootPath(Context context, String... path) {
+    public static String getExternalStoragePrivateRootPath(Context context) {
+        return getExternalStoragePrivateRootPath(context, null);
+    }
+
+    /**
+     * 外部存储私有根目录
+     */
+    public static String getExternalStoragePrivateRootPath(Context context, String path) {
         String rootPath = context.getExternalFilesDir(null).toString();
-        if (CollectionsUtil.isNotEmpty(path)) {
-            rootPath += "/" + path[0];
+        if (CommonUtil.isNotEmpty(path)) {
+            rootPath += "/" + path;
         }
         return rootPath;
     }

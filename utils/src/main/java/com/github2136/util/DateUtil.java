@@ -23,30 +23,41 @@ public class DateUtil {
     /**
      * 日期转文字
      */
-    public static String date2str(Date date, String... pattern) {
+    public static String date2str(Date date) {
+        return date2str(date, null);
+    }
+
+    /**
+     * 日期转文字
+     */
+    public static String date2str(Date date, String pattern) {
         if (date == null) {
             return null;
         }
         SimpleDateFormat sdf;
-        if (pattern != null && pattern.length > 0) {
-            sdf = new SimpleDateFormat(pattern[0], Locale.CHINA);
+        if (CommonUtil.isNotEmpty(pattern)) {
+            sdf = new SimpleDateFormat(pattern, Locale.CHINA);
         } else {
             sdf = new SimpleDateFormat(Date_pattern_default, Locale.CHINA);
         }
         return sdf.format(date);
     }
 
+    public static Date str2date(String dateStr) {
+        return str2date(dateStr);
+    }
+
     /**
      * 文字转日期
      */
-    public static Date str2date(String dateStr, String... pattern) {
+    public static Date str2date(String dateStr, String pattern) {
         if (dateStr == null) {
             return null;
         }
         try {
             SimpleDateFormat sdf;
-            if (pattern != null && pattern.length > 0) {
-                sdf = new SimpleDateFormat(pattern[0], Locale.CHINA);
+            if (CommonUtil.isNotEmpty(pattern)) {
+                sdf = new SimpleDateFormat(pattern, Locale.CHINA);
             } else {
                 sdf = new SimpleDateFormat(Date_pattern_default, Locale.CHINA);
             }
@@ -57,13 +68,17 @@ public class DateUtil {
         }
     }
 
+    public static String getDateNow() {
+        return getDateNow(null);
+    }
+
     /**
      * 获取现在的时间
      */
-    public static String getDateNow(String... pattern) {
+    public static String getDateNow(String pattern) {
         SimpleDateFormat sdf;
-        if (pattern != null && pattern.length > 0) {
-            sdf = new SimpleDateFormat(pattern[0], Locale.CHINA);
+        if (CommonUtil.isNotEmpty(pattern)) {
+            sdf = new SimpleDateFormat(pattern, Locale.CHINA);
         } else {
             sdf = new SimpleDateFormat(Date_pattern_default, Locale.CHINA);
         }

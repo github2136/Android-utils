@@ -9,7 +9,10 @@ public interface IBaseMVPView {
     void showProgressDialog(@StringRes int resId);
 
     // 显示进度框
-    void showProgressDialog(String... msg);
+    void showProgressDialog();
+
+    // 显示进度框
+    void showProgressDialog(String msg);
 
     // 关闭进度框
     void dismissDialogDialog();
