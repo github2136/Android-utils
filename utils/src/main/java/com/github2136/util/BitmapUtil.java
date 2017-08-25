@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.nfc.Tag;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
@@ -28,6 +29,7 @@ import java.io.IOException;
  */
 
 public class BitmapUtil {
+    private final String TAG = getClass().getSimpleName();
     //图片路径
     String mFilePath;
     //旋转角度
@@ -262,76 +264,79 @@ public class BitmapUtil {
      * 获取图片
      */
     public void get(final BitmapGetCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Bitmap mBitmap = getBitmap();
-                if (callBack != null) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callBack.callback(mBitmap);
+        ThreadUtil.getInstance(TAG).execute(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        final Bitmap mBitmap = getBitmap();
+                        if (callBack != null) {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callBack.callback(mBitmap);
+                                }
+                            });
                         }
-                    });
-                }
-            }
-        }).start();
+                    }
+                });
     }
 
     public void getByte(final BitmapByteGetCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                byte[] bytes = null;
-                Bitmap mBitmap = getBitmap();
-                try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    baos.flush();
-                    baos.close();
-                    bytes = baos.toByteArray();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (callBack != null) {
-                    final byte[] finalBytes = bytes;
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callBack.callback(finalBytes);
+        ThreadUtil.getInstance(TAG).execute(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        byte[] bytes = null;
+                        Bitmap mBitmap = getBitmap();
+                        try {
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            baos.flush();
+                            baos.close();
+                            bytes = baos.toByteArray();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    });
-                }
-            }
-        }).start();
+                        if (callBack != null) {
+                            final byte[] finalBytes = bytes;
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callBack.callback(finalBytes);
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     public void getBase64(final BitmapBase64GetCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String base64 = null;
-                Bitmap mBitmap = getBitmap();
-                try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    baos.flush();
-                    baos.close();
-                    base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (callBack != null) {
-                    final String finalBase6 = base64;
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callBack.callback(finalBase6);
+        ThreadUtil.getInstance(TAG).execute(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        String base64 = null;
+                        Bitmap mBitmap = getBitmap();
+                        try {
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            baos.flush();
+                            baos.close();
+                            base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    });
-                }
-            }
-        }).start();
+                        if (callBack != null) {
+                            final String finalBase6 = base64;
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callBack.callback(finalBase6);
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     /**
@@ -345,34 +350,35 @@ public class BitmapUtil {
      * 保存图片
      */
     public void save(final String filePath, final BitmapSaveCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Bitmap mBitmap = getBitmap();
-                if (mBitmap == null) {
-                    if (callBack != null) {
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                callBack.callback("");
+        ThreadUtil.getInstance(TAG).execute(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Bitmap mBitmap = getBitmap();
+                        if (mBitmap == null) {
+                            if (callBack != null) {
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        callBack.callback("");
+                                    }
+                                });
                             }
-                        });
-                    }
-                } else {
-                    final boolean isSave = saveBitmap(mBitmap, filePath);
-                    mBitmap.recycle();
-                    mBitmap = null;
-                    System.gc();
-                    if (callBack != null) {
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                callBack.callback(isSave ? filePath : "");
+                        } else {
+                            final boolean isSave = saveBitmap(mBitmap, filePath);
+                            mBitmap.recycle();
+                            mBitmap = null;
+                            System.gc();
+                            if (callBack != null) {
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        callBack.callback(isSave ? filePath : "");
+                                    }
+                                });
                             }
-                        });
+                        }
                     }
-                }
-            }
-        }).start();
+                });
     }
 }

@@ -57,67 +57,68 @@ public class DownLoadFileUtil {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage("正在下载文件");
         progressDialog.show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                        isCancel = false;
-                        isDownLoad = true;
-                        int index = urlStr.lastIndexOf("/");
-                        String encodeFileName = URLEncoder.encode(urlStr.substring(index + 1), "UTF-8");
-                        String encodeUrl = urlStr.substring(0, index + 1) + encodeFileName;
-                        URL url = new URL(encodeUrl);
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setConnectTimeout(5000);
-                        // 获取到文件的大小
-                        long max = conn.getContentLength();
-                        int sizeType = FileUtil.getFileSizeTypeInt(max);
-                        progressDialog.setMax((int) FileUtil.getFileOrFilesSize(max, FileUtil.SIZETYPE_KB));
-                        InputStream is = conn.getInputStream();
-                        File file = new File(path);
-                        file.getParentFile().mkdirs();
-                        FileOutputStream fos = new FileOutputStream(file);
-                        BufferedInputStream bis = new BufferedInputStream(is);
-                        byte[] buffer = new byte[1024];
-                        int len;
-                        int total = 0;
-                        while ((len = bis.read(buffer)) != -1) {
-                            fos.write(buffer, 0, len);
-                            total += len;
-                            // 获取当前下载量
-                            progressDialog.setProgress((int) FileUtil.getFileOrFilesSize(total, FileUtil.SIZETYPE_KB));
-                            progressDialog.setProgressNumberFormat(String.format(Locale.getDefault(), "%1$.02f%3$s/%2$.02f%3$s",
-                                    FileUtil.getFileOrFilesSize(total, sizeType),
-                                    FileUtil.getFileOrFilesSize(max, sizeType),
-                                    FileUtil.getFileSizeTypeStr(sizeType)));
-                            if (isCancel) {
-                                break;
-                            }
-                        }
-                        fos.close();//关闭流
+        ThreadUtil.getInstance("DownLoadFileUtil").execute(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                                isCancel = false;
+                                isDownLoad = true;
+                                int index = urlStr.lastIndexOf("/");
+                                String encodeFileName = URLEncoder.encode(urlStr.substring(index + 1), "UTF-8");
+                                String encodeUrl = urlStr.substring(0, index + 1) + encodeFileName;
+                                URL url = new URL(encodeUrl);
+                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                                conn.setConnectTimeout(5000);
+                                // 获取到文件的大小
+                                long max = conn.getContentLength();
+                                int sizeType = FileUtil.getFileSizeTypeInt(max);
+                                progressDialog.setMax((int) FileUtil.getFileOrFilesSize(max, FileUtil.SIZETYPE_KB));
+                                InputStream is = conn.getInputStream();
+                                File file = new File(path);
+                                file.getParentFile().mkdirs();
+                                FileOutputStream fos = new FileOutputStream(file);
+                                BufferedInputStream bis = new BufferedInputStream(is);
+                                byte[] buffer = new byte[1024];
+                                int len;
+                                int total = 0;
+                                while ((len = bis.read(buffer)) != -1) {
+                                    fos.write(buffer, 0, len);
+                                    total += len;
+                                    // 获取当前下载量
+                                    progressDialog.setProgress((int) FileUtil.getFileOrFilesSize(total, FileUtil.SIZETYPE_KB));
+                                    progressDialog.setProgressNumberFormat(String.format(Locale.getDefault(), "%1$.02f%3$s/%2$.02f%3$s",
+                                            FileUtil.getFileOrFilesSize(total, sizeType),
+                                            FileUtil.getFileOrFilesSize(max, sizeType),
+                                            FileUtil.getFileSizeTypeStr(sizeType)));
+                                    if (isCancel) {
+                                        break;
+                                    }
+                                }
+                                fos.close();//关闭流
 //                        bis.close();
 //                        is.close();
-                        if (isCancel) {
-                            file.delete();
+                                if (isCancel) {
+                                    file.delete();
+                                    call(false, urlStr, path, callback);
+                                } else {
+                                    call(true, urlStr, path, callback);
+                                }
+                                isDownLoad = false;
+                                progressDialog.dismiss();
+                            } else {
+                                call(false, urlStr, path, callback);
+                                isDownLoad = false;
+                            }
+                        } catch (IOException e) {
+                            progressDialog.dismiss();
+                            isDownLoad = false;
+                            e.printStackTrace();
                             call(false, urlStr, path, callback);
-                        } else {
-                            call(true, urlStr, path, callback);
                         }
-                        isDownLoad = false;
-                        progressDialog.dismiss();
-                    } else {
-                        call(false, urlStr, path, callback);
-                        isDownLoad = false;
                     }
-                } catch (IOException e) {
-                    progressDialog.dismiss();
-                    isDownLoad = false;
-                    e.printStackTrace();
-                    call(false, urlStr, path, callback);
-                }
-            }
-        }).start();
+                });
     }
 
     /**
