@@ -27,17 +27,4 @@ public class Adapter extends BaseListAdapter<String> {
     public void getItemView(String s, ViewHolderListView holder, int position, View convertView) {
 
     }
-//    public Adapter(Context context, List<String> list) {
-//        super(context, list);
-//    }
-//
-//    @Override
-//    public int getLayoutId() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void getItemView(String s, ViewHolder holder, int position, View convertView) {
-//    holder.setGone(R.id.activity_main);
-//    }
 }

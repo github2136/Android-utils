@@ -95,12 +95,14 @@ public class BitmapUtil {
             }
             //使用inSampleSize压缩图片
             mBitmap = getBitmap(mFilePath, scaleSize);
-            //如果图片高宽比限制大则使用Matrix再次缩小
-            if (mBitmap.getWidth() > mMax || mBitmap.getHeight() > mMax) {
-                float scaleW = (float) mMax / mBitmap.getWidth();
-                float scaleH = (float) mMax / mBitmap.getHeight();
-                float scale = scaleW > scaleH ? scaleH : scaleW;
-                mBitmap = getBitmap(mBitmap, scale);
+            if (mBitmap != null) {
+                //如果图片高宽比限制大则使用Matrix再次缩小
+                if (mBitmap.getWidth() > mMax || mBitmap.getHeight() > mMax) {
+                    float scaleW = (float) mMax / mBitmap.getWidth();
+                    float scaleH = (float) mMax / mBitmap.getHeight();
+                    float scale = scaleW > scaleH ? scaleH : scaleW;
+                    mBitmap = getBitmap(mBitmap, scale);
+                }
             }
         } else {
             mBitmap = getBitmap(mFilePath, 1);
