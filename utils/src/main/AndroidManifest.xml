@@ -3,8 +3,6 @@
           package="com.github2136.util">
 
     <application>
-        <activity android:name="com.github2136.selectImage.SelectImageActivity">
-        </activity>
     </application>
 
 </manifest>
