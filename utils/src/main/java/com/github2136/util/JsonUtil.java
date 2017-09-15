@@ -7,8 +7,8 @@ import com.google.gson.JsonSyntaxException;
 import java.lang.reflect.Type;
 
 /**
- * Json工具类JsonUtilCompat
- * 如果需要使用其他的GsonBuilder，继承该类重写<b>getInstance</b> <b>getGson</b>
+ * Json工具类JsonUtilCompat</br>
+ * 如果需要使用其他的GsonBuilder，继承该类重写<b>getInstance</b>/<b>getGson</b>
  */
 public class JsonUtil {
     private Gson mGson;
