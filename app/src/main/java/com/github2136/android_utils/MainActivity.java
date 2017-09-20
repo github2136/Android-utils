@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.github2136.android_utils.load_more.LoadMoreActivity;
-import com.github2136.selectImage.SelectImageActivity;
+
 import com.github2136.util.CommonUtil;
 import com.github2136.util.FileUtil;
 import com.github2136.util.GetPictureUtil;
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SelectImageActivity.class));
+//                startActivity(new Intent(MainActivity.this, SelectImageActivity.class));
             }
         });
     }

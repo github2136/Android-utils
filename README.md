@@ -1,4 +1,5 @@
 android-utils  
+[![](https://jitpack.io/v/github2136/Android-utils.svg)](https://jitpack.io/#github2136/Android-utils)  
 一些常用工具类  
 **BitmapUtil**图片压缩、旋转、缩略图处理  
 **CollectionsUtil**集合非空、空判断  
@@ -14,4 +15,4 @@ android-utils
 **BaseListAdapter**ListView使用的BaseAdapter
 **BaseRecyclerAdapter**RecyclerView使用的BaseAdapter
 **BaseLoadMoreRecyclerAdapter**带上拉更多的BaseAdapter，具体使用方法参考LoadMoreActivity
-[![](https://jitpack.io/v/github2136/Android-utils.svg)](https://jitpack.io/#github2136/Android-utils)
+

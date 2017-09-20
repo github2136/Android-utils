@@ -105,40 +105,40 @@ public abstract class BaseLoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter
                     v = mViewEmpty;
                     emptyViewInit(mViewEmpty);
                 }
-                return new ViewHolderRecyclerView(mContext, this, v, isFailed && isFailedRefresh ? mFailClick : null, null);
+                return new ViewHolderRecyclerView(mContext, this, v/*, isFailed && isFailedRefresh ? mFailClick : null, null*/);
             }
             case TYPE_HEAD:
-                return new ViewHolderRecyclerView(mContext, this, mHeadView, null, null);
+                return new ViewHolderRecyclerView(mContext, this, mHeadView/*, null, null*/);
             case TYPE_LOAD_MORE:
                 mViewLoadMore = mLayoutInflater.inflate(mViewLoadMoreResId, parent, false);
                 loadMoreInit(mViewLoadMore);
-                return new ViewHolderRecyclerView(mContext, this, mViewLoadMore, mLoadMoreClick, null);
+                return new ViewHolderRecyclerView(mContext, this, mViewLoadMore/*, mLoadMoreClick, null*/);
             default:
                 View v = mLayoutInflater.inflate(getLayoutId(viewType), parent, false);
-                return new ViewHolderRecyclerView(mContext, this, v, itemClickListener, itemLongClickListener);
+                return new ViewHolderRecyclerView(mContext, this, v/*, itemClickListener, itemLongClickListener*/);
         }
     }
 
-    private OnItemClickListener mLoadMoreClick = new OnItemClickListener() {
-        @Override
-        public void onItemClick(BaseRecyclerAdapter adapter, int position) {
-            if (isRefresh) {
-                loadMoreRefresh(mViewLoadMore);
-                return;
-            }
-            if (isHasMore && !isLoadMore && mLoadMoreListener != null) {
-                loadMoreLoading(mViewLoadMore);
-                mLoadMoreListener.onLoadMore();
-            }
-        }
-    };
+//    private OnItemClickListener mLoadMoreClick = new OnItemClickListener() {
+//        @Override
+//        public void onItemClick(BaseRecyclerAdapter adapter, int position) {
+//            if (isRefresh) {
+//                loadMoreRefresh(mViewLoadMore);
+//                return;
+//            }
+//            if (isHasMore && !isLoadMore && mLoadMoreListener != null) {
+//                loadMoreLoading(mViewLoadMore);
+//                mLoadMoreListener.onLoadMore();
+//            }
+//        }
+//    };
 
-    private OnItemClickListener mFailClick = new OnItemClickListener() {
-        @Override
-        public void onItemClick(BaseRecyclerAdapter adapter, int position) {
-            mLoadMoreListener.onRefresh();
-        }
-    };
+//    private OnItemClickListener mFailClick = new OnItemClickListener() {
+//        @Override
+//        public void onItemClick(BaseRecyclerAdapter adapter, int position) {
+//            mLoadMoreListener.onRefresh();
+//        }
+//    };
 
     @Override
     public final int getItemViewType(int position) {

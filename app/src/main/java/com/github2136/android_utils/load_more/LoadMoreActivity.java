@@ -6,6 +6,7 @@ import android.os.Looper;
 
 import com.github2136.android_utils.R;
 import com.github2136.base.BaseLoadMoreRecyclerAdapter;
+import com.github2136.base.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class LoadMoreActivity extends BaseListActivity<String> {
 
     @Override
     protected void initListData(Bundle savedInstanceState) {
-
+        rvContent.addOnItemTouchListener(new RecyclerItemClickListener(rvContent));
     }
 
     @Override
@@ -54,11 +55,11 @@ public class LoadMoreActivity extends BaseListActivity<String> {
                         s.add("asdf9");
                         s.add("asdf10");
 
-                        if (new Random().nextBoolean()) {
-                            getDataSuccessful(s);
-                        } else {
-                            getDataSuccessful(null);
-                        }
+//                        if (new Random().nextBoolean()) {
+                        getDataSuccessful(s);
+//                        } else {
+//                            getDataSuccessful(null);
+//                        }
                     }
                 });
             }
