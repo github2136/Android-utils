@@ -3,14 +3,14 @@ package com.github2136.android_utils.load_more;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github2136.android_utils.R;
 import com.github2136.base.BaseLoadMoreRecyclerAdapter;
-import com.github2136.base.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class LoadMoreActivity extends BaseListActivity<String> {
 
@@ -22,7 +22,9 @@ public class LoadMoreActivity extends BaseListActivity<String> {
 
     @Override
     protected void initListData(Bundle savedInstanceState) {
-        rvContent.addOnItemTouchListener(new RecyclerItemClickListener(rvContent));
+        TextView textView = new TextView(this);
+        textView.setText("asdfsadf");
+        mAdapter.setHeadView(textView);
     }
 
     @Override
@@ -36,7 +38,7 @@ public class LoadMoreActivity extends BaseListActivity<String> {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -49,11 +51,11 @@ public class LoadMoreActivity extends BaseListActivity<String> {
                         s.add("asdf3");
                         s.add("asdf4");
                         s.add("asdf5");
-                        s.add("asdf6");
-                        s.add("asdf7");
-                        s.add("asdf8");
-                        s.add("asdf9");
-                        s.add("asdf10");
+//                        s.add("asdf6");
+//                        s.add("asdf7");
+//                        s.add("asdf8");
+//                        s.add("asdf9");
+//                        s.add("asdf10");
 
 //                        if (new Random().nextBoolean()) {
                         getDataSuccessful(s);
@@ -64,5 +66,15 @@ public class LoadMoreActivity extends BaseListActivity<String> {
                 });
             }
         }).start();
+    }
+
+    @Override
+    protected void itemClick(String s, int position) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void itemLongClick(String s, int position) {
+        Toast.makeText(this, "long" + s, Toast.LENGTH_SHORT).show();
     }
 }

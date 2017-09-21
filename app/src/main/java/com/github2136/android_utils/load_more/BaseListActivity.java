@@ -50,8 +50,8 @@ public abstract class BaseListActivity<T> extends AppCompatActivity {
         getFirstPage();
         initListData(savedInstanceState);
         if (mHasItemClick) {
-//            mAdapter.setOnItemClickListener(mOnItemClickListener);
-//            mAdapter.setOnItemLongClickListener(mOnItemLongClickListener);
+            mAdapter.setOnItemClickListener(rvContent, mOnItemClickListener);
+            mAdapter.setOnItemLongClickListener(rvContent, mOnItemLongClickListener);
         }
     }
 
@@ -94,26 +94,26 @@ public abstract class BaseListActivity<T> extends AppCompatActivity {
         }
     };
 
-//    private BaseRecyclerAdapter.OnItemClickListener mOnItemClickListener = new BaseRecyclerAdapter.OnItemClickListener() {
-//        @Override
-//        public void onItemClick(BaseRecyclerAdapter baseRecyclerAdapter, int i) {
-//            //点击事件
-//            if (mAdapter.getHeadView() != null) {
-//                i--;
-//            }
-//            itemClick(mAdapter.getItem(i), i);
-//        }
-//    };
-//    private BaseRecyclerAdapter.OnItemLongClickListener mOnItemLongClickListener = new BaseRecyclerAdapter.OnItemLongClickListener() {
-//        @Override
-//        public void onItemClick(BaseRecyclerAdapter baseRecyclerAdapter, int i) {
-//            //长按事件
-//            if (mAdapter.getHeadView() != null) {
-//                i--;
-//            }
-//            itemLongClick(mAdapter.getItem(i), i);
-//        }
-//    };
+    private BaseRecyclerAdapter.OnItemClickListener mOnItemClickListener = new BaseRecyclerAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(BaseRecyclerAdapter baseRecyclerAdapter, int i) {
+            //点击事件
+            if (mAdapter.getHeadView() != null) {
+                i--;
+            }
+            itemClick(mAdapter.getItem(i), i);
+        }
+    };
+    private BaseRecyclerAdapter.OnItemLongClickListener mOnItemLongClickListener = new BaseRecyclerAdapter.OnItemLongClickListener() {
+        @Override
+        public void onItemClick(BaseRecyclerAdapter baseRecyclerAdapter, int i) {
+            //长按事件
+            if (mAdapter.getHeadView() != null) {
+                i--;
+            }
+            itemLongClick(mAdapter.getItem(i), i);
+        }
+    };
 
     protected void getDataSuccessful(List<T> list) {
         //获取成功

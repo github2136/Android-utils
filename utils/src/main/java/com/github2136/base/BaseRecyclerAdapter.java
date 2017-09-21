@@ -19,6 +19,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
     protected Context mContext;
     protected List<T> mList;//使用的集合
     protected LayoutInflater mLayoutInflater;
+    protected RecyclerItemClickListener mRecyclerItemClickListener;
 
     public BaseRecyclerAdapter(Context context, List<T> list) {
         this.mContext = context;
@@ -46,7 +47,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
     @Override
     public ViewHolderRecyclerView onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = mLayoutInflater.inflate(getLayoutId(viewType), parent, false);
-        return new ViewHolderRecyclerView(mContext, this, v/*, itemClickListener, itemLongClickListener*/);
+        return new ViewHolderRecyclerView(mContext, this, v);
     }
 
     @Override
@@ -62,30 +63,41 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
         onBindView(getItem(position), holder, position);
     }
 
-//    protected OnItemClickListener itemClickListener;
-//    protected OnItemLongClickListener itemLongClickListener;
+    protected OnItemClickListener itemClickListener;
+    protected OnItemLongClickListener itemLongClickListener;
 
-//    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
-//        this.itemClickListener = itemClickListener;
-//    }
+    public void setOnItemClickListener(RecyclerView recyclerView, OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+        addClickListener(recyclerView);
+        mRecyclerItemClickListener.setItemClickListener(itemClickListener);
+    }
 
-//    public void setOnItemLongClickListener(OnItemLongClickListener itemLongClickListener) {
-//        this.itemLongClickListener = itemLongClickListener;
-//    }
+    public void setOnItemLongClickListener(RecyclerView recyclerView, OnItemLongClickListener itemLongClickListener) {
+        this.itemLongClickListener = itemLongClickListener;
+        addClickListener(recyclerView);
+        mRecyclerItemClickListener.setItemLongClickListener(itemLongClickListener);
+    }
+
+    protected void addClickListener(RecyclerView recyclerView) {
+        if (mRecyclerItemClickListener == null) {
+            mRecyclerItemClickListener = new RecyclerItemClickListener(recyclerView);
+            recyclerView.addOnItemTouchListener(mRecyclerItemClickListener);
+        }
+    }
 
     /**
      * 单项点击事件
      */
-//    public interface OnItemClickListener {
-//        void onItemClick(BaseRecyclerAdapter adapter, int position);
-//    }
+    public interface OnItemClickListener {
+        void onItemClick(BaseRecyclerAdapter adapter, int position);
+    }
 
     /**
      * 单项长按
      */
-//    public interface OnItemLongClickListener {
-//        void onItemClick(BaseRecyclerAdapter adapter, int position);
-//    }
+    public interface OnItemLongClickListener {
+        void onItemClick(BaseRecyclerAdapter adapter, int position);
+    }
 
     public void setData(List<T> list) {
         this.mList = list == null ? new ArrayList<T>() : list;
@@ -97,33 +109,54 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
         notifyDataSetChanged();
     }
 
-    public static  class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
-        //    private OnItemClickListener mListener;
+    public static class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+        protected OnItemClickListener itemClickListener;
+        protected OnItemLongClickListener itemLongClickListener;
         private RecyclerView mRecyclerView;
         private GestureDetectorCompat mGestureDetectorCompat;
 
         public RecyclerItemClickListener(RecyclerView recyclerView) {
             mRecyclerView = recyclerView;
             mGestureDetectorCompat = new GestureDetectorCompat(recyclerView.getContext(), new GestureDetector.SimpleOnGestureListener() {
+
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
-                    View child = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-                    int position = mRecyclerView.getChildAdapterPosition(child); // item position
-
-                    return super.onSingleTapUp(e);
+                    if (itemClickListener != null) {
+                        View child = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
+                        int position = mRecyclerView.getChildAdapterPosition(child); // item position
+                        itemClickListener.onItemClick((BaseRecyclerAdapter) mRecyclerView.getAdapter(), position);
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
 
                 @Override
                 public void onLongPress(MotionEvent e) {
-                    super.onLongPress(e);
+                    if (itemLongClickListener != null) {
+                        View child = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
+                        int position = mRecyclerView.getChildAdapterPosition(child); // item position
+                        itemLongClickListener.onItemClick((BaseRecyclerAdapter) mRecyclerView.getAdapter(), position);
+                    }
                 }
             });
         }
 
+        public void setItemClickListener(OnItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
+        }
+
+        public void setItemLongClickListener(OnItemLongClickListener itemLongClickListener) {
+            this.itemLongClickListener = itemLongClickListener;
+        }
+
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-            mGestureDetectorCompat.onTouchEvent(e);
-            return false;
+            if (mGestureDetectorCompat.onTouchEvent(e)) { // 把事件交给GestureDetector处理
+                return true;
+            } else {
+                return false;
+            }
         }
 
         @Override
@@ -133,7 +166,6 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
 
         @Override
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
         }
     }
 

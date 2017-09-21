@@ -3,23 +3,18 @@ package com.github2136.android_utils.load_more;
 import android.content.Context;
 
 import com.github2136.android_utils.R;
-import com.github2136.base.BaseLoadMoreRecyclerAdapter;
+import com.github2136.base.BaseRecyclerAdapter;
 import com.github2136.base.ViewHolderRecyclerView;
 
 import java.util.List;
 
 /**
- * Created by yubin on 2017/8/22.
+ * Created by yubin on 2017/9/21.
  */
 
-public class LoadMoreAdapter extends BaseLoadMoreRecyclerAdapter<String> {
-    public LoadMoreAdapter(Context context, List<String> list) {
+public class ListAdapter extends BaseRecyclerAdapter<String> {
+    public ListAdapter(Context context, List<String> list) {
         super(context, list);
-    }
-
-    @Override
-    protected int getPageSize() {
-        return 5;
     }
 
     @Override
@@ -32,3 +27,4 @@ public class LoadMoreAdapter extends BaseLoadMoreRecyclerAdapter<String> {
         holder.setText(R.id.tv_text, s);
     }
 }
+

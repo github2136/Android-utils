@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.github2136.android_utils.load_more.ListActivity;
 import com.github2136.android_utils.load_more.LoadMoreActivity;
 
 import com.github2136.util.CommonUtil;
@@ -70,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, LoadMoreActivity.class));
+            }
+        });
+        Button btnListAdapter= (Button) findViewById(R.id.btn_list_adapter);
+        btnListAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ListActivity.class));
             }
         });
         Button btnSelectImage = (Button) findViewById(R.id.btn_select_image);

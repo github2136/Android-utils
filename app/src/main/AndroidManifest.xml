@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".load_more.LoadMoreActivity">
         </activity>
+        <activity android:name=".load_more.ListActivity">
+        </activity>
     </application>
 
 </manifest>
