@@ -11,8 +11,8 @@ android-utils
 **SpanUtil**SpannableStringBuilder文字处理类  
 **SPUtil**SharedPreferences处理类
 
-**base**目录中是一些常用的基础类
-**BaseListAdapter**ListView使用的BaseAdapter
-**BaseRecyclerAdapter**RecyclerView使用的BaseAdapter
+**base**目录中是一些常用的基础类  
+**BaseListAdapter**ListView使用的BaseAdapter  
+**BaseRecyclerAdapter**RecyclerView使用的BaseAdapter  
 **BaseLoadMoreRecyclerAdapter**带上拉更多的BaseAdapter，具体使用方法参考LoadMoreActivity
 
