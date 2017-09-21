@@ -6,7 +6,7 @@ android-utils
 **CommonUtil**文字空判断，DP转PX/PX转DP，通知权限开启判断  
 **DateUtil**日期处理Date转String/String转Date，传入日期返回与当前时间差  
 **DownLoadFileUtil**下载功能显示进度条，可取消  
-**FileUtil**文件处理类判定是否有外部存储读写权限、返回存储根目录等其他路径，根据前缀、后缀生成文件名，获取文件大小，根据路径获取文件后缀，保存文字至指定目录  
+**FileUtil**文件处理类判定是否有外部存储读写权限、返回存储根目录等其他路径，根据前缀、后缀生成文件名，获取文件大小，根据路径获取文件后缀，保存文件至指定目录
 **JsonUtil**json处理类，使用Gson  
 **SpanUtil**SpannableStringBuilder文字处理类  
 **SPUtil**SharedPreferences处理类
