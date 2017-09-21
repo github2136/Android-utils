@@ -3,6 +3,9 @@ package com.github2136.android_utils.load_more;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,8 @@ public class LoadMoreActivity extends BaseListActivity<String> {
     protected void initListData(Bundle savedInstanceState) {
         TextView textView = new TextView(this);
         textView.setText("asdfsadf");
+        RecyclerView.LayoutParams layoutParams=new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,100);
+        textView.setLayoutParams(layoutParams);
         mAdapter.setHeadView(textView);
     }
 

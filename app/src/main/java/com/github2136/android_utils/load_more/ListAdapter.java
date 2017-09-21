@@ -18,8 +18,25 @@ public class ListAdapter extends BaseRecyclerAdapter<String> {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position + 1 == getItemCount()) {
+            return 1;
+        } else {
+
+            return 0;
+        }
+    }
+
+    @Override
     public int getLayoutId(int viewType) {
-        return R.layout.item_item;
+        switch (viewType) {
+            case 0:
+                return R.layout.item_item;
+            case 1:
+                return R.layout.item_util_load_more;
+            default:
+                return R.layout.item_item;
+        }
     }
 
     @Override

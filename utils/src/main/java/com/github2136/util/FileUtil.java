@@ -29,7 +29,7 @@ import java.util.Date;
 /**
  * 文件工具 返回的所有根目录都不带斜杠<br>
  * 默认项目目录为android-util<br>
- * 如果需要更换可先在application中添加名为util_project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取，默认为android-util
+ * 如果需要更换可先在application中添加名为util_project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取，默认为android-util<br>
  * getSuffix(urlStr);//获取文件后缀<br>
  * MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀<br>
  * MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();<br>

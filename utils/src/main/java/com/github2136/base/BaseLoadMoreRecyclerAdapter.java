@@ -122,11 +122,14 @@ public abstract class BaseLoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter
     }
 
     public void setOnItemClickListener(final RecyclerView recyclerView, OnItemClickListener itemClickListener) {
-        mLoadClickListener = itemClickListener;
         this.itemClickListener = new OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, int position) {
-                if (isEnableLoadMore && position == getItemCount()) {
+                if (isFailed) {
+                    //加载失败
+                    mLoadMoreListener.onRefresh();
+                } else if (isEnableLoadMore && position + 1 == getItemCount()) {
+                    //点击加载更多
                     if (isRefresh) {
                         loadMoreRefresh(mViewLoadMore);
                         return;
@@ -136,22 +139,30 @@ public abstract class BaseLoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter
                         mLoadMoreListener.onLoadMore();
                     }
                 } else {
-                    mLoadClickListener.onItemClick(adapter, position);
+                    //其他项
+                    if (mHeadView == null || position != 0) {
+                        mLoadClickListener.onItemClick(adapter, position);
+                    }
                 }
             }
         };
-        super.setOnItemClickListener(recyclerView, BaseLoadMoreRecyclerAdapter.this.itemClickListener);
+        mLoadClickListener = itemClickListener;
+        addClickListener(recyclerView);
+        mRecyclerItemClickListener.setItemClickListener(this.itemClickListener);
     }
 
     public void setOnItemLongClickListener(RecyclerView recyclerView, OnItemLongClickListener itemLongClickListener) {
-        mLoadLongClickListener = itemLongClickListener;
         this.itemLongClickListener = new OnItemLongClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, int position) {
-                mLoadLongClickListener.onItemClick(adapter, position);
+                if (!(isEnableLoadMore && position + 1 == getItemCount())) {
+                    mLoadLongClickListener.onItemClick(adapter, position);
+                }
             }
         };
-        super.setOnItemLongClickListener(recyclerView, BaseLoadMoreRecyclerAdapter.this.itemLongClickListener);
+        mLoadLongClickListener = itemLongClickListener;
+        addClickListener(recyclerView);
+        mRecyclerItemClickListener.setItemLongClickListener(this.itemLongClickListener);
     }
 
 //    private OnItemClickListener mFailClick = new OnItemClickListener() {
