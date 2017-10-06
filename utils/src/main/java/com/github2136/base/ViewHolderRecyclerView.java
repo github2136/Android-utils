@@ -17,25 +17,25 @@ import android.widget.TextView;
  * Created by yubin on 2017/7/7.
  */
 
-public class ViewHolderRecyclerView extends RecyclerView.ViewHolder /*implements View.OnClickListener, View.OnLongClickListener */{
+public class ViewHolderRecyclerView extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     private SparseArray<View> views = new SparseArray<>();
     private View itemView;
-//    private BaseRecyclerAdapter.OnItemClickListener itemClickListener;
-//    private BaseRecyclerAdapter.OnItemLongClickListener itemLongClickListener;
+    private BaseRecyclerAdapter.OnItemClickListener itemClickListener;
+    private BaseRecyclerAdapter.OnItemLongClickListener itemLongClickListener;
     private BaseRecyclerAdapter mAdapter;
     private Context mContext;
 
-    public ViewHolderRecyclerView(Context context, BaseRecyclerAdapter mAdapter, View itemView/*, BaseRecyclerAdapter.OnItemClickListener
-            itemClickListener, BaseRecyclerAdapter.OnItemLongClickListener itemLongClickListener*/) {
+    public ViewHolderRecyclerView(Context context, BaseRecyclerAdapter mAdapter, View itemView, BaseRecyclerAdapter.OnItemClickListener
+            itemClickListener, BaseRecyclerAdapter.OnItemLongClickListener itemLongClickListener) {
         super(itemView);
         this.mContext = context;
         this.itemView = itemView;
         this.mAdapter = mAdapter;
-//        this.itemClickListener = itemClickListener;
-//        this.itemLongClickListener = itemLongClickListener;
+        this.itemClickListener = itemClickListener;
+        this.itemLongClickListener = itemLongClickListener;
 
-//        itemView.setOnClickListener(this);
-//        itemView.setOnLongClickListener(this);
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
     }
 
     public View getRootView() {
@@ -58,29 +58,29 @@ public class ViewHolderRecyclerView extends RecyclerView.ViewHolder /*implements
         return (T) v;
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        if (itemClickListener != null) {
-//            //如果adpater正在调用notifyDataSetChanged那么getAdapterPosition会返回 RecyclerView.NO_POSITION
-//            int position = getAdapterPosition();
-//            if (position != RecyclerView.NO_POSITION) {
-//                itemClickListener.onItemClick(mAdapter, position);
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public boolean onLongClick(View v) {
-//        if (itemLongClickListener != null) {
-//            int position = getAdapterPosition();
-//            if (position != RecyclerView.NO_POSITION) {
-//                itemLongClickListener.onItemClick(mAdapter, position);
-//            }
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+    @Override
+    public void onClick(View v) {
+        if (itemClickListener != null) {
+            //如果adpater正在调用notifyDataSetChanged那么getAdapterPosition会返回 RecyclerView.NO_POSITION
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                itemClickListener.onItemClick(mAdapter, position);
+            }
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (itemLongClickListener != null) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                itemLongClickListener.onItemClick(mAdapter, position);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     //
