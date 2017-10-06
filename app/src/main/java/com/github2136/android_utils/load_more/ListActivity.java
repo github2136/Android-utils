@@ -30,13 +30,13 @@ public class ListActivity extends AppCompatActivity {
         s.add("asdf9");
         s.add("asdf10");
         ListAdapter adapter = new ListAdapter(this, s);
-        adapter.setOnItemClickListener(rvContent, new BaseRecyclerAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener( new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, int position) {
                 Toast.makeText(ListActivity.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
-        adapter.setOnItemLongClickListener(rvContent, new BaseRecyclerAdapter.OnItemLongClickListener() {
+        adapter.setOnItemLongClickListener( new BaseRecyclerAdapter.OnItemLongClickListener() {
             @Override
             public void onItemClick(BaseRecyclerAdapter adapter, int position) {
                 Toast.makeText(ListActivity.this, "" + position, Toast.LENGTH_SHORT).show();

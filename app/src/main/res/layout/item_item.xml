@@ -9,4 +9,11 @@
         android:id="@+id/tv_text"
         android:layout_width="match_parent"
         android:layout_height="100dp"/>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:background="#654987"
+        android:layout_height="40dp"
+        android:text="00000"/>
 </LinearLayout>

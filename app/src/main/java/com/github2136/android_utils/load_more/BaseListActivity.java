@@ -50,8 +50,8 @@ public abstract class BaseListActivity<T> extends AppCompatActivity {
         getFirstPage();
         initListData(savedInstanceState);
         if (mHasItemClick) {
-            mAdapter.setOnItemClickListener(rvContent, mOnItemClickListener);
-            mAdapter.setOnItemLongClickListener(rvContent, mOnItemLongClickListener);
+            mAdapter.setOnItemClickListener( mOnItemClickListener);
+            mAdapter.setOnItemLongClickListener( mOnItemLongClickListener);
         }
     }
 

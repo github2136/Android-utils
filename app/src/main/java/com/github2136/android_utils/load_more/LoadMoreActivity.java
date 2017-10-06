@@ -43,7 +43,7 @@ public class LoadMoreActivity extends BaseListActivity<String> {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
