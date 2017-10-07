@@ -1,5 +1,8 @@
 android-utils  
-[![](https://jitpack.io/v/github2136/Android-utils.svg)](https://jitpack.io/#github2136/Android-utils)  
+[![](https://jitpack.io/v/github2136/Android-utils.svg)](https://jitpack.io/#github2136/Android-utils)
+使用该库还需要引用以下库
+com.google.code.gson:gson:2.7'
+
 一些常用工具类  
 **BitmapUtil**图片压缩、旋转、缩略图处理  
 **CollectionsUtil**集合非空、空判断  
