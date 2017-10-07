@@ -1,5 +1,7 @@
 package com.github2136.base.mvp;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
@@ -19,6 +21,7 @@ public abstract class BaseMVPPresenter<V extends IBaseMVPView> {
     protected final String failedStr = "无法连接服务器";
     protected JsonUtil mJsonUtil;
     protected SPUtil mSpUtil;
+    protected Handler mHandler;
 
     public BaseMVPPresenter(AppCompatActivity activity, V view) {
         mActivity = activity;
@@ -33,6 +36,7 @@ public abstract class BaseMVPPresenter<V extends IBaseMVPView> {
     private void initPresenter(V view) {
         this.mView = view;
         mJsonUtil = JsonUtil.getInstance();
+        mHandler = new Handler(Looper.getMainLooper());
         if (mActivity == null) {
             mSpUtil = SPUtil.getInstance(mFragment.getContext());
         } else {
@@ -62,6 +66,10 @@ public abstract class BaseMVPPresenter<V extends IBaseMVPView> {
 
     public Set<String> getSPStringSet(String key) {
         return mSpUtil.getStringSet(key);
+    }
+
+    public void postMain(Runnable runnable) {
+        mHandler.post(runnable);
     }
 
     //取消请求
