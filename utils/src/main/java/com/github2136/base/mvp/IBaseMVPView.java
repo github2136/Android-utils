@@ -15,5 +15,5 @@ public interface IBaseMVPView {
     void showProgressDialog(String msg);
 
     // 关闭进度框
-    void dismissDialogDialog();
+    void dismissDialog();
 }
