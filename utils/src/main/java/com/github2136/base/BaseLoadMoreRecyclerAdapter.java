@@ -133,7 +133,6 @@ public abstract class BaseLoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter
         }
     };
 
-<<<<<<< Updated upstream
     private OnItemClickListener mFailClick = new OnItemClickListener() {
         @Override
         public void onItemClick(BaseRecyclerAdapter adapter, int position) {
@@ -141,8 +140,6 @@ public abstract class BaseLoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter
         }
     };
 
-=======
->>>>>>> Stashed changes
     @Override
     public final int getItemViewType(int position) {
         //没有头部没有数据
