@@ -15,6 +15,7 @@ import java.io.File;
 
 
 /**
+ * 建议使用 compile 'com.github.github2136:SelectImage:-SNAPSHOT'
  * 图片选择拍摄工具<br>
  * 选择或拍摄的图片可以设置压缩尺寸<br>
  * getPictureUtil = new GetPictureUtil(this, GetPictureUtil.PIC_LIMIT_DISPLAY);<br>
@@ -25,6 +26,7 @@ import java.io.File;
  * 如果需要更换可先在application中添加名为util_project_path的&lt;meta-data/&#62;<br>
  * requestCode 789不可使用
  */
+@Deprecated
 public class GetPictureUtil {
     public static final int PIC_LIMIT_NO = -1;
     public static final int PIC_LIMIT_DISPLAY = 0;
