@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 public class ViewHolderRecyclerView extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     private SparseArray<View> views = new SparseArray<>();
-    private View itemView;
     private BaseRecyclerAdapter.OnItemClickListener itemClickListener;
     private BaseRecyclerAdapter.OnItemLongClickListener itemLongClickListener;
     private BaseRecyclerAdapter mAdapter;
@@ -29,7 +28,6 @@ public class ViewHolderRecyclerView extends RecyclerView.ViewHolder implements V
             itemClickListener, BaseRecyclerAdapter.OnItemLongClickListener itemLongClickListener) {
         super(itemView);
         this.mContext = context;
-        this.itemView = itemView;
         this.mAdapter = mAdapter;
         this.itemClickListener = itemClickListener;
         this.itemLongClickListener = itemLongClickListener;
