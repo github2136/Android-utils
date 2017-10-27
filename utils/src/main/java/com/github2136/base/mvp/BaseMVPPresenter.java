@@ -68,6 +68,26 @@ public abstract class BaseMVPPresenter<V extends IBaseMVPView> {
         return mSpUtil.getStringSet(key);
     }
 
+    public void setSPValue(String key, String strVal) {
+        mSpUtil.edit().putValue(key, strVal).apply();
+    }
+
+    public void setSPValue(String key, boolean boolVal) {
+        mSpUtil.edit().putValue(key, boolVal).apply();
+    }
+
+    public void setSPValue(String key, float floatVal) {
+        mSpUtil.edit().putValue(key, floatVal).apply();
+    }
+
+    public void setSPValue(String key, int intVal) {
+        mSpUtil.edit().putValue(key, intVal).apply();
+    }
+
+    public void setSPValue(String key, Set<String> setVal) {
+        mSpUtil.edit().putValue(key, setVal).apply();
+    }
+
     public void postMain(Runnable runnable) {
         mHandler.post(runnable);
     }
