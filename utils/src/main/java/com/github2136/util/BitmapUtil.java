@@ -24,6 +24,7 @@ import java.io.IOException;
  * 然后就可以在通过其他方法来对图片进行处理<br>
  * rotation//图片旋转为正<br>
  * limit(int max)//显示图片最大宽高 0 表示不限制<br>
+ * limitSize(int maxSize)//显示图片最大大小，单位为KB 0 表示不限制<br>
  * get***()//获取图片的bitmap、base64、byte[]<br>
  * correct()//图片是否为正的<br>
  * values()//获取图片宽高[0]表示为宽[1]表示为高<br>
