@@ -1,5 +1,6 @@
 package com.github2136.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -13,6 +14,7 @@ import com.google.gson.JsonSerializer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -30,27 +32,33 @@ import java.io.IOException;
 
 public class BitmapUtil {
     private final String TAG = getClass().getSimpleName();
+    private Context mContext;
     //图片路径
-    String mFilePath;
+    private String mFilePath;
     //旋转角度
-    int mDegree;
+    private int mDegree;
     //宽高最大值
-    int mMax;
-    Handler mHandler;
-    private volatile static BitmapUtil mBitmapUtil;
+    private int mMax;
+    //文件最大值
+    private int mMaxSize;
+    //图片保存质量
+    private int mQuality = 100;
+    private Handler mHandler;
+//    private volatile static BitmapUtil mBitmapUtil;
 
-    private BitmapUtil() {
+    private BitmapUtil(Context context) {
         mHandler = new Handler(Looper.getMainLooper());
+        mContext = context;
     }
 
-    public static BitmapUtil getInstance(String filePath) {
-        if (mBitmapUtil == null) {
-            synchronized (BitmapUtil.class) {
-                if (mBitmapUtil == null) {
-                    mBitmapUtil = new BitmapUtil();
-                }
-            }
-        }
+    public static BitmapUtil getInstance(Context context, String filePath) {
+//        if (mBitmapUtil == null) {
+//            synchronized (BitmapUtil.class) {
+//                if (mBitmapUtil == null) {
+        BitmapUtil mBitmapUtil = new BitmapUtil(context);
+//                }
+//            }
+//        }
         mBitmapUtil.init(filePath);
         return mBitmapUtil;
     }
@@ -62,6 +70,7 @@ public class BitmapUtil {
         mFilePath = filePath;
         mDegree = 0;
         mMax = 0;
+        mMaxSize = 0;
     }
 
     /**
@@ -106,6 +115,30 @@ public class BitmapUtil {
             }
         } else {
             mBitmap = getBitmap(mFilePath, 1);
+        }
+        if (mMaxSize != 0) {
+            String filePath = FileUtil.getExternalStoragePrivateCachePath(mContext) + "/" + FileUtil.createFileName("");
+            File file;
+            FileOutputStream fileOut;
+            mQuality = 100;
+            try {
+                do {
+                    file = new File(filePath);
+                    fileOut = new FileOutputStream(file, false);
+                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, fileOut);
+                    mQuality -= 5;
+                } while (mQuality > 0 && file.length() / 1024 > mMaxSize);
+                if (file.exists()) {
+                    file.delete();
+                }
+                fileOut.flush();
+                fileOut.close();
+                fileOut = null;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (mDegree > 0) {
             mBitmap = rotateBitmapByDegree(mBitmap, mDegree);
@@ -202,7 +235,7 @@ public class BitmapUtil {
         }
         try {
             FileOutputStream fileOut = new FileOutputStream(file);
-            sourceBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOut);
+            sourceBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, fileOut);
             fileOut.flush();
             fileOut.close();
             fileOut = null;
@@ -263,6 +296,14 @@ public class BitmapUtil {
     }
 
     /**
+     * 文件最大值
+     */
+    public BitmapUtil limitSize(int maxSize) {
+        mMaxSize = maxSize;
+        return this;
+    }
+
+    /**
      * 获取图片
      */
     public void get(final BitmapGetCallBack callBack) {
@@ -292,7 +333,7 @@ public class BitmapUtil {
                         Bitmap mBitmap = getBitmap();
                         try {
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos);
                             baos.flush();
                             baos.close();
                             bytes = baos.toByteArray();
@@ -321,7 +362,7 @@ public class BitmapUtil {
                         Bitmap mBitmap = getBitmap();
                         try {
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos);
                             baos.flush();
                             baos.close();
                             base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);

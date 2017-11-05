@@ -272,89 +272,89 @@ public class GetPictureUtil {
                         //拍摄
                         if (mMaxValue == PIC_LIMIT_NO) {
                             //图片不做缩小
-                            if (BitmapUtil.getInstance(mShootUri.getPath()).correct()) {
-                                callBack(mPicCode, mShootUri.getPath(), extraStr);
-                            } else {
-                                File rotationFile = new File(
-                                        getPhotoPath(),
-                                        FileUtil.createFileName(".jpg"));
-                                mProgressDialog.show();
-                                BitmapUtil.getInstance(mShootUri.getPath())
-                                        .rotation()
-                                        .save(rotationFile.getAbsolutePath(),
-                                                new BitmapUtil.BitmapSaveCallBack() {
-                                                    @Override
-                                                    public void callback(String filePath) {
-                                                        mProgressDialog.dismiss();
-                                                        callBack(mPicCode, filePath, extraStr);
-                                                    }
-                                                });
-                            }
+//                            if (BitmapUtil.getInstance( mShootUri.getPath()).correct()) {
+//                                callBack(mPicCode, mShootUri.getPath(), extraStr);
+//                            } else {
+//                                File rotationFile = new File(
+//                                        getPhotoPath(),
+//                                        FileUtil.createFileName(".jpg"));
+//                                mProgressDialog.show();
+//                                BitmapUtil.getInstance(mShootUri.getPath())
+//                                        .rotation()
+//                                        .save(rotationFile.getAbsolutePath(),
+//                                                new BitmapUtil.BitmapSaveCallBack() {
+//                                                    @Override
+//                                                    public void callback(String filePath) {
+//                                                        mProgressDialog.dismiss();
+//                                                        callBack(mPicCode, filePath, extraStr);
+//                                                    }
+//                                                });
+//                            }
                         } else {
                             //图片缩小
-                            File rotationFile = new File(
-                                    getPhotoPath(),
-                                    FileUtil.createFileName(".jpg"));
-                            mProgressDialog.show();
-                            BitmapUtil.getInstance(mShootUri.getPath())
-                                    .rotation()
-                                    .limit(mMaxValue)
-                                    .save(rotationFile.getAbsolutePath(),
-                                            new BitmapUtil.BitmapSaveCallBack() {
-                                                @Override
-                                                public void callback(String filePath) {
-                                                    mProgressDialog.dismiss();
-                                                    callBack(mPicCode, filePath, extraStr);
-                                                }
-                                            });
+//                            File rotationFile = new File(
+//                                    getPhotoPath(),
+//                                    FileUtil.createFileName(".jpg"));
+//                            mProgressDialog.show();
+//                            BitmapUtil.getInstance(mShootUri.getPath())
+//                                    .rotation()
+//                                    .limit(mMaxValue)
+//                                    .save(rotationFile.getAbsolutePath(),
+//                                            new BitmapUtil.BitmapSaveCallBack() {
+//                                                @Override
+//                                                public void callback(String filePath) {
+//                                                    mProgressDialog.dismiss();
+//                                                    callBack(mPicCode, filePath, extraStr);
+//                                                }
+//                                            });
                         }
                     } else {
                         //选择
-                        String filePath = FileUtil.getFileAbsolutePath(mAct, data.getData());
-                        int[] values = BitmapUtil.getInstance(filePath).values();
-                        if (Math.min(values[0], values[1]) > 0) {
-                            //没有宽高，表示为非图片文件
-                            if (mMaxValue == PIC_LIMIT_NO) {
-                                //图片不做缩小
-                                if (BitmapUtil.getInstance(filePath).correct()) {
-                                    callBack(mPicCode, filePath, extraStr);
-                                } else {
-                                    File rotationFile = new File(
-                                            getPhotoPath(),
-                                            FileUtil.createFileName(".jpg"));
-                                    mProgressDialog.show();
-                                    BitmapUtil.getInstance(filePath)
-                                            .rotation()
-                                            .save(rotationFile.getAbsolutePath(),
-                                                    new BitmapUtil.BitmapSaveCallBack() {
-                                                        @Override
-                                                        public void callback(String filePath) {
-                                                            mProgressDialog.dismiss();
-                                                            callBack(mPicCode, filePath, extraStr);
-                                                        }
-                                                    });
-                                }
-                            } else {
-                                //图片缩小
-                                File rotationFile = new File(
-                                        getPhotoPath(),
-                                        FileUtil.createFileName(".jpg"));
-                                mProgressDialog.show();
-                                BitmapUtil.getInstance(filePath)
-                                        .rotation()
-                                        .limit(mMaxValue)
-                                        .save(rotationFile.getAbsolutePath(),
-                                                new BitmapUtil.BitmapSaveCallBack() {
-                                                    @Override
-                                                    public void callback(String filePath) {
-                                                        mProgressDialog.dismiss();
-                                                        callBack(mPicCode, filePath, extraStr);
-                                                    }
-                                                });
-                            }
-                        } else {
-                            callBack(mPicCode, "", extraStr);
-                        }
+//                        String filePath = FileUtil.getFileAbsolutePath(mAct, data.getData());
+//                        int[] values = BitmapUtil.getInstance(filePath).values();
+//                        if (Math.min(values[0], values[1]) > 0) {
+//                            //没有宽高，表示为非图片文件
+//                            if (mMaxValue == PIC_LIMIT_NO) {
+//                                //图片不做缩小
+//                                if (BitmapUtil.getInstance(filePath).correct()) {
+//                                    callBack(mPicCode, filePath, extraStr);
+//                                } else {
+//                                    File rotationFile = new File(
+//                                            getPhotoPath(),
+//                                            FileUtil.createFileName(".jpg"));
+//                                    mProgressDialog.show();
+//                                    BitmapUtil.getInstance(filePath)
+//                                            .rotation()
+//                                            .save(rotationFile.getAbsolutePath(),
+//                                                    new BitmapUtil.BitmapSaveCallBack() {
+//                                                        @Override
+//                                                        public void callback(String filePath) {
+//                                                            mProgressDialog.dismiss();
+//                                                            callBack(mPicCode, filePath, extraStr);
+//                                                        }
+//                                                    });
+//                                }
+//                            } else {
+//                                //图片缩小
+//                                File rotationFile = new File(
+//                                        getPhotoPath(),
+//                                        FileUtil.createFileName(".jpg"));
+//                                mProgressDialog.show();
+//                                BitmapUtil.getInstance(filePath)
+//                                        .rotation()
+//                                        .limit(mMaxValue)
+//                                        .save(rotationFile.getAbsolutePath(),
+//                                                new BitmapUtil.BitmapSaveCallBack() {
+//                                                    @Override
+//                                                    public void callback(String filePath) {
+//                                                        mProgressDialog.dismiss();
+//                                                        callBack(mPicCode, filePath, extraStr);
+//                                                    }
+//                                                });
+//                            }
+//                        } else {
+//                            callBack(mPicCode, "", extraStr);
+//                        }
                     }
                 }
             }

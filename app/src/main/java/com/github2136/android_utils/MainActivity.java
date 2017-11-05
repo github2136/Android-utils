@@ -1,22 +1,24 @@
 package com.github2136.android_utils;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.github2136.android_utils.load_more.ListActivity;
 import com.github2136.android_utils.load_more.LoadMoreActivity;
-
+import com.github2136.selectimamge.activity.SelectImageActivity;
+import com.github2136.util.BitmapUtil;
 import com.github2136.util.CommonUtil;
 import com.github2136.util.FileUtil;
 import com.github2136.util.GetPictureUtil;
 import com.github2136.util.JsonUtil;
 import com.github2136.util.SPUtil;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         String path1 = Environment.getExternalStorageDirectory()
                 .getAbsolutePath() + "/" + "Android/data/com.kuntu.mobile.fireservices.police/files/Pictures";
-
         CommonUtil.isEquals("asdf", "asdf");
         CommonUtil.isEquals("asdf", "assdf");
         CommonUtil.isEquals(null, "assdf");
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LoadMoreActivity.class));
             }
         });
-        Button btnListAdapter= (Button) findViewById(R.id.btn_list_adapter);
+        Button btnListAdapter = (Button) findViewById(R.id.btn_list_adapter);
         btnListAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,14 +85,29 @@ public class MainActivity extends AppCompatActivity {
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(MainActivity.this, SelectImageActivity.class));
+                Intent intent = new Intent(MainActivity.this, SelectImageActivity.class);
+                intent.putExtra(SelectImageActivity.ARG_SELECT_COUNT, 1);
+                startActivityForResult(intent, 0);
             }
         });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        getPictureUtil.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            BitmapUtil.getInstance(this, data.getStringArrayListExtra(SelectImageActivity.ARG_RESULT).get(0))
+                    .limit(2000)
+                    .limitSize(512)
+                    .rotation()
+                    .save(FileUtil.getExternalStorageRootPath() + "/" + "z" + FileUtil.createFileName(".jpg"), new BitmapUtil.BitmapSaveCallBack() {
+                        @Override
+                        public void callback(String filePath) {
+                            Toast.makeText(MainActivity.this, filePath, Toast.LENGTH_SHORT).show();
+                            File file = new File(filePath);
+                        }
+                    });
+        }
+//        getPictureUtil.onActivityResult(requestCode, resultCode, data);
     }
 
     private Byte[] toObject(byte[] array) {
