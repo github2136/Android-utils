@@ -118,28 +118,36 @@ public class BitmapUtil {
             mBitmap = getBitmap(mFilePath, 1);
         }
         if (mMaxSize != 0) {
-            String filePath = FileUtil.getExternalStoragePrivateCachePath(mContext) + "/" + FileUtil.createFileName("");
-            File file;
-            FileOutputStream fileOut;
+//            String filePath = FileUtil.getExternalStoragePrivateCachePath(mContext) + "/" + FileUtil.createFileName("");
+//            File file;
+//            FileOutputStream fileOut;
+//            mQuality = 100;
+//            try {
+//                do {
+//                    file = new File(filePath);
+//                    fileOut = new FileOutputStream(file, false);
+//                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, fileOut);
+//                    mQuality -= 5;
+//                } while (mQuality > 0 && file.length() / 1024 > mMaxSize);
+//                if (file.exists()) {
+//                    file.delete();
+//                }
+//                fileOut.flush();
+//                fileOut.close();
+//                fileOut = null;
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             mQuality = 100;
-            try {
-                do {
-                    file = new File(filePath);
-                    fileOut = new FileOutputStream(file, false);
-                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, fileOut);
-                    mQuality -= 5;
-                } while (mQuality > 0 && file.length() / 1024 > mMaxSize);
-                if (file.exists()) {
-                    file.delete();
-                }
-                fileOut.flush();
-                fileOut.close();
-                fileOut = null;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            do {
+                os.reset();
+                mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, os);
+                mQuality -= 5;
+            } while (mQuality > 0 && os.toByteArray().length / 1024 > mMaxSize);
         }
         if (mDegree > 0) {
             mBitmap = rotateBitmapByDegree(mBitmap, mDegree);

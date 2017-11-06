@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             BitmapUtil.getInstance(this, data.getStringArrayListExtra(SelectImageActivity.ARG_RESULT).get(0))
                     .limit(2000)
-                    .limitSize(512)
+                    .limitSize(400)
                     .rotation()
                     .save(FileUtil.getExternalStorageRootPath() + "/" + "z" + FileUtil.createFileName(".jpg"), new BitmapUtil.BitmapSaveCallBack() {
                         @Override
