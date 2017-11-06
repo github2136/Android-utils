@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -92,16 +93,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    long start, end;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            start = System.currentTimeMillis();
             BitmapUtil.getInstance(this, data.getStringArrayListExtra(SelectImageActivity.ARG_RESULT).get(0))
-                    .limit(2000)
-                    .limitSize(400)
+                    .limit(1080)
+                    .limitSize(300)
                     .rotation()
                     .save(FileUtil.getExternalStorageRootPath() + "/" + "z" + FileUtil.createFileName(".jpg"), new BitmapUtil.BitmapSaveCallBack() {
                         @Override
                         public void callback(String filePath) {
+                            end = System.currentTimeMillis();
+                            Log.e("tt", "callback: " + (end - start));
                             Toast.makeText(MainActivity.this, filePath, Toast.LENGTH_SHORT).show();
                             File file = new File(filePath);
                         }
