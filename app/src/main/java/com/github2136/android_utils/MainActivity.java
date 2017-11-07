@@ -20,7 +20,7 @@ import com.github2136.selectimamge.activity.SelectImageActivity;
 import com.github2136.util.BitmapUtil;
 import com.github2136.util.CommonUtil;
 import com.github2136.util.FileUtil;
-import com.github2136.util.GetPictureUtil;
+//import com.github2136.util.GetPictureUtil;
 import com.github2136.util.JsonUtil;
 import com.github2136.util.SPUtil;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    GetPictureUtil getPictureUtil;
+//    GetPictureUtil getPictureUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +49,20 @@ public class MainActivity extends AppCompatActivity {
         String path3 = FileUtil.getExternalStoragePrivateRootPath(this, "asdf");
         FileUtil.getExternalStorageProjectPath(this);
         SPUtil.getInstance(this);
-        getPictureUtil = new GetPictureUtil(this, GetPictureUtil.PIC_LIMIT_DISPLAY);
-        getPictureUtil.setCallBack(new GetPictureUtil.GetCallBack() {
-            @Override
-            public void callback(int picCode, String filePath, String extraStr) {
-                Log.e("sss", picCode + "   " + filePath);
-            }
-        });
+//        getPictureUtil = new GetPictureUtil(this, GetPictureUtil.PIC_LIMIT_DISPLAY);
+//        getPictureUtil.setCallBack(new GetPictureUtil.GetCallBack() {
+//            @Override
+//            public void callback(int picCode, String filePath, String extraStr) {
+//                Log.e("sss", picCode + "   " + filePath);
+//            }
+//        });
         Button btn = (Button) findViewById(R.id.btn1);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPictureUtil.getPic(1);
-            }
-        });
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getPictureUtil.getPic(1);
+//            }
+//        });
         List<String> strs = new ArrayList<>();
         strs.add("as1df");
         strs.add("as2df");
@@ -104,9 +104,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             start = System.currentTimeMillis();
-            BitmapUtil.getInstance(this, data.getStringArrayListExtra(SelectImageActivity.ARG_RESULT).get(0))
+            BitmapUtil.getInstance( data.getStringArrayListExtra(SelectImageActivity.ARG_RESULT).get(0))
                     .limit(1080)
-                    .limitSize(300)
+                    .limitSize(1024)
                     .rotation()
                     .save(FileUtil.getExternalStorageRootPath() + "/" + "z" + FileUtil.createFileName(".jpg"), new BitmapUtil.BitmapSaveCallBack() {
                         @Override

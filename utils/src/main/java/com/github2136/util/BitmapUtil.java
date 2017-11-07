@@ -33,7 +33,6 @@ import java.io.IOException;
 
 public class BitmapUtil {
     private final String TAG = getClass().getSimpleName();
-    private Context mContext;
     //图片路径
     private String mFilePath;
     //旋转角度
@@ -47,16 +46,15 @@ public class BitmapUtil {
     private Handler mHandler;
 //    private volatile static BitmapUtil mBitmapUtil;
 
-    private BitmapUtil(Context context) {
+    private BitmapUtil() {
         mHandler = new Handler(Looper.getMainLooper());
-        mContext = context;
     }
 
-    public static BitmapUtil getInstance(Context context, String filePath) {
+    public static BitmapUtil getInstance(String filePath) {
 //        if (mBitmapUtil == null) {
 //            synchronized (BitmapUtil.class) {
 //                if (mBitmapUtil == null) {
-        BitmapUtil mBitmapUtil = new BitmapUtil(context);
+        BitmapUtil mBitmapUtil = new BitmapUtil();
 //                }
 //            }
 //        }
@@ -118,35 +116,35 @@ public class BitmapUtil {
             mBitmap = getBitmap(mFilePath, 1);
         }
         if (mMaxSize != 0) {
-            String filePath = FileUtil.getExternalStoragePrivateCachePath(mContext) + "/" + FileUtil.createFileName("");
-            File file;
-            FileOutputStream fileOut;
+//            String filePath = FileUtil.getExternalStoragePrivateCachePath(mContext) + "/" + FileUtil.createFileName("");
+//            File file;
+//            FileOutputStream fileOut;
+//            mQuality = 110;
+//            try {
+//                do {
+//                    mQuality -= 10;
+//                    file = new File(filePath);
+//                    fileOut = new FileOutputStream(file, false);
+//                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, fileOut);
+//                } while (mQuality > 0 && file.length() / 1024 > mMaxSize);
+//                if (file.exists()) {
+//                    file.delete();
+//                }
+//                fileOut.flush();
+//                fileOut.close();
+//                fileOut = null;
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             mQuality = 110;
-            try {
-                do {
-                    mQuality -= 10;
-                    file = new File(filePath);
-                    fileOut = new FileOutputStream(file, false);
-                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, fileOut);
-                } while (mQuality > 0 && file.length() / 1024 > mMaxSize);
-                if (file.exists()) {
-                    file.delete();
-                }
-                fileOut.flush();
-                fileOut.close();
-                fileOut = null;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//            ByteArrayOutputStream os = new ByteArrayOutputStream();
-//            mQuality = 100;
-//            do {
-//                os.reset();
-//                mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, os);
-//                mQuality -= 10;
-//            } while (mQuality > 0 && os.toByteArray().length / 1024 > mMaxSize);
+            do {
+                os.reset();
+                mQuality -= 10 ;
+                mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, os);
+            } while (mQuality > 0 && os.toByteArray().length / 1024 > mMaxSize);
         }
         if (mDegree > 0) {
             mBitmap = rotateBitmapByDegree(mBitmap, mDegree);
