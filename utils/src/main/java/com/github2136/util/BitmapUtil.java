@@ -222,7 +222,7 @@ public class BitmapUtil {
         // 根据旋转角度，生成旋转矩阵
         Matrix matrix = new Matrix();
         matrix.setScale(scale, scale);
-        // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
+        // 将原始图片按照比例矩阵进行压缩，并得到新的图片
         retBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight(),
                 matrix, true);
         sourceBitmap.recycle();
