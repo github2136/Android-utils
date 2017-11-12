@@ -5,7 +5,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.mock.MockContext;
 
-import com.github2136.util.DownLoadFileUtil;
 import com.github2136.util.FileUtil;
 
 import org.junit.Test;
