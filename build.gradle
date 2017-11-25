@@ -22,6 +22,3 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-ext {
-    supportVerson = "25.3.1"
-}
