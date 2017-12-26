@@ -1,8 +1,6 @@
 package com.github2136.util;
 
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -20,7 +18,7 @@ public class ThreadUtil {
     private static volatile ThreadUtil instance;
 
     private static final int corePoolSize = 5;
-    private static final int maximumPoolSize = 128;
+    private static final int maximumPoolSize = 8;
     private static final long keepAliveTime = 1;
     private static final TimeUnit unit = TimeUnit.SECONDS;
     private static final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(10);
@@ -33,15 +31,12 @@ public class ThreadUtil {
     };
     private static final RejectedExecutionHandler handler = new ThreadPoolExecutor.DiscardOldestPolicy();
 
+
     public static ThreadUtil getInstance() {
-        return getInstance("thread");
+        return getInstance(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
     }
 
-    public static ThreadUtil getInstance(String name) {
-        return getInstance(name, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
-    }
-
-    public static ThreadUtil getInstance(String name, int corePoolSize,
+    public static ThreadUtil getInstance(int corePoolSize,
                                          int maximumPoolSize,
                                          long keepAliveTime,
                                          TimeUnit unit,
@@ -55,8 +50,7 @@ public class ThreadUtil {
                 }
             }
         }
-        instance.getExecutor(name,
-                corePoolSize,
+        instance.getExecutor(corePoolSize,
                 maximumPoolSize,
                 keepAliveTime,
                 unit,
@@ -66,32 +60,17 @@ public class ThreadUtil {
         return instance;
     }
 
-    public static ThreadUtil getInstance(int corePoolSize,
-                                         int maximumPoolSize,
-                                         long keepAliveTime,
-                                         TimeUnit unit,
-                                         BlockingQueue<Runnable> workQueue,
-                                         ThreadFactory threadFactory,
-                                         RejectedExecutionHandler handler) {
-        return getInstance("thread", corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
-    }
-
-    private Map<String, ThreadPoolExecutor> mapExecutor;
     private ThreadPoolExecutor executor = null;
 
-    private ThreadUtil() {
-        mapExecutor = new HashMap<>();
-    }
+    private ThreadUtil() { }
 
-    private void getExecutor(String name,
-                             int corePoolSize,
+    private void getExecutor(int corePoolSize,
                              int maximumPoolSize,
                              long keepAliveTime,
                              TimeUnit unit,
                              BlockingQueue<Runnable> workQueue,
                              ThreadFactory threadFactory,
                              RejectedExecutionHandler handler) {
-        executor = mapExecutor.get(name);
         if (executor == null) {
             executor = new ThreadPoolExecutor(
                     corePoolSize,
@@ -101,7 +80,6 @@ public class ThreadUtil {
                     workQueue,
                     threadFactory,
                     handler);
-            mapExecutor.put(name, executor);
         }
     }
 

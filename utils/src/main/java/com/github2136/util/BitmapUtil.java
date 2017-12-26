@@ -313,7 +313,7 @@ public class BitmapUtil {
      * 获取图片
      */
     public void get(final BitmapGetCallBack callBack) {
-        ThreadUtil.getInstance(TAG).execute(
+        ThreadUtil.getInstance().execute(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -331,7 +331,7 @@ public class BitmapUtil {
     }
 
     public void getByte(final BitmapByteGetCallBack callBack) {
-        ThreadUtil.getInstance(TAG).execute(
+        ThreadUtil.getInstance().execute(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -360,7 +360,7 @@ public class BitmapUtil {
     }
 
     public void getBase64(final BitmapBase64GetCallBack callBack) {
-        ThreadUtil.getInstance(TAG).execute(
+        ThreadUtil.getInstance().execute(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -399,7 +399,7 @@ public class BitmapUtil {
      * 保存图片
      */
     public void save(final String filePath, final BitmapSaveCallBack callBack) {
-        ThreadUtil.getInstance(TAG).execute(
+        ThreadUtil.getInstance().execute(
                 new Runnable() {
                     @Override
                     public void run() {

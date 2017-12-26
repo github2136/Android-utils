@@ -23,6 +23,7 @@ import com.github2136.util.FileUtil;
 //import com.github2136.util.GetPictureUtil;
 import com.github2136.util.JsonUtil;
 import com.github2136.util.SPUtil;
+import com.github2136.util.ThreadUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,8 +36,60 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SharedPreferences sp= getSharedPreferences("1", Context.MODE_PRIVATE);
-         sp.edit().commit();
+
+//        ThreadUtil.getInstance("ttt").execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    try {
+//                        Thread.sleep(1000);
+//                        Log.e("tt", "tt");
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+        ThreadUtil.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(1000);
+                        Log.e("dddd", "t1");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        ThreadUtil.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 30; i++) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    ThreadUtil.getInstance().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(8000);
+                            Log.e("tttt", "t2");
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+
+        SharedPreferences sp = getSharedPreferences("1", Context.MODE_PRIVATE);
+        sp.edit().commit();
         String path1 = Environment.getExternalStorageDirectory()
                 .getAbsolutePath() + "/" + "Android/data/com.kuntu.mobile.fireservices.police/files/Pictures";
         CommonUtil.isEquals("asdf", "asdf");
@@ -104,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             start = System.currentTimeMillis();
-            BitmapUtil.getInstance( data.getStringArrayListExtra(SelectImageActivity.ARG_RESULT).get(0))
+            BitmapUtil.getInstance(data.getStringArrayListExtra(SelectImageActivity.ARG_RESULT).get(0))
                     .limit(1080)
                     .limitSize(1024)
                     .rotation()
