@@ -44,7 +44,7 @@ public class DateUtil {
     }
 
     public static Date str2date(String dateStr) {
-        return str2date(dateStr);
+        return str2date(dateStr, null);
     }
 
     /**
