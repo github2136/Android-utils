@@ -2,6 +2,7 @@ package com.github2136.util;
 
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
@@ -16,12 +17,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreadUtil {
     private static volatile ThreadUtil instance;
-
-    private static final int corePoolSize = 5;
-    private static final int maximumPoolSize = 8;
+    private static final int CPUCount = Runtime.getRuntime().availableProcessors();
+    private static final int corePoolSize = CPUCount + 1;
+    private static final int maximumPoolSize = CPUCount * 2 + 1;
     private static final long keepAliveTime = 1;
     private static final TimeUnit unit = TimeUnit.SECONDS;
-    private static final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(10);
+    private static final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(128);
     private static final ThreadFactory threadFactory = new ThreadFactory() {
         private final AtomicInteger mCount = new AtomicInteger(1);
 
@@ -60,6 +61,37 @@ public class ThreadUtil {
         return instance;
     }
 
+    public static ThreadUtil getNewInstance() {
+        BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(128);
+        ThreadFactory threadFactory = new ThreadFactory() {
+            AtomicInteger mCount = new AtomicInteger(1);
+
+            public Thread newThread(Runnable r) {
+                return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
+            }
+        };
+        RejectedExecutionHandler handler = new ThreadPoolExecutor.DiscardOldestPolicy();
+        return getNewInstance(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
+    }
+
+    public static ThreadUtil getNewInstance(int corePoolSize,
+                                            int maximumPoolSize,
+                                            long keepAliveTime,
+                                            TimeUnit unit,
+                                            BlockingQueue<Runnable> workQueue,
+                                            ThreadFactory threadFactory,
+                                            RejectedExecutionHandler handler) {
+        ThreadUtil instance = new ThreadUtil();
+        instance.getExecutor(corePoolSize,
+                maximumPoolSize,
+                keepAliveTime,
+                unit,
+                workQueue,
+                threadFactory,
+                handler);
+        return instance;
+    }
+
     private ThreadPoolExecutor executor = null;
 
     private ThreadUtil() { }
@@ -86,4 +118,8 @@ public class ThreadUtil {
     public void execute(Runnable runnable) {
         executor.execute(runnable);
     }
+
+//    public Executor getNew() {
+//        return aNew;
+//    }
 }
