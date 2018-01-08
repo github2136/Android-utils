@@ -2,10 +2,14 @@ package com.github2136.util;
 
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 通用工具类
@@ -19,39 +23,6 @@ public class CommonUtil {
     public static int px2dp(Context context, int px) {
         float density = context.getResources().getDisplayMetrics().density;
         return (int) (px / density + 0.5f);
-    }
-
-    public static boolean isEquals(String str1, String str2) {
-        return (str1 == null && str2 == null) || (str1 != null && str2 != null && str1.equals(str2));
-    }
-
-    public static boolean isNotEquals(String str1, String str2) {
-        return !isEquals(str1, str2);
-    }
-
-    public static boolean isEmpty(String str) {
-        return str == null || str.length() == 0;
-    }
-
-    public static boolean isNotEmpty(String str) {
-        return !isEmpty(str);
-    }
-
-    public static boolean isEmpty(StringBuilder str) {
-        return str == null || str.length() == 0;
-    }
-
-    public static boolean isNotEmpty(StringBuilder str) {
-        return !isEmpty(str);
-    }
-
-
-    public static boolean isEmpty(StringBuffer str) {
-        return str == null || str.length() == 0;
-    }
-
-    public static boolean isNotEmpty(StringBuffer str) {
-        return !isEmpty(str);
     }
 
     /**
@@ -78,5 +49,21 @@ public class CommonUtil {
             e.printStackTrace();
         }
         return true;
+    }
+
+    /**
+     * 该Intent是否可执行
+     *
+     * @param context
+     * @param intent
+     * @return
+     */
+    public static boolean isIntentExisting(Context context, Intent intent) {
+        final PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> resolveInfo = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (resolveInfo.size() > 0) {
+            return true;
+        }
+        return false;
     }
 }

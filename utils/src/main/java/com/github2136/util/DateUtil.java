@@ -1,5 +1,7 @@
 package com.github2136.util;
 
+import android.text.TextUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,7 +37,7 @@ public class DateUtil {
             return null;
         }
         SimpleDateFormat sdf;
-        if (CommonUtil.isNotEmpty(pattern)) {
+        if (!TextUtils.isEmpty(pattern)) {
             sdf = new SimpleDateFormat(pattern, Locale.CHINA);
         } else {
             sdf = new SimpleDateFormat(Date_pattern_default, Locale.CHINA);
@@ -56,7 +58,7 @@ public class DateUtil {
         }
         try {
             SimpleDateFormat sdf;
-            if (CommonUtil.isNotEmpty(pattern)) {
+            if (!TextUtils.isEmpty(pattern)) {
                 sdf = new SimpleDateFormat(pattern, Locale.CHINA);
             } else {
                 sdf = new SimpleDateFormat(Date_pattern_default, Locale.CHINA);
@@ -77,7 +79,7 @@ public class DateUtil {
      */
     public static String getDateNow(String pattern) {
         SimpleDateFormat sdf;
-        if (CommonUtil.isNotEmpty(pattern)) {
+        if (!TextUtils.isEmpty(pattern)) {
             sdf = new SimpleDateFormat(pattern, Locale.CHINA);
         } else {
             sdf = new SimpleDateFormat(Date_pattern_default, Locale.CHINA);

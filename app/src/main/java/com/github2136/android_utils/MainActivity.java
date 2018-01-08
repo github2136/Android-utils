@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.content.SharedPreferencesCompat;
+import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,49 +37,51 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
-//        ThreadUtil.getInstance("ttt").execute(new Runnable() {
+//        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
-//                while (true) {
+//                for (int i = 0; i < 1000; i++) {
 //                    try {
-//                        Thread.sleep(1000);
-//                        Log.e("tt", "tt");
+//                        Thread.sleep(100);
 //                    } catch (InterruptedException e) {
 //                        e.printStackTrace();
 //                    }
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                Thread.sleep(1000);
+//                                Log.e("tttt", "t2");
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }).start();
 //                }
 //            }
-//        });
+//        }).start();
+
         ThreadUtil.getInstance().execute(new Runnable() {
             @Override
             public void run() {
+                int i = 0;
                 while (true) {
+                    i++;
                     try {
-                        Thread.sleep(1000);
-                        Log.e("dddd", "t1");
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }
-            }
-        });
-        ThreadUtil.getInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 30; i++) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    final int finalI = i;
                     ThreadUtil.getInstance().execute(new Runnable() {
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(8000);
-                            Log.e("tttt", "t2");
+                                Log.e("threadutil", "index " + finalI);
+                                Thread.sleep(1000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -92,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
         sp.edit().commit();
         String path1 = Environment.getExternalStorageDirectory()
                 .getAbsolutePath() + "/" + "Android/data/com.kuntu.mobile.fireservices.police/files/Pictures";
-        CommonUtil.isEquals("asdf", "asdf");
-        CommonUtil.isEquals("asdf", "assdf");
-        CommonUtil.isEquals(null, "assdf");
-        CommonUtil.isEquals("asdf", null);
-        CommonUtil.isEquals(null, null);
+        TextUtils.equals("asdf", "asdf");
+        TextUtils.equals("asdf", "assdf");
+        TextUtils.equals(null, "assdf");
+        TextUtils.equals("asdf", null);
+        TextUtils.equals(null, null);
 
         String path2 = FileUtil.getExternalStorageProjectPath(this);
         String path3 = FileUtil.getExternalStoragePrivateRootPath(this, "asdf");

@@ -96,7 +96,7 @@ public class FileUtil {
      */
     public static String getExternalStoragePrivateRootPath(Context context, String path) {
         String rootPath = context.getExternalFilesDir(null).toString();
-        if (CommonUtil.isNotEmpty(path)) {
+        if (!TextUtils.isEmpty(path)) {
             rootPath += "/" + path;
         }
         return rootPath;

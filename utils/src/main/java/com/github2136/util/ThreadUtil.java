@@ -2,7 +2,6 @@ package com.github2136.util;
 
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
@@ -14,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 线程工具类
  * Created by yubin on 2017/8/23.
  */
-
 public class ThreadUtil {
     private static volatile ThreadUtil instance;
     private static final int CPUCount = Runtime.getRuntime().availableProcessors();
@@ -22,7 +20,8 @@ public class ThreadUtil {
     private static final int maximumPoolSize = CPUCount * 2 + 1;
     private static final long keepAliveTime = 1;
     private static final TimeUnit unit = TimeUnit.SECONDS;
-    private static final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(128);
+    private static final int queueSize = 128;
+    private static final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(queueSize);
     private static final ThreadFactory threadFactory = new ThreadFactory() {
         private final AtomicInteger mCount = new AtomicInteger(1);
 
@@ -62,7 +61,7 @@ public class ThreadUtil {
     }
 
     public static ThreadUtil getNewInstance() {
-        BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(128);
+        BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(queueSize);
         ThreadFactory threadFactory = new ThreadFactory() {
             AtomicInteger mCount = new AtomicInteger(1);
 
