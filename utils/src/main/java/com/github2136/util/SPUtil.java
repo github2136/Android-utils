@@ -125,8 +125,13 @@ public class SPUtil {
     }
 
     //删除某值
-    public void remove(String key) {
-        SharedPreferencesCompat.EditorCompat.getInstance().apply(sp.edit().remove(key));
+    public void remove(String... key) {
+        if (CollectionsUtil.isNotEmpty(key)) {
+            for (int i = 0, len = key.length; i < len; i++) {
+                String k = key[i];
+                SharedPreferencesCompat.EditorCompat.getInstance().apply(sp.edit().remove(k));
+            }
+        }
     }
 
     //清理所有
