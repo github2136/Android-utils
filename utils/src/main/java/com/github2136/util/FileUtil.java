@@ -17,6 +17,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class FileUtil {
     public static String getExternalStoragePrivateRootPath(Context context, String path) {
         String rootPath = context.getExternalFilesDir(null).toString();
         if (!TextUtils.isEmpty(path)) {
-            rootPath += "/" + path;
+            rootPath += File.separator + path;
         }
         return rootPath;
     }
@@ -424,7 +425,7 @@ public class FileUtil {
             if (query > 0) {
                 str = str.substring(0, query);
             }
-            int filenamePos = str.lastIndexOf('/');
+            int filenamePos = str.lastIndexOf(File.separatorChar);
             String filename = 0 <= filenamePos ? str.substring(filenamePos + 1) : str;
             if (!filename.isEmpty()) {
                 int dotPos = filename.lastIndexOf('.');
@@ -434,56 +435,6 @@ public class FileUtil {
             }
         }
         return "";
-    }
-
-    /**
-     * 复制单个文件
-     *
-     * @param oldPath 原文件路径 如：c:/fqf.txt
-     * @param newPath 复制后路径 如：f:/fqf.txt
-     * @return boolean
-     */
-    public static boolean copyFile(String oldPath, String newPath) {
-        try {
-            int bytesum = 0;
-            int byteread = 0;
-            File oldfile = new File(oldPath);
-            if (oldfile.exists()) { // 文件存在时
-                InputStream inStream = new FileInputStream(oldPath); // 读入原文件
-                FileOutputStream fs = new FileOutputStream(newPath);
-                byte[] buffer = new byte[1444];
-                while ((byteread = inStream.read(buffer)) != -1) {
-                    bytesum += byteread; // 字节数 文件大小
-                    System.out.println(bytesum);
-                    fs.write(buffer, 0, byteread);
-                }
-                fs.close();
-                inStream.close();
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 清理指定目录下所有文件
-     *
-     * @param path
-     * @return
-     */
-    public static boolean cleanFolder(String path) {
-        File folder = new File(path);
-        if (folder.isDirectory()) {
-            File[] files = folder.listFiles();
-            for (File f : files) {
-                f.delete();
-            }
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -542,6 +493,27 @@ public class FileUtil {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static String readFile(String path) {
+        try {
+            File file = new File(path);
+            if (file.exists()) {
+                FileInputStream inputStream = new FileInputStream(file);
+                byte[] bytes = new byte[(int) file.length()];
+                inputStream.read(bytes);
+                inputStream.close();
+                return new String(bytes, "UTF-8");
+            } else {
+                return null;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
