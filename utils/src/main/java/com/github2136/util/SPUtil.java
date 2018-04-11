@@ -7,13 +7,13 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.SharedPreferencesCompat;
+import android.text.TextUtils;
 
 import java.util.Set;
 
 /**
  * SharedPreferences<br>
- * 默认SP的文件名为android-util<br>
- * 如果需要更换可先在application中添加名为util_sp_name的&lt;meta-data/&#62;
+ * 在application中添加名为util_sp_name的&lt;meta-data/&#62;
  */
 public class SPUtil {
 
@@ -49,18 +49,21 @@ public class SPUtil {
     }
 
     protected SPUtil(Context context) {
-        String name = "android-util";
+        String name = null;
         try {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle metaData = appInfo.metaData;
             if (metaData != null) {
-                name = metaData.getString("util_sp_name", name);
+                name = metaData.getString("util_sp_name");
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-            name = "android-util";
         }
-        sp = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        if (!TextUtils.isEmpty(name)) {
+            sp = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        } else {
+            throw new RuntimeException("SharedPreferences name is null");
+        }
     }
 
     public SharedPreferences get() {

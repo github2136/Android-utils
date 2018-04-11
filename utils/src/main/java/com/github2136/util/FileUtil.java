@@ -29,8 +29,7 @@ import java.util.Date;
 
 /**
  * 文件工具 返回的所有根目录都不带斜杠<br>
- * 默认项目目录为android-util<br>
- * 如果需要更换可先在application中添加名为util_project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取，默认为android-util<br>
+ * 在application中添加名为util_project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取<br>
  * getSuffix(urlStr);//获取文件后缀<br>
  * MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀<br>
  * MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();<br>
@@ -71,18 +70,21 @@ public class FileUtil {
      * @return
      */
     public static String getExternalStorageProjectPath(Context context) {
-        String projectPath = "android-util";
+        String projectPath = null;
         try {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle metaData = appInfo.metaData;
             if (metaData != null) {
-                projectPath = metaData.getString("util_project_path", projectPath);
+                projectPath = metaData.getString("util_project_path");
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-            projectPath = "android-util";
         }
-        return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + projectPath;
+        if (!TextUtils.isEmpty(projectPath)) {
+            return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + projectPath;
+        } else {
+            throw new RuntimeException("Project Path is null");
+        }
     }
 
     /**
