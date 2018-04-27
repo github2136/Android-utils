@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.os.Build;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 通用工具类
@@ -68,36 +65,5 @@ public class CommonUtil {
             return true;
         }
         return false;
-    }
-
-    /**
-     * 唯一标识符
-     *
-     * @param stable 卸载重置
-     * @return
-     */
-    public static String getInstanceID(Context context, boolean stable) {
-        String instanceId;
-        if (stable) {
-            String path = context.getFilesDir() + File.separator + "InstanceID";
-            File file = new File(path);
-            if (file.exists()) {
-                instanceId = FileUtil.readFile(path);
-            } else {
-                instanceId = UUID.randomUUID().toString();
-                FileUtil.saveFile(path, instanceId);
-            }
-            return instanceId;
-        } else {
-            StringBuilder msg = new StringBuilder();
-            msg.append(Build.BRAND);
-            msg.append(Build.DEVICE);
-            msg.append(Build.MANUFACTURER);
-            msg.append(Build.MODEL);
-            msg.append(Build.SERIAL);
-            msg.append(BuildConfig.APPLICATION_ID);
-            instanceId = UUID.nameUUIDFromBytes(msg.toString().getBytes()).toString();
-            return instanceId;
-        }
     }
 }
