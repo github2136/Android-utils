@@ -1,20 +1,15 @@
 package com.github2136.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.nfc.Tag;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
 
-import com.google.gson.JsonSerializer;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -116,28 +111,6 @@ public class BitmapUtil {
             mBitmap = getBitmap(mFilePath, 1);
         }
         if (mMaxSize != 0) {
-//            String filePath = FileUtil.getExternalStoragePrivateCachePath(mContext) + "/" + FileUtil.createFileName("");
-//            File file;
-//            FileOutputStream fileOut;
-//            mQuality = 110;
-//            try {
-//                do {
-//                    mQuality -= 10;
-//                    file = new File(filePath);
-//                    fileOut = new FileOutputStream(file, false);
-//                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, fileOut);
-//                } while (mQuality > 0 && file.length() / 1024 > mMaxSize);
-//                if (file.exists()) {
-//                    file.delete();
-//                }
-//                fileOut.flush();
-//                fileOut.close();
-//                fileOut = null;
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             mQuality = 110;
             do {

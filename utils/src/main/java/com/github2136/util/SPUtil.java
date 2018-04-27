@@ -78,7 +78,6 @@ public class SPUtil {
         }
 
         public Edit putValue(String key, String value) {
-
             editor.putString(key, value);
             return this;
         }
@@ -108,6 +107,11 @@ public class SPUtil {
             return this;
         }
 
+        public Edit remove(String key) {
+            editor.remove(key);
+            return this;
+        }
+
         //保存数据，建议使用apply
         public void apply() {
             SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
@@ -130,10 +134,11 @@ public class SPUtil {
     //删除某值
     public void remove(String... key) {
         if (CollectionsUtil.isNotEmpty(key)) {
-            for (int i = 0, len = key.length; i < len; i++) {
-                String k = key[i];
-                SharedPreferencesCompat.EditorCompat.getInstance().apply(sp.edit().remove(k));
+            Edit e = edit();
+            for (String k : key) {
+                e.remove(k);
             }
+            e.apply();
         }
     }
 

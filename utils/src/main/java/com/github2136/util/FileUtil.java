@@ -498,6 +498,12 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 文件读取
+     *
+     * @param path
+     * @return
+     */
     public static String readFile(String path) {
         try {
             File file = new File(path);
@@ -516,6 +522,41 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * 清理文件件
+     *
+     * @param path
+     * @return
+     */
+    public static boolean cleanFolder(String path) {
+        File folder = new File(path);
+        if (folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            for (File f : files) {
+                f.delete();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param path
+     * @return
+     */
+    public static boolean deleteFile(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            file.delete();
+            return true;
+        } else {
+            return false;
         }
     }
 }
