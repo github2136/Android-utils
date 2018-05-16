@@ -62,7 +62,7 @@ public class SPUtil {
         if (!TextUtils.isEmpty(name)) {
             sp = context.getSharedPreferences(name, Context.MODE_PRIVATE);
         } else {
-            throw new RuntimeException("SharedPreferences name is null");
+            throw new NullPointerException("SharedPreferences name is null");
         }
     }
 

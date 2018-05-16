@@ -32,68 +32,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-//    GetPictureUtil getPictureUtil;
+    //    GetPictureUtil getPictureUtil;
+    SPUtil mSpUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+//        run(1);
+//        run(2);
+//        run(3);
+//        run(4);
+//        run(5);
+//        run(6);
+//        run(7);
+//        run(8);
+//        run(9);
+//        run(10);
+//        run(11);
+//        run(12);
+//        run(13);
+//        run(14);
+//        run(15);
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                for (int i = 0; i < 1000; i++) {
-//                    try {
-//                        Thread.sleep(100);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                Thread.sleep(1000);
-//                                Log.e("tttt", "t2");
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }).start();
-//                }
-//            }
-//        }).start();
-
-        ThreadUtil.getInstance().execute(new Runnable() {
+        mSpUtil = SPUtil.getInstance(this);
+        Button btnSave = (Button) findViewById(R.id.btn_save);
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                int i = 0;
-                while (true) {
-                    i++;
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    final int finalI = i;
-                    ThreadUtil.getInstance().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Log.e("threadutil", "index " + finalI);
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
+            public void onClick(View v) {
+                mSpUtil.edit().putValue("sss", "fdf").apply();
             }
         });
+        Button btnDeleate = (Button) findViewById(R.id.btn_delete);
+        btnDeleate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              startActivity(new Intent(MainActivity.this,Main2Activity.class));
+            }
+        });
+        if (mSpUtil.contains("sss")) {
+            Log.e("11", "sss" + mSpUtil.getString("sss"));
+        } else {
+            Log.e("11", "aaaa");
 
+        }
+//        SharedPrefere
 
-        SharedPreferences sp = getSharedPreferences("1", Context.MODE_PRIVATE);
-        sp.edit().commit();
         String path1 = Environment.getExternalStorageDirectory()
                 .getAbsolutePath() + "/" + "Android/data/com.kuntu.mobile.fireservices.police/files/Pictures";
         TextUtils.equals("asdf", "asdf");
@@ -151,6 +135,21 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, SelectImageActivity.class);
                 intent.putExtra(SelectImageActivity.ARG_SELECT_COUNT, 1);
                 startActivityForResult(intent, 0);
+            }
+        });
+    }
+
+    private void run(final int index) {
+        ThreadUtil.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("ThreadUtil", "start " + index);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.e("ThreadUtil", "end " + index);
             }
         });
     }

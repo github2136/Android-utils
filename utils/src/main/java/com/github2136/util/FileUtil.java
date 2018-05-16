@@ -83,7 +83,7 @@ public class FileUtil {
         if (!TextUtils.isEmpty(projectPath)) {
             return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + projectPath;
         } else {
-            throw new RuntimeException("Project Path is null");
+            throw new NullPointerException("Project Path is null");
         }
     }
 
