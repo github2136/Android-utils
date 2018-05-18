@@ -12,6 +12,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.github2136.android_utils.MainActivity">
 
+    <Button
+        android:id="@+id/btn_bitmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BitmapUtil"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/btn_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DateUitl"
+        android:textAllCaps="false"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -9,7 +9,7 @@ import com.github2136.base.ViewHolderRecyclerView;
 import java.util.List;
 
 /**
- * Created by yubin on 2017/9/21.
+ * Created by yb on 2017/9/21.
  */
 
 public class ListAdapter extends BaseRecyclerAdapter<String> {

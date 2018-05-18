@@ -13,10 +13,10 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="util_sp_name"
-            android:value="t"/>
+            android:value="spname"/>
         <meta-data
             android:name="util_project_path"
-            android:value="tt"/>
+            android:value="AndroidUtil"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -32,6 +32,10 @@
         <activity android:name=".load_more.ListActivity">
         </activity>
         <activity android:name=".Main2Activity">
+        </activity>
+        <activity android:name=".BitmapActivity">
+        </activity>
+        <activity android:name=".DateActivity">
         </activity>
     </application>
 

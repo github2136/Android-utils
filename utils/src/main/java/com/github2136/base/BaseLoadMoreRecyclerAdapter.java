@@ -14,7 +14,7 @@ import com.github2136.util.R;
 import java.util.List;
 
 /**
- * Created by yubin on 2017/8/18.
+ * Created by yb on 2017/8/18.
  */
 
 public abstract class BaseLoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> {

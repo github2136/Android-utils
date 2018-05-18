@@ -32,161 +32,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    //    GetPictureUtil getPictureUtil;
-    SPUtil mSpUtil;
+    Context context;
+    Button btnBitmap, btnDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        run(1);
-//        run(2);
-//        run(3);
-//        run(4);
-//        run(5);
-//        run(6);
-//        run(7);
-//        run(8);
-//        run(9);
-//        run(10);
-//        run(11);
-//        run(12);
-//        run(13);
-//        run(14);
-//        run(15);
+        context = this;
+        btnBitmap = (Button) findViewById(R.id.btn_bitmap);
+        btnBitmap.setOnClickListener(mOnClickListener);
+        btnDate = (Button) findViewById(R.id.btn_date);
+        btnDate.setOnClickListener(mOnClickListener);
 
-        mSpUtil = SPUtil.getInstance(this);
-        Button btnSave = (Button) findViewById(R.id.btn_save);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSpUtil.edit().putValue("sss", "fdf").apply();
-            }
-        });
-        Button btnDeleate = (Button) findViewById(R.id.btn_delete);
-        btnDeleate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              startActivity(new Intent(MainActivity.this,Main2Activity.class));
-            }
-        });
-        if (mSpUtil.contains("sss")) {
-            Log.e("11", "sss" + mSpUtil.getString("sss"));
-        } else {
-            Log.e("11", "aaaa");
-
-        }
-//        SharedPrefere
-
-        String path1 = Environment.getExternalStorageDirectory()
-                .getAbsolutePath() + "/" + "Android/data/com.kuntu.mobile.fireservices.police/files/Pictures";
-        TextUtils.equals("asdf", "asdf");
-        TextUtils.equals("asdf", "assdf");
-        TextUtils.equals(null, "assdf");
-        TextUtils.equals("asdf", null);
-        TextUtils.equals(null, null);
-
-        String path2 = FileUtil.getExternalStorageProjectPath(this);
-        String path3 = FileUtil.getExternalStoragePrivateRootPath(this, "asdf");
-        FileUtil.getExternalStorageProjectPath(this);
-        SPUtil.getInstance(this);
-//        getPictureUtil = new GetPictureUtil(this, GetPictureUtil.PIC_LIMIT_DISPLAY);
-//        getPictureUtil.setCallBack(new GetPictureUtil.GetCallBack() {
-//            @Override
-//            public void callback(int picCode, String filePath, String extraStr) {
-//                Log.e("sss", picCode + "   " + filePath);
-//            }
-//        });
-        Button btn = (Button) findViewById(R.id.btn1);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getPictureUtil.getPic(1);
-//            }
-//        });
-        List<String> strs = new ArrayList<>();
-        strs.add("as1df");
-        strs.add("as2df");
-        strs.add("as3df");
-        strs.add("as4df");
-        strs.add("as5df");
-        JsonUtil jsonUtil = JsonUtil.getInstance();
-        String jsonStr = jsonUtil.toJsonStr(strs);
-//        JsonUtil.getInstance().getObjectByStr(jsonStr,new TypeToken<List<String>>());
-
-        Button btnLoadMore = (Button) findViewById(R.id.btn_load_more);
-        btnLoadMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LoadMoreActivity.class));
-            }
-        });
-        Button btnListAdapter = (Button) findViewById(R.id.btn_list_adapter);
-        btnListAdapter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ListActivity.class));
-            }
-        });
-        Button btnSelectImage = (Button) findViewById(R.id.btn_select_image);
-        btnSelectImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectImageActivity.class);
-                intent.putExtra(SelectImageActivity.ARG_SELECT_COUNT, 1);
-                startActivityForResult(intent, 0);
-            }
-        });
     }
 
-    private void run(final int index) {
-        ThreadUtil.getInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.e("ThreadUtil", "start " + index);
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Log.e("ThreadUtil", "end " + index);
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = null;
+            switch (v.getId()) {
+                case R.id.btn_bitmap:
+                    intent = new Intent(context, BitmapActivity.class);
+                    break;
+                case R.id.btn_date:
+                    intent = new Intent(context, DateActivity.class);
+                    break;
             }
-        });
-    }
-
-    long start, end;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            start = System.currentTimeMillis();
-            BitmapUtil.getInstance(data.getStringArrayListExtra(SelectImageActivity.ARG_RESULT).get(0))
-                    .limit(1080)
-                    .limitSize(1024)
-                    .rotation()
-                    .save(FileUtil.getExternalStorageRootPath() + "/" + "z" + FileUtil.createFileName(".jpg"), new BitmapUtil.BitmapSaveCallBack() {
-                        @Override
-                        public void callback(String filePath) {
-                            end = System.currentTimeMillis();
-                            Log.e("tt", "callback: " + (end - start));
-                            Toast.makeText(MainActivity.this, filePath, Toast.LENGTH_SHORT).show();
-                            File file = new File(filePath);
-                        }
-                    });
+            if (intent != null) {
+                startActivity(intent);
+            }
         }
-//        getPictureUtil.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private Byte[] toObject(byte[] array) {
-        if (array == null)
-            return null;
-        if (array.length == 0) {
-            return new Byte[0];
-        }
-        Byte[] result = new Byte[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = Byte.valueOf(array[i]);
-        }
-        return result;
-    }
+    };
 }

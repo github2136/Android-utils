@@ -13,7 +13,7 @@ import java.util.Set;
 
 /**
  * SharedPreferences<br>
- * 在application中添加名为util_sp_name的&lt;meta-data/&#62;
+ * 在Manifest中添加名为util_sp_name的&lt;meta-data/&#62;
  */
 public class SPUtil {
 
