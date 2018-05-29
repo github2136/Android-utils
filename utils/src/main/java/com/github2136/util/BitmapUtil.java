@@ -115,7 +115,7 @@ public class BitmapUtil {
             mQuality = 110;
             do {
                 os.reset();
-                mQuality -= 10 ;
+                mQuality -= 10;
                 mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, os);
             } while (mQuality > 0 && os.toByteArray().length / 1024 > mMaxSize);
         }
@@ -257,6 +257,13 @@ public class BitmapUtil {
      */
     public boolean correct() {
         return getBitmapRotateDegree(mFilePath) == 0;
+    }
+
+    /**
+     * 获取图片旋转角度
+     */
+    public int degree() {
+        return getBitmapRotateDegree(mFilePath);
     }
 
     /**
