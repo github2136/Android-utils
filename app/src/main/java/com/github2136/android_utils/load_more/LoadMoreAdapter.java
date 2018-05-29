@@ -12,7 +12,7 @@ import com.github2136.base.ViewHolderRecyclerView;
 import java.util.List;
 
 /**
- * Created by yubin on 2017/8/22.
+ * Created by yb on 2017/8/22.
  */
 
 public class LoadMoreAdapter extends BaseLoadMoreRecyclerAdapter<String> {

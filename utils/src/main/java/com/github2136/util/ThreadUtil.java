@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 线程工具类
- * Created by yubin on 2017/8/23.
+ * Created by yb on 2017/8/23.
  */
 public class ThreadUtil {
     private static volatile ThreadUtil instance;

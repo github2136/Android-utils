@@ -11,6 +11,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="util_sp_name"
+            android:value="spname"/>
+        <meta-data
+            android:name="util_project_path"
+            android:value="AndroidUtil"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,6 +30,12 @@
         <activity android:name=".load_more.LoadMoreActivity">
         </activity>
         <activity android:name=".load_more.ListActivity">
+        </activity>
+        <activity android:name=".Main2Activity">
+        </activity>
+        <activity android:name=".BitmapActivity">
+        </activity>
+        <activity android:name=".DateActivity">
         </activity>
     </application>
 

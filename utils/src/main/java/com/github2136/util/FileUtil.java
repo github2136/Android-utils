@@ -29,7 +29,7 @@ import java.util.Date;
 
 /**
  * 文件工具 返回的所有根目录都不带斜杠<br>
- * 在application中添加名为util_project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取<br>
+ * 在Manifest中添加名为util_project_path的&lt;meta-data/&#62;使用getExternalStorageProjectPath获取<br>
  * getSuffix(urlStr);//获取文件后缀<br>
  * MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀<br>
  * MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();<br>
@@ -83,7 +83,7 @@ public class FileUtil {
         if (!TextUtils.isEmpty(projectPath)) {
             return Environment.getExternalStorageDirectory().getAbsoluteFile().toString() + File.separator + projectPath;
         } else {
-            throw new RuntimeException("Project Path is null");
+            throw new NullPointerException("Project Path is null");
         }
     }
 

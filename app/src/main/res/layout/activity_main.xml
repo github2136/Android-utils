@@ -12,6 +12,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.github2136.android_utils.MainActivity">
 
+    <Button
+        android:id="@+id/btn_bitmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BitmapUtil"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/btn_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DateUitl"
+        android:textAllCaps="false"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,19 +41,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="btn"/>
+
     <Button
         android:id="@+id/btn_load_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LoadMore"/>
+
     <Button
         android:id="@+id/btn_list_adapter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ListAdapter"/>
+
     <Button
         android:id="@+id/btn_select_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SelectImage"/>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="save"/>
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="delete"/>
 </LinearLayout>

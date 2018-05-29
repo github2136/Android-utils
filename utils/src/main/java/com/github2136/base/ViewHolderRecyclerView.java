@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Created by yubin on 2017/7/7.
+ * Created by yb on 2017/7/7.
  */
 
 public class ViewHolderRecyclerView extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
