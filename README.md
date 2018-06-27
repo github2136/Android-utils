@@ -1,7 +1,7 @@
 android-utils  
 [![](https://jitpack.io/v/github2136/Android-utils.svg)](https://jitpack.io/#github2136/Android-utils)  
 使用该库还需要引用以下库  
-**compile 'com.google.code.gson:gson:2.8.2'**  
+**implementation 'com.google.code.gson:gson:2.8.2'**
 
 一些常用工具类  
 **BitmapUtil** 图片压缩、旋转、缩略图处理 BitmapActivity  
