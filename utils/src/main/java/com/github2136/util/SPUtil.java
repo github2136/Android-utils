@@ -31,21 +31,14 @@ public class SPUtil {
     }
 
     public static SPUtil getInstance(Context context, String name) {
-        if (ourInstance == null) {
-            synchronized (SPUtil.class) {
-                if (ourInstance == null) {
-                    ourInstance = new SPUtil(context, name);
-                }
-            }
-        }
-        return ourInstance;
+        return new SPUtil(context, name);
     }
 
     private SharedPreferences sp;
     private Edit edit;
 
     protected SPUtil(Context context, String name) {
-        sp = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        sp = context.getApplicationContext().getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
     protected SPUtil(Context context) {
@@ -114,7 +107,7 @@ public class SPUtil {
 
         //保存数据，建议使用apply
         public void apply() {
-            SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
+            editor.apply();
         }
     }
 
@@ -124,7 +117,6 @@ public class SPUtil {
         }
         return edit;
     }
-
 
     //查询某值是否存在
     public boolean contains(String key) {
@@ -144,7 +136,7 @@ public class SPUtil {
 
     //清理所有
     public void clear() {
-        SharedPreferencesCompat.EditorCompat.getInstance().apply(sp.edit().clear());
+        sp.edit().clear().apply();
     }
 
     public String getString(String key) {
