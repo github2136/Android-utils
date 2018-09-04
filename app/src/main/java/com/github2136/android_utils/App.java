@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.github2136.util.CrashHandler;
 
+import java.util.Map;
+
 /**
  * Created by yb on 2018/9/4.
  */
@@ -20,9 +22,10 @@ public class App extends Application {
             }
 
             @Override
-            public void submitLog() {
+            public void submitLog(Map<String, String> deviceInfo, String exception) {
 
             }
+
         });
     }
 }

@@ -85,7 +85,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         }.start();
         saveException(mContext, ex);
         if (mCallback != null) {
-            mCallback.submitLog();
+            mCallback.submitLog(map, sb.toString());
         }
         return true;
     }
@@ -155,6 +155,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public interface CrashHandlerCallback {
         void finishAll();
 
-        void submitLog();
+        void submitLog(Map<String, String> deviceInfo, String exception);
     }
 }
