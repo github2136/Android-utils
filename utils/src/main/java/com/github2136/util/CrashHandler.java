@@ -1,6 +1,6 @@
 package com.github2136.util;
 
-import android.content.Context;
+import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,19 +10,19 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 日志保存
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
-    private Context mContext;
+    private Application application;
     private static CrashHandler mInstance = new CrashHandler();
     // 系统默认的UncaughtException处理类
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     private StringBuffer sb;
-    private HashMap<String, String> map;
+    private TreeMap<String, String> map;
     private CrashHandlerCallback mCallback;
 
     private CrashHandler() {
@@ -35,12 +35,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         return mInstance;
     }
 
-    public void setCustomCrashHanler(Context context) {
-        mContext = context;
+    public void setCustomCrashHanler(Application application, CrashHandlerCallback mCallback) {
+        this.application = application;
         // 获取系统默认的UncaughtException处理器
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         // 设置该CrashHandler为程序的默认处理器
         Thread.setDefaultUncaughtExceptionHandler(this);
+        this.mCallback = mCallback;
     }
 
     /**
@@ -78,12 +79,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
-                Toast.makeText(mContext, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_SHORT)
+                Toast.makeText(application, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_SHORT)
                         .show();
                 Looper.loop();
             }
         }.start();
-        saveException(mContext, ex);
+        saveException(application, ex);
         if (mCallback != null) {
             mCallback.submitLog(map, sb.toString());
         }
@@ -93,16 +94,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     /**
      * 保存log
      */
-    private void saveException(Context context, Throwable ex) {
-        StringBuffer sb = getLog(context, ex);
+    private void saveException(Application application, Throwable ex) {
+        StringBuffer sb = getLog(application, ex);
         String filename = FileUtil.createFileName("log", ".log");
-        File logFile = new File(FileUtil.getExternalStoragePrivateLogPath(context), filename);
+        File logFile = new File(FileUtil.getExternalStoragePrivateLogPath(application), filename);
         FileUtil.saveFile(logFile.getPath(), sb.toString());
     }
 
-    private StringBuffer getLog(Context context, Throwable ex) {
+    private StringBuffer getLog(Application application, Throwable ex) {
         sb = new StringBuffer();
-        for (Map.Entry<String, String> entry : getDeviceInfo(context).entrySet()) {
+        for (Map.Entry<String, String> entry : getDeviceInfo(application).entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             sb.append(key).append(" = ").append(value).append("\n");
@@ -114,12 +115,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     /**
      * 获取一些简单的信息,软件版本，手机版本，型号等信息存放在HashMap中
      */
-    private HashMap<String, String> getDeviceInfo(Context context) {
-        map = new HashMap<>();
-        PackageManager mPackageManager = context.getPackageManager();
+    private TreeMap<String, String> getDeviceInfo(Application application) {
+        map = new TreeMap<>();
+        PackageManager mPackageManager = application.getPackageManager();
         PackageInfo mPackageInfo = null;
         try {
-            mPackageInfo = mPackageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+            mPackageInfo = mPackageManager.getPackageInfo(application.getPackageName(), PackageManager.GET_ACTIVITIES);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -146,10 +147,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         throwable.printStackTrace(mPrintWriter);
         mPrintWriter.close();
         return mStringWriter.toString();
-    }
-
-    public void setCallback(CrashHandlerCallback mCallback) {
-        this.mCallback = mCallback;
     }
 
     public interface CrashHandlerCallback {
