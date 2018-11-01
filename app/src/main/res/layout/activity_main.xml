@@ -26,6 +26,18 @@
         android:text="DateUitl"
         android:textAllCaps="false"/>
 
+    <Button
+        android:id="@+id/btn_list_adapter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ListAdapter"/>
+
+    <Button
+        android:id="@+id/btn_load_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LoadMore"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,24 +47,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/RecyclerView_Grid"/>
-
-    <Button
-        android:id="@+id/btn1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="btn"/>
-
-    <Button
-        android:id="@+id/btn_load_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LoadMore"/>
-
-    <Button
-        android:id="@+id/btn_list_adapter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ListAdapter"/>
 
     <Button
         android:id="@+id/btn_select_image"
