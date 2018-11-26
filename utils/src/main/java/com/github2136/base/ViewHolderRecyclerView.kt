@@ -1,19 +1,16 @@
 package com.github2136.base
 
-import android.content.Context
-import android.support.annotation.*
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by yb on 2018/10/29.
  */
-class ViewHolderRecyclerView(val mContext: Context,
-                             val mAdapter: BaseRecyclerAdapter<*>,
+class ViewHolderRecyclerView(val mAdapter: BaseRecyclerAdapter<*>,
                              itemView: View,
                              val itemClickListener: BaseRecyclerAdapter.OnItemClickListener?,
                              val itemLongClickListener: BaseRecyclerAdapter.OnItemLongClickListener?) : RecyclerView.ViewHolder(itemView),
@@ -48,14 +45,14 @@ class ViewHolderRecyclerView(val mContext: Context,
     }
 
     override fun onLongClick(v: View): Boolean {
-        if (itemLongClickListener != null) {
+        return if (itemLongClickListener != null) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 itemLongClickListener.onItemClick(mAdapter, position)
             }
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
@@ -70,60 +67,22 @@ class ViewHolderRecyclerView(val mContext: Context,
      * @param text
      */
     fun setText(@IdRes resId: Int, text: CharSequence) {
-        val textView = getView<TextView>(resId)
-        if (textView != null) {
-            textView.text = text
-        }
+        getView<TextView>(resId)?.text = text
     }
 
     fun setText(@IdRes resId: Int, @StringRes resStr: Int) {
-        val textView = getView<TextView>(resId)
-        textView?.setText(resStr)
-    }
-
-    /**
-     * 设置图片
-     *
-     * @param resId
-     * @param resDraw
-     */
-    fun setImage(@IdRes resId: Int, @DrawableRes resDraw: Int) {
-        val imageView = getView<ImageView>(resId)
-        imageView?.setImageResource(resDraw)
-    }
-
-    /**
-     * 背景图
-     *
-     * @param resId
-     * @param resDraw
-     */
-    fun setBackgroundRes(@IdRes resId: Int, @DrawableRes resDraw: Int) {
-        val view = getView<View>(resId)
-        view?.setBackgroundResource(resDraw)
-    }
-
-    fun setBackgroundColRes(@IdRes resId: Int, @ColorRes resColor: Int) {
-        val view = getView<View>(resId)
-        view?.setBackgroundColor(ContextCompat.getColor(mContext, resColor))
-    }
-
-    fun setBackgroundColInt(@IdRes resId: Int, @ColorInt color: Int) {
-        val view = getView<View>(resId)
-        view?.setBackgroundColor(color)
+        getView<TextView>(resId)?.setText(resStr)
     }
 
     fun setGone(@IdRes resId: Int) {
-        val view = getView<View>(resId)
-        if (view != null) {
-            view.visibility = View.GONE
+        getView<View>(resId)?.run {
+            visibility = View.GONE
         }
     }
 
     fun setVisible(@IdRes resId: Int) {
-        val view = getView<View>(resId)
-        if (view != null) {
-            view.visibility = View.VISIBLE
+        getView<View>(resId)?.run {
+            visibility = View.VISIBLE
         }
     }
 }

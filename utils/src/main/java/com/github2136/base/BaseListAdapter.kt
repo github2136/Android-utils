@@ -1,6 +1,5 @@
 package com.github2136.base
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,15 +8,8 @@ import android.widget.BaseAdapter
 /**
  * Created by yb on 2018/10/27.
  */
-abstract class BaseListAdapter<T>(context: Context, list: MutableList<T>?) : BaseAdapter() {
-    protected val mContext: Context by lazy { context }
-    protected var mList: MutableList<T>
-    protected val mLayoutInflater: LayoutInflater by lazy { LayoutInflater.from(context) }
-
-    init {
-        mList = list ?: mutableListOf()
-    }
-
+abstract class BaseListAdapter<T>(var list: MutableList<T>) : BaseAdapter() {
+      lateinit var  layoutInflater: LayoutInflater
     /**
      * 需要返回item布局的resource id
      *
@@ -36,11 +28,11 @@ abstract class BaseListAdapter<T>(context: Context, list: MutableList<T>?) : Bas
 
 
     override fun getCount(): Int {
-        return mList.size
+        return list.size
     }
 
     override fun getItem(position: Int): T {
-        return mList[position]
+        return list[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -48,11 +40,14 @@ abstract class BaseListAdapter<T>(context: Context, list: MutableList<T>?) : Bas
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        if (!::layoutInflater.isInitialized) {
+            layoutInflater= LayoutInflater.from(parent.context)
+        }
         var convertView = convertView
         val holder: ViewHolderListView
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(getLayoutId(), parent, false)
-            holder = ViewHolderListView(mContext, convertView)
+            convertView = layoutInflater.inflate(getLayoutId(), parent, false)
+            holder = ViewHolderListView( convertView)
             convertView.tag = holder
         } else {
             holder = convertView.tag as ViewHolderListView
@@ -62,12 +57,12 @@ abstract class BaseListAdapter<T>(context: Context, list: MutableList<T>?) : Bas
     }
 
     fun setData(list: MutableList<T>) {
-        mList = list
+      this.list = list
         notifyDataSetChanged()
     }
 
     fun appendData(list: List<T>) {
-        mList.addAll(list)
+        this.list.addAll(list)
         notifyDataSetChanged()
     }
 }

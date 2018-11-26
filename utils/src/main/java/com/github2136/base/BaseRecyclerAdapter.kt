@@ -1,23 +1,14 @@
 package com.github2136.base
 
-import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import java.util.ArrayList
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by yb on 2018/10/29.
  */
-abstract class BaseRecyclerAdapter<T>(context: Context, list: MutableList<T>?) : RecyclerView.Adapter<ViewHolderRecyclerView>() {
-    protected val mContext: Context by lazy { context }
-    protected var mList: MutableList<T>
-    protected val mLayoutInflater: LayoutInflater by lazy { LayoutInflater.from(context) }
-
-    init {
-        mList = list ?: mutableListOf()
-    }
-
+abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>) : RecyclerView.Adapter<ViewHolderRecyclerView>() {
+    protected lateinit var mLayoutInflater: LayoutInflater
     /**
      * 通过类型获得布局ID
      *
@@ -32,16 +23,19 @@ abstract class BaseRecyclerAdapter<T>(context: Context, list: MutableList<T>?) :
      * 获得对象
      */
     fun getItem(position: Int): T {
-        return mList[position]
+        return list[position]
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderRecyclerView {
+        if (!::mLayoutInflater.isInitialized) {
+            mLayoutInflater = LayoutInflater.from(parent.context)
+        }
         val v = mLayoutInflater.inflate(getLayoutId(viewType), parent, false)
-        return ViewHolderRecyclerView(mContext, this, v, null, null)
+        return ViewHolderRecyclerView(this, v, null, null)
     }
 
     override fun getItemCount(): Int {
-        return mList.size
+        return list.size
     }
 
     override fun onBindViewHolder(holder: ViewHolderRecyclerView, position: Int) {
@@ -74,12 +68,12 @@ abstract class BaseRecyclerAdapter<T>(context: Context, list: MutableList<T>?) :
     }
 
     fun setData(list: MutableList<T>) {
-        this.mList = list
+        this.list = list
         notifyDataSetChanged()
     }
 
     fun appendData(list: List<T>) {
-        mList.addAll(list)
+        this.list.addAll(list)
         notifyDataSetChanged()
     }
 }

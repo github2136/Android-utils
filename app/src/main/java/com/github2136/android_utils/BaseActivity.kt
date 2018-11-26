@@ -3,8 +3,8 @@ package com.github2136.android_utils
 import android.content.Context
 import android.os.Bundle
 import android.os.Message
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import java.lang.ref.WeakReference
 
 /**

@@ -1,6 +1,5 @@
 package com.github2136.android_utils.load_more
 
-import android.content.Context
 import com.github2136.android_utils.R
 import com.github2136.base.BaseRecyclerAdapter
 import com.github2136.base.ViewHolderRecyclerView
@@ -8,7 +7,7 @@ import com.github2136.base.ViewHolderRecyclerView
 /**
  * Created by yb on 2018/11/1.
  */
-class ListAdapter(context: Context, list: MutableList<String>?) : BaseRecyclerAdapter<String>(context, list) {
+class ListAdapter(list: MutableList<String>) : BaseRecyclerAdapter<String>(list) {
     override fun getItemViewType(position: Int): Int {
         return 0
     }
