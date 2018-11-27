@@ -125,9 +125,9 @@ class CrashHandler private constructor(val application: Application) : Thread.Un
 
     companion object {
         @Volatile
-        private var instance: CrashHandler? = null;
+        private var instance: CrashHandler? = null
 
-        fun getInstance(application: Application): CrashHandler? {
+        fun getInstance(application: Application): CrashHandler {
             if (instance == null) {
                 synchronized(CrashHandler::class) {
                     if (instance == null) {
@@ -135,7 +135,7 @@ class CrashHandler private constructor(val application: Application) : Thread.Un
                     }
                 }
             }
-            return instance
+            return instance!!
         }
     }
 }

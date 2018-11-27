@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.github2136.android_utils.load_more.ListActivity
+import com.github2136.android_utils.load_more.ListViewActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btn_bitmap.setOnClickListener(this)
         btn_date.setOnClickListener(this)
         btn_list_adapter.setOnClickListener(this)
+        btn_list_view_adapter.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -27,9 +29,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btn_bitmap -> intent = Intent(this, BitmapActivity::class.java)
             R.id.btn_date -> intent = Intent(this, DateActivity::class.java)
             R.id.btn_list_adapter -> intent = Intent(this, ListActivity::class.java)
+            R.id.btn_list_view_adapter -> intent = Intent(this, ListViewActivity::class.java)
         }
-        if (intent != null) {
-            startActivity(intent)
+        intent?.let {
+            startActivity(it)
         }
     }
 }

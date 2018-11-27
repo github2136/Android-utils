@@ -34,6 +34,8 @@
         </activity>
         <activity android:name=".DateActivity">
         </activity>
+        <activity android:name=".load_more.ListViewActivity">
+        </activity>
     </application>
 
 </manifest>

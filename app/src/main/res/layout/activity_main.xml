@@ -31,6 +31,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="ListAdapter"/>
+    <Button
+        android:id="@+id/btn_list_view_adapter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ListViewAdapter"/>
 
     <TextView
         android:layout_width="wrap_content"

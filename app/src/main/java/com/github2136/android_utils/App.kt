@@ -10,11 +10,11 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-         CrashHandler.getInstance(this)?.setCallback(object : CrashHandler.CrashHandlerCallback {
-            override fun finishAll() {}
-
-            override fun submitLog(deviceInfo: Map<String, String>, exception: String) {}
-        })
+         CrashHandler.getInstance(this)//.setCallback(object : CrashHandler.CrashHandlerCallback {
+//            override fun finishAll() {}
+//
+//            override fun submitLog(deviceInfo: Map<String, String>, exception: String) {}
+//        })
 
     }
 }
