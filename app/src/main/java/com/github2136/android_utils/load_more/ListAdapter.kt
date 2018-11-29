@@ -8,9 +8,6 @@ import com.github2136.base.ViewHolderRecyclerView
  * Created by yb on 2018/11/1.
  */
 class ListAdapter(list: MutableList<String>) : BaseRecyclerAdapter<String>(list) {
-    override fun getItemViewType(position: Int): Int {
-        return 0
-    }
 
     override fun getLayoutId(viewType: Int): Int {
         return R.layout.item_item

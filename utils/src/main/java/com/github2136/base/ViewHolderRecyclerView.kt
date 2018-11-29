@@ -10,13 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Created by yb on 2018/10/29.
  */
-class ViewHolderRecyclerView(val mAdapter: BaseRecyclerAdapter<*>,
+class ViewHolderRecyclerView(val mAdapter: RecyclerView.Adapter<*>,
                              itemView: View,
                              val itemClickListener: BaseRecyclerAdapter.OnItemClickListener?,
                              val itemLongClickListener: BaseRecyclerAdapter.OnItemLongClickListener?) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener,
         View.OnLongClickListener {
     private var views: SparseArray<View> = SparseArray()
+    init {
+        itemView.setOnClickListener(this)
+        itemView.setOnLongClickListener(this)
+    }
     fun getRootView(): View {
         return itemView
     }

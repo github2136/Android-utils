@@ -3,6 +3,7 @@ package com.github2136.android_utils.load_more
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.github2136.android_utils.R
 import com.github2136.base.BaseRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_list.*
@@ -26,17 +27,17 @@ class ListActivity : AppCompatActivity() {
         s.add("asdf8")
         s.add("asdf9")
         s.add("asdf10")
-        val adapter = ListAdapter( s)
+        val adapter = ListAdapter(s)
+        rv_content.adapter = adapter
         adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter<*>, position: Int) {
+            override fun onItemClick(adapter: RecyclerView.Adapter<*>, position: Int) {
                 Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show()
             }
         })
         adapter.setOnItemLongClickListener(object : BaseRecyclerAdapter.OnItemLongClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter<*>, position: Int) {
+            override fun onItemClick(adapter: RecyclerView.Adapter<*>, position: Int) {
                 Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show()
             }
         })
-        rv_content.adapter = adapter
     }
 }

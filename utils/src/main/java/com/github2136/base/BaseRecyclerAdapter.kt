@@ -31,7 +31,7 @@ abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>) : Recycl
             mLayoutInflater = LayoutInflater.from(parent.context)
         }
         val v = mLayoutInflater.inflate(getLayoutId(viewType), parent, false)
-        return ViewHolderRecyclerView(this, v, null, null)
+        return ViewHolderRecyclerView(this, v, itemClickListener, itemLongClickListener)
     }
 
     override fun getItemCount(): Int {
@@ -57,14 +57,14 @@ abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>) : Recycl
      * 单项点击事件
      */
     interface OnItemClickListener {
-        fun onItemClick(adapter: BaseRecyclerAdapter<*>, position: Int)
+        fun onItemClick(adapter: RecyclerView.Adapter<*>, position: Int)
     }
 
     /**
      * 单项长按
      */
     interface OnItemLongClickListener {
-        fun onItemClick(adapter: BaseRecyclerAdapter<*>, position: Int)
+        fun onItemClick(adapter: RecyclerView.Adapter<*>, position: Int)
     }
 
     fun setData(list: MutableList<T>) {
