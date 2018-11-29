@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Created by yb on 2018/10/29.
  */
-abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>) : RecyclerView.Adapter<ViewHolderRecyclerView>() {
+abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>? = null) : RecyclerView.Adapter<ViewHolderRecyclerView>() {
     protected lateinit var mLayoutInflater: LayoutInflater
     /**
      * 通过类型获得布局ID
@@ -22,8 +22,8 @@ abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>) : Recycl
     /**
      * 获得对象
      */
-    fun getItem(position: Int): T {
-        return list[position]
+    fun getItem(position: Int): T? {
+        return list?.get(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderRecyclerView {
@@ -35,11 +35,13 @@ abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>) : Recycl
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return list?.size ?: 0
     }
 
     override fun onBindViewHolder(holder: ViewHolderRecyclerView, position: Int) {
-        onBindView(getItem(position), holder, position)
+        getItem(position)?.let {
+            onBindView(it, holder, position)
+        }
     }
 
     protected var itemClickListener: OnItemClickListener? = null
@@ -73,7 +75,9 @@ abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>) : Recycl
     }
 
     fun appendData(list: List<T>) {
-        this.list.addAll(list)
-        notifyDataSetChanged()
+        this.list?.let {
+            it.addAll(list)
+            notifyDataSetChanged()
+        }
     }
 }

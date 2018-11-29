@@ -22,7 +22,7 @@ class ListViewActivity : AppCompatActivity() {
         s.add("asdf8")
         s.add("asdf9")
         s.add("asdf10")
-        val adapter = ListViewAdapter( s)
+        val adapter = ListViewAdapter(s)
 
         rv_content.adapter = adapter
     }

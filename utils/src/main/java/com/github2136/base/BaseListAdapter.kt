@@ -8,8 +8,8 @@ import android.widget.BaseAdapter
 /**
  * Created by yb on 2018/10/27.
  */
-abstract class BaseListAdapter<T>(var list: MutableList<T>) : BaseAdapter() {
-      lateinit var  layoutInflater: LayoutInflater
+abstract class BaseListAdapter<T>(var list: MutableList<T>? = null) : BaseAdapter() {
+    lateinit var layoutInflater: LayoutInflater
     /**
      * 需要返回item布局的resource id
      *
@@ -28,11 +28,11 @@ abstract class BaseListAdapter<T>(var list: MutableList<T>) : BaseAdapter() {
 
 
     override fun getCount(): Int {
-        return list.size
+        return list?.size ?: 0
     }
 
-    override fun getItem(position: Int): T {
-        return list[position]
+    override fun getItem(position: Int): T? {
+        return list?.get(position)
     }
 
     override fun getItemId(position: Int): Long {
@@ -41,28 +41,32 @@ abstract class BaseListAdapter<T>(var list: MutableList<T>) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         if (!::layoutInflater.isInitialized) {
-            layoutInflater= LayoutInflater.from(parent.context)
+            layoutInflater = LayoutInflater.from(parent.context)
         }
         var convertView = convertView
         val holder: ViewHolderListView
         if (convertView == null) {
             convertView = layoutInflater.inflate(getLayoutId(), parent, false)
-            holder = ViewHolderListView( convertView)
+            holder = ViewHolderListView(convertView)
             convertView.tag = holder
         } else {
             holder = convertView.tag as ViewHolderListView
         }
-        getItemView(getItem(position), holder, position, convertView!!)
-        return convertView
+        getItem(position)?.let {
+            getItemView(it, holder, position, convertView!!)
+        }
+        return convertView!!
     }
 
     fun setData(list: MutableList<T>) {
-      this.list = list
+        this.list = list
         notifyDataSetChanged()
     }
 
     fun appendData(list: List<T>) {
-        this.list.addAll(list)
-        notifyDataSetChanged()
+        this.list?.let {
+            it.addAll(list)
+            notifyDataSetChanged()
+        }
     }
 }
