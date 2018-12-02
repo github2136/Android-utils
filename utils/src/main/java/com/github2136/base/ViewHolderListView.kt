@@ -9,7 +9,7 @@ import androidx.annotation.StringRes
 /**
  * Created by yb on 2018/10/30.
  */
-class ViewHolderListView(private val convertView: View) {
+open class ViewHolderListView(private val convertView: View) {
     private val viewArray = SparseArray<View>()
 
     private fun <T : View> getView(@IdRes resId: Int): T? {

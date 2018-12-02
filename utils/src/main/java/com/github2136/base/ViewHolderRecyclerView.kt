@@ -10,19 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Created by yb on 2018/10/29.
  */
-class ViewHolderRecyclerView(val mAdapter: RecyclerView.Adapter<*>,
-                             itemView: View,
-                             val itemClickListener: BaseRecyclerAdapter.OnItemClickListener?,
-                             val itemLongClickListener: BaseRecyclerAdapter.OnItemLongClickListener?) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener,
-        View.OnLongClickListener {
+open class ViewHolderRecyclerView(itemView: View,
+                                  val itemClickListener: BaseRecyclerAdapter.OnItemClickListener? = null,
+                                  val itemLongClickListener: BaseRecyclerAdapter.OnItemLongClickListener? = null) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
     private var views: SparseArray<View> = SparseArray()
+
     init {
         itemView.setOnClickListener(this)
         itemView.setOnLongClickListener(this)
-    }
-    fun getRootView(): View {
-        return itemView
     }
 
     fun <T : View> getView(@IdRes id: Int): T? {
@@ -43,7 +39,7 @@ class ViewHolderRecyclerView(val mAdapter: RecyclerView.Adapter<*>,
             //如果adpater正在调用notifyDataSetChanged那么getAdapterPosition会返回 RecyclerView.NO_POSITION
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                itemClickListener.onItemClick(mAdapter, position)
+                itemClickListener.onItemClick(position)
             }
         }
     }
@@ -52,7 +48,7 @@ class ViewHolderRecyclerView(val mAdapter: RecyclerView.Adapter<*>,
         return if (itemLongClickListener != null) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                itemLongClickListener.onItemClick(mAdapter, position)
+                itemLongClickListener.onItemClick(position)
             }
             true
         } else {
