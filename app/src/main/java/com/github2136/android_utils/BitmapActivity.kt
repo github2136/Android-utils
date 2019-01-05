@@ -15,6 +15,7 @@ class BitmapActivity : BaseActivity(), View.OnClickListener {
     private val REQUEST_PIC = 610
 
     override fun initData(savedInstanceState: Bundle?) {
+        val i=10/0
         btn_choose.setOnClickListener(this)
     }
 

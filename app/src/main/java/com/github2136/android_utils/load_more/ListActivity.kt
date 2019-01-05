@@ -30,12 +30,12 @@ class ListActivity : AppCompatActivity() {
         val adapter = ListAdapter(s)
         rv_content.adapter = adapter
         adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: RecyclerView.Adapter<*>, position: Int) {
+            override fun onItemClick( position: Int) {
                 Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show()
             }
         })
         adapter.setOnItemLongClickListener(object : BaseRecyclerAdapter.OnItemLongClickListener {
-            override fun onItemClick(adapter: RecyclerView.Adapter<*>, position: Int) {
+            override fun onItemClick( position: Int) {
                 Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show()
             }
         })

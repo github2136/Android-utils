@@ -12,11 +12,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 /**
  * Created by yb on 2018/10/30.
  */
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : BaseActivity(), View.OnClickListener {
+    override fun getViewResId(): Int {
+    return R.layout.activity_main
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun initData(savedInstanceState: Bundle?) {
         btn_bitmap.setOnClickListener(this)
         btn_date.setOnClickListener(this)
         btn_list_adapter.setOnClickListener(this)

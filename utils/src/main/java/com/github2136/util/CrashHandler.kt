@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Looper
+import android.os.Process
 import android.widget.Toast
 import java.io.File
 import java.io.PrintWriter
@@ -14,7 +15,7 @@ import java.util.*
 /**
  * Created by yb on 2018/9/4.
  */
-class CrashHandler private constructor(val application: Application) : Thread.UncaughtExceptionHandler {
+class CrashHandler private constructor(val application: Application, val debug: Boolean) : Thread.UncaughtExceptionHandler {
     // 系统默认的UncaughtException处理类
     private var mDefaultHandler: Thread.UncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
     private var sb: StringBuffer = StringBuffer()
@@ -44,41 +45,29 @@ class CrashHandler private constructor(val application: Application) : Thread.Un
     }
 
     override fun uncaughtException(t: Thread?, e: Throwable?) {
-        if (!handleException(e)) {
-            // 如果用户没有处理则让系统默认的异常处理器来处理
+        e?.let {
+            saveException(application, it)
+        }
+        callback?.submitLog(map, sb.toString())
+        if (debug) {
             mDefaultHandler.uncaughtException(t, e)
         } else {
-            if (BuildConfig.DEBUG) {
-                mDefaultHandler.uncaughtException(t, e)
-            }
+            // 使用Toast来显示异常信息
+            object : Thread() {
+                override fun run() {
+                    Looper.prepare()
+                    Toast.makeText(application, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_SHORT)
+                            .show()
+                    Looper.loop()
+                }
+            }.start()
             try {
                 Thread.sleep(4000)
             } catch (e: InterruptedException) {
             }
             callback?.finishAll()
+            Process.killProcess(Process.myPid())
         }
-    }
-
-    /**
-     * 为我们的应用程序设置自定义Crash处理
-     */
-
-    private fun handleException(ex: Throwable?): Boolean {
-        if (ex == null) {
-            return false
-        }
-        // 使用Toast来显示异常信息
-        object : Thread() {
-            override fun run() {
-                Looper.prepare()
-                Toast.makeText(application, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_SHORT)
-                        .show()
-                Looper.loop()
-            }
-        }.start()
-        saveException(application, ex)
-        callback?.submitLog(map, sb.toString())
-        return true
     }
 
     /**
@@ -127,11 +116,11 @@ class CrashHandler private constructor(val application: Application) : Thread.Un
         @Volatile
         private var instance: CrashHandler? = null
 
-        fun getInstance(application: Application): CrashHandler {
+        fun getInstance(application: Application, debug: Boolean): CrashHandler {
             if (instance == null) {
                 synchronized(CrashHandler::class) {
                     if (instance == null) {
-                        instance = CrashHandler(application)
+                        instance = CrashHandler(application, debug)
                     }
                 }
             }

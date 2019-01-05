@@ -12,11 +12,14 @@ import java.lang.ref.WeakReference
  */
 abstract class BaseActivity : AppCompatActivity() {
     protected val TAG = this.javaClass.name
+    protected lateinit var mApp: Appli
     protected lateinit var mContext: Context
     protected lateinit var mHandler: Handler
     protected lateinit var mToast: Toast
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mApp = application as Appli
+        mApp.addActivity(this)
         mContext = this
         setContentView(getViewResId())
 
@@ -35,6 +38,11 @@ abstract class BaseActivity : AppCompatActivity() {
         mToast.setText(msg)
         mToast.duration = Toast.LENGTH_LONG
         mToast.show()
+    }
+
+    override fun onDestroy() {
+        mApp.removeActivity(this)
+        super.onDestroy()
     }
 
     class Handler(activity: BaseActivity) : android.os.Handler() {
