@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
  * Created by yb on 2018/10/29.
  */
 open class ViewHolderRecyclerView(itemView: View,
-                                  val itemClickListener: BaseRecyclerAdapter.OnItemClickListener? = null,
-                                  val itemLongClickListener: BaseRecyclerAdapter.OnItemLongClickListener? = null) :
+                                  val itemClickListener:  ((Int) -> Unit)? = null,
+                                  val itemLongClickListener:  ((Int) -> Unit)? = null) :
         RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
     private var views: SparseArray<View> = SparseArray()
 
@@ -39,7 +39,7 @@ open class ViewHolderRecyclerView(itemView: View,
             //如果adpater正在调用notifyDataSetChanged那么getAdapterPosition会返回 RecyclerView.NO_POSITION
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                itemClickListener.onItemClick(position)
+                itemClickListener.invoke(position)
             }
         }
     }
@@ -48,7 +48,7 @@ open class ViewHolderRecyclerView(itemView: View,
         return if (itemLongClickListener != null) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                itemLongClickListener.onItemClick(position)
+                itemLongClickListener.invoke(position)
             }
             true
         } else {

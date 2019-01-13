@@ -231,51 +231,47 @@ class BitmapUtil private constructor(path: String) {
      * 获取图片
      */
     fun get(callBack: (Bitmap?) -> Unit) {
-        Thread({
+        Thread {
             val mBitmap = getBitmap()
             mHandler.post { callBack(mBitmap) }
-        }).start()
+        }.start()
     }
 
-    fun getByte(callBack: (ByteArray?) -> Unit) {
-        Thread({
-            var bytes: ByteArray? = null
-            val mBitmap = getBitmap()
-            try {
-                val baos = ByteArrayOutputStream()
-                mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
-                baos.flush()
-                baos.close()
-                bytes = baos.toByteArray()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            mHandler.post { callBack(bytes) }
-        }).start()
-    }
+    fun getByte(callBack: (ByteArray?) -> Unit) = Thread {
+        var bytes: ByteArray? = null
+        val mBitmap = getBitmap()
+        try {
+            val baos = ByteArrayOutputStream()
+            mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
+            baos.flush()
+            baos.close()
+            bytes = baos.toByteArray()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        mHandler.post { callBack(bytes) }
+    }.start()
 
-    fun getBase64(callBack: (String?) -> Unit) {
-        Thread({
-            var base64: String? = null
-            val mBitmap = getBitmap()
-            try {
-                val baos = ByteArrayOutputStream()
-                mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
-                baos.flush()
-                baos.close()
-                base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            mHandler.post { callBack(base64) }
-        }).start()
-    }
+    fun getBase64(callBack: (String?) -> Unit) = Thread {
+        var base64: String? = null
+        val mBitmap = getBitmap()
+        try {
+            val baos = ByteArrayOutputStream()
+            mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
+            baos.flush()
+            baos.close()
+            base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        mHandler.post { callBack(base64) }
+    }.start()
 
     /**
      * 保存图片
      */
     fun save(filePath: String, callBack: (String) -> Unit) {
-        Thread({
+        Thread {
             val mBitmap = getBitmap()
             if (mBitmap == null) {
                 mHandler.post { callBack("") }
@@ -284,7 +280,7 @@ class BitmapUtil private constructor(path: String) {
                 mBitmap.recycle()
                 mHandler.post { callBack(if (isSave) filePath else "") }
             }
-        }).start()
+        }.start()
     }
 
     companion object {

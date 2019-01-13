@@ -44,29 +44,15 @@ abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>? = null) 
         }
     }
 
-    protected var itemClickListener: OnItemClickListener? = null
-    protected var itemLongClickListener: OnItemLongClickListener? = null
+    protected var itemClickListener: ((Int) -> Unit)? = null
+    protected var itemLongClickListener: ((Int) -> Unit)? = null
 
-    fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
+    fun setOnItemClickListener(itemClickListener: (position: Int) -> Unit) {
         this.itemClickListener = itemClickListener
     }
 
-    fun setOnItemLongClickListener(itemLongClickListener: OnItemLongClickListener) {
+    fun setOnItemLongClickListener(itemLongClickListener: (position: Int) -> Unit) {
         this.itemLongClickListener = itemLongClickListener
-    }
-
-    /**
-     * 单项点击事件
-     */
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-    }
-
-    /**
-     * 单项长按
-     */
-    interface OnItemLongClickListener {
-        fun onItemClick(position: Int)
     }
 
     fun setData(list: MutableList<T>) {
