@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Created by yb on 2018/10/29.
  */
-abstract class BaseRecyclerAdapter<T>(private var list: MutableList<T>? = null) : RecyclerView.Adapter<ViewHolderRecyclerView>() {
+abstract class BaseRecyclerAdapter<T>(protected var list: MutableList<T>? = null) : RecyclerView.Adapter<ViewHolderRecyclerView>() {
     protected lateinit var mLayoutInflater: LayoutInflater
     /**
      * 通过类型获得布局ID
