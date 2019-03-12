@@ -22,43 +22,55 @@ object DateUtil {
     /**
      * 日期转文字
      */
-    fun date2str(date: Date, pattern: String = ""): String {
+    fun date2str(date: Date, pattern: String = "", timeZone: String = TimeZone.getDefault().id): String {
         val sdf: SimpleDateFormat = if (!TextUtils.isEmpty(pattern)) {
-            SimpleDateFormat(pattern, Locale.CHINA)
+            SimpleDateFormat(pattern, Locale.getDefault())
         } else {
-            SimpleDateFormat(Date_pattern_default, Locale.CHINA)
+            SimpleDateFormat(Date_pattern_default, Locale.getDefault())
         }
+        sdf.timeZone = TimeZone.getTimeZone(timeZone)
         return sdf.format(date)
     }
 
     /**
      * 文字转日期
      */
-    fun str2date(dateStr: String, pattern: String = ""): Date? {
+    fun str2date(dateStr: String, pattern: String = "", timeZone: String = TimeZone.getDefault().id): Date? {
         return try {
             val sdf: SimpleDateFormat = if (!TextUtils.isEmpty(pattern)) {
-                SimpleDateFormat(pattern, Locale.CHINA)
+                SimpleDateFormat(pattern, Locale.getDefault())
             } else {
-                SimpleDateFormat(Date_pattern_default, Locale.CHINA)
+                SimpleDateFormat(Date_pattern_default, Locale.getDefault())
             }
+            sdf.timeZone = TimeZone.getTimeZone(timeZone)
             sdf.parse(dateStr)
         } catch (e: ParseException) {
             e.printStackTrace()
             null
         }
-
     }
 
     /**
      * 获取现在的时间
      */
-    fun getDateNow(pattern: String = ""): String {
+    fun getDateNow(pattern: String = "", timeZone: String = TimeZone.getDefault().id): String {
         val sdf: SimpleDateFormat = if (!TextUtils.isEmpty(pattern)) {
-            SimpleDateFormat(pattern, Locale.CHINA)
+            SimpleDateFormat(pattern, Locale.getDefault())
         } else {
-            SimpleDateFormat(Date_pattern_default, Locale.CHINA)
+            SimpleDateFormat(Date_pattern_default, Locale.getDefault())
         }
+        sdf.timeZone = TimeZone.getTimeZone(timeZone)
         return sdf.format(Date())
+    }
+
+    /**
+     * UTC转换为指定时区时间格式
+     */
+    fun UTC2GMT(utc: String, timeZone: String = TimeZone.getDefault().id, pattern: String = ""): String {
+        val utcDate: Date? = str2date(utc, pattern, TimeZone.getTimeZone("UTC").id)
+        return utcDate?.let {
+            date2str(it, pattern, timeZone)
+        } ?: ""
     }
 
     /**

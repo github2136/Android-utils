@@ -29,15 +29,7 @@ class ListActivity : AppCompatActivity() {
         s.add("asdf10")
         val adapter = ListAdapter(s)
         rv_content.adapter = adapter
-        adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick( position: Int) {
-                Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show()
-            }
-        })
-        adapter.setOnItemLongClickListener(object : BaseRecyclerAdapter.OnItemLongClickListener {
-            override fun onItemClick( position: Int) {
-                Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show()
-            }
-        })
+        adapter.setOnItemClickListener { position -> Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show() }
+        adapter.setOnItemLongClickListener { position -> Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show() }
     }
 }
