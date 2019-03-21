@@ -360,11 +360,13 @@ object FileUtil {
     private fun getFileSizes(f: File): Long {
         var size: Long = 0
         val files = f.listFiles()
-        for (i in files!!.indices)
-            if (files[i].isDirectory)
-                size = size + getFileSizes(files[i])
-            else
-                size = size + getFileSize(files[i])
+        files.forEach {
+            size = if (it.isDirectory) {
+                size + getFileSizes(it)
+            } else {
+                size + getFileSize(it)
+            }
+        }
         return size
     }
 
@@ -541,14 +543,12 @@ object FileUtil {
     @JvmStatic
     fun cleanFolder(path: String): Boolean {
         val folder = File(path)
-        if (folder.isDirectory) {
+        return if (folder.isDirectory) {
             val files = folder.listFiles()
-            for (f in files!!) {
-                f.delete()
-            }
-            return true
+            files.forEach { it.delete() }
+            true
         } else {
-            return false
+            false
         }
     }
 

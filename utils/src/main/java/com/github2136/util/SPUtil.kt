@@ -99,9 +99,7 @@ class SPUtil {
     //删除某值
     fun remove(vararg key: String) {
         val e = edit()
-        for (k in key) {
-            e.remove(k)
-        }
+        key.forEach { e.remove(it) }
         e.apply()
     }
 

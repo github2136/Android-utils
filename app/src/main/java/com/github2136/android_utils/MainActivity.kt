@@ -2,17 +2,13 @@ package com.github2136.android_utils
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.util.DateUtil
 import kotlinx.android.synthetic.main.activity_main.*
-import java.sql.Date
 import java.util.*
-
 
 /**
  * Created by yb on 2018/10/30.

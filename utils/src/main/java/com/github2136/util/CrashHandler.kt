@@ -82,11 +82,7 @@ class CrashHandler private constructor(val application: Application, val debug: 
 
     private fun getLog(ex: Throwable): StringBuffer {
         sb = StringBuffer()
-        for (entry in map) {
-            val key = entry.key
-            val value = entry.value
-            sb.append(key).append(" = ").append(value).append("\n")
-        }
+        map.map { entry ->  sb.append(entry.key).append(" = ").append( entry.value).append("\n")}
         sb.append(obtainExceptionInfo(ex))
         return sb
     }
