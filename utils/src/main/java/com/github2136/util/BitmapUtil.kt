@@ -13,8 +13,17 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 /**
- * 图片处理类
- */
+*       图片处理
+*       首先设置图片路径BitmapUtil.getInstance(filePath)
+*       然后就可以在通过其他方法来对图片进行处理
+*       rotation//图片旋转为正
+*       limit(int max)//显示图片最大宽高 0 表示不限制
+*       limitSize(int maxSize)//显示图片最大大小，单位为KB 0 表示不限制
+*       get***()//获取图片的bitmap、base64、byte[]
+*       correct()//图片是否为正的
+*       values()//获取图片宽高[0]表示为宽[1]表示为高
+*       save(String filepath,callback)//保存至指定目录
+*/
 class BitmapUtil private constructor(path: String) {
     //图片路径
     private var mFilePath: String = path

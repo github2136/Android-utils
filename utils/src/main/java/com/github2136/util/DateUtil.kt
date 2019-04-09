@@ -5,8 +5,11 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 /**
- * Created by yb on 2018/9/6.
+ *      日期
+ *      Created by yubin on 2016/3/11.
+ *      日期格式化参数说明 http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
  */
 object DateUtil {
     val SECOND: Long = 1000

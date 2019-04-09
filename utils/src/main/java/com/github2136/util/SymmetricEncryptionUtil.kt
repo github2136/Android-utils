@@ -9,13 +9,20 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * 对称加密<br>
- * ECB不可添加向量IV<br>
- * DES/DESede IV长度为8字节<br>
- * AES IV长度为16字节
- * DES key长度为8字节<br>
- * DESede key长度为16字节或24字节<br>
- * AES key长度为16字节、24字节或32字节<br>
+ *
+ *      对称加密
+ *      ECB不可添加向量IV
+ *      DES/DESede IV长度为8字节
+ *      AES IV长度为16字节
+ *      DES key长度为8字节
+ *      DESede key长度为16字节或24字节
+ *      AES key长度为16字节、24字节或32字节
+ *      val keyData = SymmetricEncryptionUtil.getKey(SymmetricEncryptionUtil.AES, 128)!!.encoded
+ *      val keyStr = Base64.encodeToString(keyData, Base64.NO_WRAP)
+ *      //加密后的内容
+ *      val encryptStr = Base64.encodeToString(encryptData, Base64.NO_WRAP)
+ *      //解密后的内容
+ *      String(decryptData!!)
  */
 object SymmetricEncryptionUtil {
     const val DES = "DES"//64位(bit)

@@ -9,8 +9,15 @@ import javax.crypto.Cipher
 
 
 /**
- * 非对称加密<br>
- * RSA 生成的key至少1024位
+ *      非对称加密
+ *      RSA 生成的key至少1024位
+ *      val keyData = AsymmetricEncryptionUtil.getKey()
+ *      val publicKey = Base64.encodeToString(keyData!!.public.encoded, Base64.NO_WRAP)
+ *      val privateKey = Base64.encodeToString(keyData.private.encoded, Base64.NO_WRAP)
+ *      //加密后的内容
+ *      val encryptStr = Base64.encodeToString(encryptData, Base64.NO_WRAP)
+ *      //解密后的内容
+ *      String(decryptData!!)
  */
 object AsymmetricEncryptionUtil {
     const val RSA = "RSA"//1024+
@@ -18,7 +25,6 @@ object AsymmetricEncryptionUtil {
     const val MODE_ECB = "/ECB"// RSA
     const val MODE_NONE = "/NONE"//RSA
 
-    //如果加密内容不是8字节的整数倍就会报错
     const val PADDING_NO = "/NoPadding"//支持长度 keySize/8
     const val PADDING_OAEP = "/OAEPPadding"//支持长度 keySize/8 - 42
     const val PADDING_OAEP_SHA_1 = "/OAEPwithSHA-1andMGF1Padding"//支持长度 keySize/8 - 42

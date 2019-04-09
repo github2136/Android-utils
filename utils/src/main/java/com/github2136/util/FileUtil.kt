@@ -19,7 +19,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Created by yb on 2018/9/4.
+ *      文件工具 返回的所有根目录都不带斜杠
+ *      在application中添加名为util_project_path的<meta-data/>使用getExternalStorageProjectPath获取
+ *      getSuffix(urlStr);//获取文件后缀
+ *      MimeTypeMap.getFileExtensionFromUrl(urlStr);//获取文件后缀
+ *      MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+ *      mimeTypeMap.getMimeTypeFromExtension(suffix);//通过后缀获取MIME
+ *      所需权限<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
  */
 object FileUtil {
     private val PATH_LOG = "Log"

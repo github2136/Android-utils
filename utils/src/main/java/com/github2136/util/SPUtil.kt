@@ -7,8 +7,8 @@ import android.content.pm.PackageManager
 import android.text.TextUtils
 
 /**
- * SharedPreferences<br></br>
- * 在Manifest中添加名为util_sp_name的&lt;meta-data/&#62;
+ *      SharedPreferences
+ *      在Manifest中添加名为util_sp_name的<meta-data/>
  */
 class SPUtil {
     private var sp: SharedPreferences
