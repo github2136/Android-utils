@@ -2,11 +2,15 @@ package com.github2136.android_utils
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
+import com.github2136.util.AsymmetricEncryptionUtil
 import com.github2136.util.DateUtil
+import com.github2136.util.MessageDigestUtil
+import com.github2136.util.SymmetricEncryptionUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -31,6 +35,72 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         Log.e("t", t)
         val t2 = DateUtil.UTC2GMT(t, TimeZone.getDefault().id)
         Log.e("t", t2)
+        MessageDigestUtil.getMessageDigest("ttt".toByteArray(), "MD5")
+
+
+        val data = "12355484s5d8f1w5w"
+
+        val keyData = SymmetricEncryptionUtil.getKey(SymmetricEncryptionUtil.AES, 128)!!.encoded
+        val keyStr = Base64.encodeToString(keyData, Base64.NO_WRAP)
+        Log.e("asexxx", "key $keyStr")
+
+        val encryptData = SymmetricEncryptionUtil.encrypt(Base64.decode(keyStr, Base64.NO_WRAP),
+                SymmetricEncryptionUtil.AES,
+                data.toByteArray(),
+                SymmetricEncryptionUtil.MODE_ECB,
+                SymmetricEncryptionUtil.PADDING_PKCS5)
+        val encryptStr = Base64.encodeToString(encryptData, Base64.NO_WRAP)
+        Log.e("asexxx", "encrypt $encryptStr")
+
+        val decryptData = SymmetricEncryptionUtil.decrypt(Base64.decode(keyStr, Base64.NO_WRAP),
+                SymmetricEncryptionUtil.AES,
+                Base64.decode(encryptStr, Base64.NO_WRAP),
+                SymmetricEncryptionUtil.MODE_ECB,
+                SymmetricEncryptionUtil.PADDING_PKCS5)
+
+        Log.e("asexxx", "decrypt ${String(decryptData!!)}")
+
+        val data2 = "0000000000000000000000000000000000000000000000000000012345601234560112"
+        val keyData2 = AsymmetricEncryptionUtil.getKey()
+        val publicKey = Base64.encodeToString(keyData2!!.public.encoded, Base64.NO_WRAP)
+        val privateKey = Base64.encodeToString(keyData2.private.encoded, Base64.NO_WRAP)
+
+        Log.e("rsaxxx", "publicKey $publicKey")
+        Log.e("rsaxxx", "privateKey $privateKey")
+
+        val encryptData2 = AsymmetricEncryptionUtil.encryptByPublicKey(
+                keyData2.public.encoded,
+                data2.toByteArray(),
+                AsymmetricEncryptionUtil.MODE_ECB,
+                AsymmetricEncryptionUtil.PADDING_PKCS1)
+
+
+        val encryptStr2 = Base64.encodeToString(encryptData2, Base64.NO_WRAP)
+        Log.e("rsaxxx", "encrypt2 $encryptStr2")
+
+        val decryptData2 = AsymmetricEncryptionUtil.decryptByPrivateKey(
+                keyData2.private.encoded,
+                encryptData2!!,
+                AsymmetricEncryptionUtil.MODE_ECB,
+                AsymmetricEncryptionUtil.PADDING_PKCS1)
+        Log.e("rsaxxx", "decrypt ${String(decryptData2!!)}")
+
+
+        val encryptData3 = AsymmetricEncryptionUtil.encryptByPrivateKey(
+                keyData2.private.encoded,
+                data2.toByteArray(),
+                AsymmetricEncryptionUtil.MODE_ECB,
+                AsymmetricEncryptionUtil.PADDING_PKCS1)
+        val encryptStr3 = Base64.encodeToString(encryptData3, Base64.NO_WRAP)
+        Log.e("rsaxxx", "encrypt3 $encryptStr3")
+
+        val decryptData3 = AsymmetricEncryptionUtil.decryptByPublicKey(
+                keyData2.public.encoded,
+                encryptData3!!,
+                AsymmetricEncryptionUtil.MODE_ECB,
+                AsymmetricEncryptionUtil.PADDING_PKCS1)
+        Log.e("rsaxxx", "decrypt ${String(decryptData3!!)}")
+
     }
 
     override fun onClick(v: View?) {

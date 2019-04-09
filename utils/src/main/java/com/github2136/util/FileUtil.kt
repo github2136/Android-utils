@@ -494,15 +494,15 @@ object FileUtil {
     fun appendFile(path: String, bytes: ByteArray) {
         try {
             val file = File(path)
-            if (file.exists()) {
-                val outputStream = FileOutputStream(file, true)
-                outputStream.write(bytes)
-                outputStream.close()
+            if (!file.exists()) {
+                file.createNewFile()
             }
+            val outputStream = FileOutputStream(file, true)
+            outputStream.write(bytes)
+            outputStream.close()
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
     }
 
     /**
