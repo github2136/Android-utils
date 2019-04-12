@@ -15,7 +15,7 @@ class JsonUtil private constructor() {
     }
 
     @Synchronized
-    fun <T> getObjectByStr(json: String, cls: Class<T>): T? {
+    fun <T> getObjectByStr(json: String?, cls: Class<T>): T? {
         return try {
             mGson.fromJson<T>(json, cls)
         } catch (e: JsonSyntaxException) {
@@ -23,7 +23,7 @@ class JsonUtil private constructor() {
         }
     }
     @Synchronized
-    fun <T> getObjectByStr(json: String, typeOf: Type): T? {
+    fun <T> getObjectByStr(json: String?, typeOf: Type): T? {
         return try {
             mGson.fromJson<T>(json, typeOf)
         } catch (e: JsonSyntaxException) {
