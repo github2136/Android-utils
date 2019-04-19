@@ -478,6 +478,9 @@ object FileUtil {
     fun saveFile(path: String, bytes: ByteArray) {
         try {
             val file = File(path)
+            if (!file.parentFile.exists()) {
+                file.parentFile.mkdirs()
+            }
             if (!file.exists()) {
                 file.createNewFile()
             }
@@ -500,6 +503,9 @@ object FileUtil {
     fun appendFile(path: String, bytes: ByteArray) {
         try {
             val file = File(path)
+            if (!file.parentFile.exists()) {
+                file.parentFile.mkdirs()
+            }
             if (!file.exists()) {
                 file.createNewFile()
             }
