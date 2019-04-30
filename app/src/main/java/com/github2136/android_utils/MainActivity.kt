@@ -42,18 +42,18 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         Log.e("asexxx", "key $keyStr")
 
         val encryptData = SymmetricEncryptionUtil.encrypt(Base64.decode(keyStr, Base64.NO_WRAP),
-                SymmetricEncryptionUtil.AES,
-                data.toByteArray(),
-                SymmetricEncryptionUtil.MODE_ECB,
-                SymmetricEncryptionUtil.PADDING_PKCS5)
+                                                          SymmetricEncryptionUtil.AES,
+                                                          data.toByteArray(),
+                                                          SymmetricEncryptionUtil.MODE_ECB,
+                                                          SymmetricEncryptionUtil.PADDING_PKCS5)
         val encryptStr = Base64.encodeToString(encryptData, Base64.NO_WRAP)
         Log.e("asexxx", "encrypt $encryptStr")
 
         val decryptData = SymmetricEncryptionUtil.decrypt(Base64.decode(keyStr, Base64.NO_WRAP),
-                SymmetricEncryptionUtil.AES,
-                Base64.decode(encryptStr, Base64.NO_WRAP),
-                SymmetricEncryptionUtil.MODE_ECB,
-                SymmetricEncryptionUtil.PADDING_PKCS5)
+                                                          SymmetricEncryptionUtil.AES,
+                                                          Base64.decode(encryptStr, Base64.NO_WRAP),
+                                                          SymmetricEncryptionUtil.MODE_ECB,
+                                                          SymmetricEncryptionUtil.PADDING_PKCS5)
 
         Log.e("asexxx", "decrypt ${String(decryptData!!)}")
 
@@ -66,37 +66,41 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         Log.e("rsaxxx", "privateKey $privateKey")
 
         val encryptData2 = AsymmetricEncryptionUtil.encryptByPublicKey(
-                keyData2.public.encoded,
-                data2.toByteArray(),
-                AsymmetricEncryptionUtil.MODE_ECB,
-                AsymmetricEncryptionUtil.PADDING_PKCS1)
+            keyData2.public.encoded,
+            data2.toByteArray(),
+            AsymmetricEncryptionUtil.MODE_ECB,
+            AsymmetricEncryptionUtil.PADDING_PKCS1)
 
 
         val encryptStr2 = Base64.encodeToString(encryptData2, Base64.NO_WRAP)
         Log.e("rsaxxx", "encrypt2 $encryptStr2")
 
         val decryptData2 = AsymmetricEncryptionUtil.decryptByPrivateKey(
-                keyData2.private.encoded,
-                encryptData2!!,
-                AsymmetricEncryptionUtil.MODE_ECB,
-                AsymmetricEncryptionUtil.PADDING_PKCS1)
+            keyData2.private.encoded,
+            encryptData2!!,
+            AsymmetricEncryptionUtil.MODE_ECB,
+            AsymmetricEncryptionUtil.PADDING_PKCS1)
         Log.e("rsaxxx", "decrypt ${String(decryptData2!!)}")
 
 
         val encryptData3 = AsymmetricEncryptionUtil.encryptByPrivateKey(
-                keyData2.private.encoded,
-                data2.toByteArray(),
-                AsymmetricEncryptionUtil.MODE_ECB,
-                AsymmetricEncryptionUtil.PADDING_PKCS1)
+            keyData2.private.encoded,
+            data2.toByteArray(),
+            AsymmetricEncryptionUtil.MODE_ECB,
+            AsymmetricEncryptionUtil.PADDING_PKCS1)
         val encryptStr3 = Base64.encodeToString(encryptData3, Base64.NO_WRAP)
         Log.e("rsaxxx", "encrypt3 $encryptStr3")
 
         val decryptData3 = AsymmetricEncryptionUtil.decryptByPublicKey(
-                keyData2.public.encoded,
-                encryptData3!!,
-                AsymmetricEncryptionUtil.MODE_ECB,
-                AsymmetricEncryptionUtil.PADDING_PKCS1)
+            keyData2.public.encoded,
+            encryptData3!!,
+            AsymmetricEncryptionUtil.MODE_ECB,
+            AsymmetricEncryptionUtil.PADDING_PKCS1)
         Log.e("rsaxxx", "decrypt ${String(decryptData3!!)}")
+        JsonUtil.dateFormat = "yyyy-MM-dd"
+        val json = JsonUtil.instance
+        val dStr = json.getGson().toJson(Date())
+        val d = json.getObjectByStr(dStr, Date::class.java)
 
     }
 

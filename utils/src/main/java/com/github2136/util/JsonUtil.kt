@@ -9,7 +9,7 @@ import java.lang.reflect.Type
  * Created by yb on 2018/8/24.
  */
 class JsonUtil private constructor() {
-    private val mGson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
+    private val mGson: Gson = GsonBuilder().setDateFormat(dateFormat).create()
     fun getGson(): Gson {
         return mGson
     }
@@ -22,6 +22,7 @@ class JsonUtil private constructor() {
             null
         }
     }
+
     @Synchronized
     fun <T> getObjectByStr(json: String?, typeOf: Type): T? {
         return try {
@@ -32,6 +33,7 @@ class JsonUtil private constructor() {
     }
 
     companion object {
+        var dateFormat = "yyyy-MM-dd HH:mm:ss"
         val instance: JsonUtil by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             JsonUtil()
         }
