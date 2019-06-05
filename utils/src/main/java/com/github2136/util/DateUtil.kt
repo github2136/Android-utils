@@ -104,4 +104,34 @@ object DateUtil {
         }
         return relativeTimeStr
     }
+
+    /**
+     * 获取两个时间差距date2必须晚于date1
+     */
+    fun getRelativeTimeString(date1: Date, date2: Date): String {
+        val interval: Long //相差时间
+        val dateTimeMil = date1.time
+        val diffTimeMil = date2.time - dateTimeMil
+        val relativeTimeStr: String
+
+        when {
+            diffTimeMil > DateUtil.DAY -> {
+                interval = diffTimeMil / DateUtil.DAY
+                relativeTimeStr = String.format("%d 天", interval)
+            }
+            diffTimeMil > DateUtil.HOUR -> {
+                interval = diffTimeMil / DateUtil.HOUR
+                relativeTimeStr = String.format("%d 小时", interval)
+            }
+            diffTimeMil > DateUtil.MINUTE -> {
+                interval = diffTimeMil / DateUtil.MINUTE
+                relativeTimeStr = String.format("%d 分钟", interval)
+            }
+            else -> {
+                interval = diffTimeMil / DateUtil.SECOND
+                relativeTimeStr = String.format("%d 秒", interval)
+            }
+        }
+        return relativeTimeStr
+    }
 }
