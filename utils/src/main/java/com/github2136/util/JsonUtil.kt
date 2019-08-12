@@ -38,5 +38,9 @@ class JsonUtil private constructor() {
         val instance: JsonUtil by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             JsonUtil()
         }
+
+        fun newInstance(): JsonUtil {
+            return JsonUtil()
+        }
     }
 }

@@ -75,7 +75,7 @@ class CrashHandler private constructor(val application: Application, val debug: 
      */
     private fun saveException(application: Application, ex: Throwable) {
         val sb = getLog(ex)
-        val filename = FileUtil.createFileName("log", ".log")
+        val filename = FileUtil.createFileName("log", ".txt")
         val logFile = File(FileUtil.getExternalStorageProjectPath(application) + File.separator + "Log", filename)
         FileUtil.saveFile(logFile.path, sb.toString())
     }

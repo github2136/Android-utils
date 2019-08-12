@@ -45,17 +45,4 @@ object CommonUtil {
         }
         return true
     }
-
-    /**
-     * 该Intent是否可执行
-     *
-     * @param context
-     * @param intent
-     * @return
-     */
-    fun isIntentExisting(context: Context, intent: Intent): Boolean {
-        val packageManager = context.packageManager
-        val resolveInfo = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        return resolveInfo.size > 0
-    }
 }
