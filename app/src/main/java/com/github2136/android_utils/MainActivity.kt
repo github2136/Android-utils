@@ -1,10 +1,13 @@
 package com.github2136.android_utils
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.collection.ArrayMap
 import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.util.*
@@ -15,6 +18,10 @@ import java.util.*
  * Created by yb on 2018/10/30.
  */
 class MainActivity : BaseActivity(), View.OnClickListener {
+
+    private val permissionArrayMap = ArrayMap<String, String>()
+    val permissionUtil by lazy { PermissionUtil(this) }
+
     override fun getViewResId(): Int {
         return R.layout.activity_main
     }
@@ -102,8 +109,23 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         val dStr = json.getGson().toJson(Date())
         val d = json.getObjectByStr(dStr, Date::class.java)
 
+
+        permissionArrayMap[Manifest.permission.WRITE_EXTERNAL_STORAGE] = "读写手机存储"
+        permissionArrayMap[Manifest.permission.READ_PHONE_STATE] = "获取手机信息"
+
+        permissionUtil.getPermission(permissionArrayMap) {
+          showToast("ok")
+        }
+    }
+    override fun onRestart() {
+        super.onRestart()
+        permissionUtil.onRestart()
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
     override fun onClick(v: View?) {
         var intent: Intent? = null
         when (v?.id) {

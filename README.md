@@ -13,6 +13,7 @@ android-utils
 **JsonUtil** json处理类，使用Gson，参考**Appli**  
 **SpanUtil** SpannableStringBuilder文字处理类  
 **SPUtil** SharedPreferences处理类。**必须在Manifest中添加默认名（util_sp_name）**  
+**PermissionUtil** 6.0动态权限请求类  
 **NetworkUtil** 网络状态判定  
 **CrashHandler** 异常捕获类，默认把异常信息存储外部存储目录下的Log目录下  
 **AsymmetricEncryptionUtil** 非对称加密类  

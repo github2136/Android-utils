@@ -134,7 +134,7 @@ class SPUtil {
 
     companion object {
         @Volatile
-        var instance: SPUtil? = null
+        private var instance: SPUtil? = null
 
         fun getInstance(context: Context): SPUtil {
             if (instance == null) {
