@@ -1,6 +1,7 @@
 package com.github2136.android_utils
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
@@ -8,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.collection.ArrayMap
+import androidx.core.content.edit
 import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.util.*
@@ -114,9 +116,17 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         permissionArrayMap[Manifest.permission.READ_PHONE_STATE] = "获取手机信息"
 
         permissionUtil.getPermission(permissionArrayMap) {
-          showToast("ok")
+            showToast("ok")
         }
+        val sp = SPUtil.getSharedPreferences(this)
+        getPreferences(Context.MODE_PRIVATE)
+        sp.edit {
+            putString("abc", "def")
+            putInt("aaa", 111)
+        }
+        sp.getString("abc","")
     }
+
     override fun onRestart() {
         super.onRestart()
         permissionUtil.onRestart()
@@ -126,6 +136,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         permissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+
     override fun onClick(v: View?) {
         var intent: Intent? = null
         when (v?.id) {
