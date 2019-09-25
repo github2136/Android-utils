@@ -6,12 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.github2136.android_utils.load_more.BaseListActivity">
+    tools:context="com.github2136.android_utils.load_more.ListActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="@string/RecyclerView_Linear"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </LinearLayout>

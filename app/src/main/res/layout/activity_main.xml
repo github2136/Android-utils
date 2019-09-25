@@ -42,11 +42,6 @@
         android:layout_height="wrap_content"
         android:text="Hello World!"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/RecyclerView_Grid"/>
-
     <Button
         android:id="@+id/btn_select_image"
         android:layout_width="wrap_content"
