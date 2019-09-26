@@ -59,7 +59,7 @@ object FileUtil {
     }
 
     /**
-     * 外部存储项目目录
+     * 外部存储项目目录，默认为AndroidUtil
      *
      * @return
      */
@@ -75,7 +75,7 @@ object FileUtil {
         return if (!TextUtils.isEmpty(projectPath)) {
             Environment.getExternalStorageDirectory().absoluteFile.toString() + File.separator + projectPath
         } else {
-            throw NullPointerException("Project Path is null")
+            Environment.getExternalStorageDirectory().absoluteFile.toString() + File.separator + "AndroidUtil"
         }
     }
 

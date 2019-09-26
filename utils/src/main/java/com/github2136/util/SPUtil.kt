@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.text.TextUtils
 
 /**
- *      SharedPreferences
+ *      SharedPreferences，默认值为UtilSp
  *      在Manifest中添加名为util_sp_name的<meta-data/>
  */
 object SPUtil {
@@ -24,10 +24,10 @@ object SPUtil {
                         name = appInfo.metaData?.getString("util_sp_name")
                     } catch (e: PackageManager.NameNotFoundException) {
                     }
-                    if (!TextUtils.isEmpty(name)) {
-                        sp = context.getSharedPreferences(name, Context.MODE_PRIVATE)
+                    sp = if (!TextUtils.isEmpty(name)) {
+                        context.getSharedPreferences(name, Context.MODE_PRIVATE)
                     } else {
-                        throw NullPointerException("SharedPreferences name is null")
+                        context.getSharedPreferences("UtilSp", Context.MODE_PRIVATE)
                     }
                 }
             }
