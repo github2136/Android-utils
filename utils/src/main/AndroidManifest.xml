@@ -5,6 +5,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <application/>
+    <application>
+        <meta-data
+            android:name="util_sp_name"
+            android:value="UtilSp"/>
+        <meta-data
+            android:name="util_project_path"
+            android:value="AndroidUtil"/>
+    </application>
 
 </manifest>
