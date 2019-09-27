@@ -147,17 +147,6 @@ object FileUtil {
     ///////////////////////////////////////////////////////////////////////////
     // 创建文件名称、创建文件
     ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     * 创建文件名称
-     *
-     * @param suffix 后缀 .jpg .png
-     */
-    @JvmStatic
-    fun createFileName(suffix: String): String {
-        return createFileName(null, suffix)
-    }
-
     /**
      * 创建文件名称
      *
@@ -165,7 +154,7 @@ object FileUtil {
      * @param suffix 后缀 .jpg .png
      */
     @JvmStatic
-    fun createFileName(prefix: String?, suffix: String): String {
+    fun createFileName(prefix: String? = null, suffix: String): String {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(Date())
         return (if (prefix == null) "" else prefix + "_") + timeStamp + suffix
     }
