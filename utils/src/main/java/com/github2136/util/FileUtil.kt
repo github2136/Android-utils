@@ -31,7 +31,6 @@ object FileUtil {
     private val PATH_LOG = "Log"
     private val PATH_DOC = "Documents"
 
-
     /**
      * 外部存储可写
      */
@@ -65,38 +64,25 @@ object FileUtil {
      */
     @JvmStatic
     fun getExternalStorageProjectPath(context: Context): String {
-        var projectPath: String? = null
+        var projectPath = "AndroidUtil"
         try {
             val appInfo = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
-            projectPath = appInfo.metaData?.getString("util_project_path")
+            appInfo.metaData?.getString("util_project_path")?.apply {
+                projectPath = this
+            }
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-        return if (!TextUtils.isEmpty(projectPath)) {
-            Environment.getExternalStorageDirectory().absoluteFile.toString() + File.separator + projectPath
-        } else {
-            Environment.getExternalStorageDirectory().absoluteFile.toString() + File.separator + "AndroidUtil"
-        }
+        return Environment.getExternalStorageDirectory().absoluteFile.toString() + File.separator + projectPath
     }
+
 
     /**
      * 外部存储私有根目录
      */
     @JvmStatic
-    fun getExternalStoragePrivateRootPath(context: Context): String {
-        return getExternalStoragePrivateRootPath(context, null)
-    }
-
-    /**
-     * 外部存储私有根目录
-     */
-    @JvmStatic
-    fun getExternalStoragePrivateRootPath(context: Context, path: String?): String {
-        var rootPath = context.getExternalFilesDir(null)!!.toString()
-        if (!TextUtils.isEmpty(path)) {
-            rootPath += File.separator + path!!
-        }
-        return rootPath
+    fun getExternalStoragePrivateRootPath(context: Context, path: String? = null): String {
+        return context.getExternalFilesDir(path)!!.toString()
     }
 
     /**
@@ -113,7 +99,7 @@ object FileUtil {
     @JvmStatic
     fun getExternalStoragePrivateDocPath(context: Context): String {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            val path = context.getExternalFilesDir(null)!!.absolutePath + File.separator + PATH_DOC
+            val path = context.getExternalFilesDir(PATH_DOC)!!.absolutePath
             val doc = File(path)
             if (!doc.exists()) {
                 doc.mkdirs()
@@ -137,7 +123,7 @@ object FileUtil {
      */
     @JvmStatic
     fun getExternalStoragePrivateLogPath(context: Context): String {
-        val path = context.getExternalFilesDir(null)!!.absolutePath + File.separator + PATH_LOG
+        val path = context.getExternalFilesDir(PATH_LOG)!!.absolutePath
         val log = File(path)
         if (!log.exists()) {
             log.mkdirs()
@@ -169,8 +155,7 @@ object FileUtil {
     @TargetApi(19)
     @JvmStatic
     fun getFileAbsolutePath(context: Context, imageUri: Uri): String? {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract
-                        .isDocumentUri(context, imageUri)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, imageUri)) {
             if (isExternalStorageDocument(imageUri)) {
                 val docId = DocumentsContract.getDocumentId(imageUri)
                 val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -180,8 +165,7 @@ object FileUtil {
                 }
             } else if (isDownloadsDocument(imageUri)) {
                 val id = DocumentsContract.getDocumentId(imageUri)
-                val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long
-                        .valueOf(id))
+                val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
                 return getDataColumn(context, contentUri, null, null)
             } else if (isMediaDocument(imageUri)) {
                 val docId = DocumentsContract.getDocumentId(imageUri)
@@ -300,11 +284,11 @@ object FileUtil {
     @JvmStatic
     fun getFileSizeTypeStr(sizeType: Int): String {
         when (sizeType) {
-            SIZETYPE_B -> return "B"
+            SIZETYPE_B  -> return "B"
             SIZETYPE_KB -> return "KB"
             SIZETYPE_MB -> return "MB"
             SIZETYPE_GB -> return "GB"
-            else -> return "错误的类型"
+            else        -> return "错误的类型"
         }
     }
 
@@ -393,12 +377,10 @@ object FileUtil {
         val df = DecimalFormat("#.00")
         var fileSizeLong = 0.0
         when (sizeType) {
-            SIZETYPE_B -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble()))
+            SIZETYPE_B  -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble()))
             SIZETYPE_KB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1024))
             SIZETYPE_MB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1048576))
             SIZETYPE_GB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1073741824))
-            else -> {
-            }
         }
         return fileSizeLong
     }

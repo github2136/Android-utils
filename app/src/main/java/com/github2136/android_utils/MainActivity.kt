@@ -125,6 +125,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             putInt("aaa", 111)
         }
         sp.getString("abc","")
+
+        FileUtil.getExternalStoragePrivateRootPath(this,"abc")
     }
 
     override fun onRestart() {

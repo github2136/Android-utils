@@ -18,17 +18,15 @@ object SPUtil {
         if (sp == null) {
             synchronized(SharedPreferences::class) {
                 if (sp == null) {
-                    var name: String? = null
+                    var name = "UtilSp"
                     try {
                         val appInfo: ApplicationInfo = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
-                        name = appInfo.metaData?.getString("util_sp_name")
+                        appInfo.metaData?.getString("util_sp_name")?.apply {
+                            name = this
+                        }
                     } catch (e: PackageManager.NameNotFoundException) {
                     }
-                    sp = if (!TextUtils.isEmpty(name)) {
-                        context.getSharedPreferences(name, Context.MODE_PRIVATE)
-                    } else {
-                        context.getSharedPreferences("UtilSp", Context.MODE_PRIVATE)
-                    }
+                    sp = context.getSharedPreferences(name, Context.MODE_PRIVATE)
                 }
             }
         }
