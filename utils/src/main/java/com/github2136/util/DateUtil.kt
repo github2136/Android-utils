@@ -1,6 +1,5 @@
 package com.github2136.util
 
-import android.text.TextUtils
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,12 +24,8 @@ object DateUtil {
     /**
      * 日期转文字
      */
-    fun date2str(date: Date, pattern: String = "", timeZone: String = TimeZone.getDefault().id): String {
-        val sdf: SimpleDateFormat = if (!TextUtils.isEmpty(pattern)) {
-            SimpleDateFormat(pattern, Locale.getDefault())
-        } else {
-            SimpleDateFormat(Date_pattern_default, Locale.getDefault())
-        }
+    fun date2str(date: Date, pattern: String = Date_pattern_default, timeZone: String = TimeZone.getDefault().id): String {
+        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getTimeZone(timeZone)
         return sdf.format(date)
     }
@@ -38,13 +33,9 @@ object DateUtil {
     /**
      * 文字转日期
      */
-    fun str2date(dateStr: String, pattern: String = "", timeZone: String = TimeZone.getDefault().id): Date? {
+    fun str2date(dateStr: String, pattern: String = Date_pattern_default, timeZone: String = TimeZone.getDefault().id): Date? {
         return try {
-            val sdf: SimpleDateFormat = if (!TextUtils.isEmpty(pattern)) {
-                SimpleDateFormat(pattern, Locale.getDefault())
-            } else {
-                SimpleDateFormat(Date_pattern_default, Locale.getDefault())
-            }
+            val sdf = SimpleDateFormat(pattern, Locale.getDefault())
             sdf.timeZone = TimeZone.getTimeZone(timeZone)
             sdf.parse(dateStr)
         } catch (e: ParseException) {
@@ -56,12 +47,8 @@ object DateUtil {
     /**
      * 获取现在的时间
      */
-    fun getDateNow(pattern: String = "", timeZone: String = TimeZone.getDefault().id): String {
-        val sdf: SimpleDateFormat = if (!TextUtils.isEmpty(pattern)) {
-            SimpleDateFormat(pattern, Locale.getDefault())
-        } else {
-            SimpleDateFormat(Date_pattern_default, Locale.getDefault())
-        }
+    fun getDateNow(pattern: String = Date_pattern_default, timeZone: String = TimeZone.getDefault().id): String {
+        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getTimeZone(timeZone)
         return sdf.format(Date())
     }
@@ -69,7 +56,7 @@ object DateUtil {
     /**
      * UTC转换为指定时区时间格式
      */
-    fun UTC2GMT(utc: String, timeZone: String = TimeZone.getDefault().id, pattern: String = ""): String {
+    fun UTC2GMT(utc: String, timeZone: String = TimeZone.getDefault().id, pattern: String = Date_pattern_default): String {
         val utcDate: Date? = str2date(utc, pattern, TimeZone.getTimeZone("UTC").id)
         return utcDate?.let {
             date2str(it, pattern, timeZone)
@@ -88,19 +75,19 @@ object DateUtil {
         val absDiffTimeMil = Math.abs(diffTimeMil)//绝对时间
         when {
             absDiffTimeMil > DAY * 3 -> relativeTimeStr = date2str(date, Date_Pattern_Short1)
-            absDiffTimeMil > DAY -> {
+            absDiffTimeMil > DAY     -> {
                 interval = absDiffTimeMil / DAY
                 relativeTimeStr = String.format("%d 天%s", interval, if (diffTimeMil > 0) "前" else "后")
             }
-            absDiffTimeMil > HOUR -> {
+            absDiffTimeMil > HOUR    -> {
                 interval = absDiffTimeMil / HOUR
                 relativeTimeStr = String.format("%d 小时%s", interval, if (diffTimeMil > 0) "前" else "后")
             }
-            absDiffTimeMil > MINUTE -> {
+            absDiffTimeMil > MINUTE  -> {
                 interval = absDiffTimeMil / MINUTE
                 relativeTimeStr = String.format("%d 分钟%s", interval, if (diffTimeMil > 0) "前" else "后")
             }
-            else -> relativeTimeStr = if (diffTimeMil > 0) "刚刚" else "马上"
+            else                     -> relativeTimeStr = if (diffTimeMil > 0) "刚刚" else "马上"
         }
         return relativeTimeStr
     }
@@ -115,11 +102,11 @@ object DateUtil {
         val relativeTimeStr: String
 
         when {
-            diffTimeMil > DateUtil.DAY -> {
+            diffTimeMil > DateUtil.DAY    -> {
                 interval = diffTimeMil / DateUtil.DAY
                 relativeTimeStr = String.format("%d 天", interval)
             }
-            diffTimeMil > DateUtil.HOUR -> {
+            diffTimeMil > DateUtil.HOUR   -> {
                 interval = diffTimeMil / DateUtil.HOUR
                 relativeTimeStr = String.format("%d 小时", interval)
             }
@@ -127,7 +114,7 @@ object DateUtil {
                 interval = diffTimeMil / DateUtil.MINUTE
                 relativeTimeStr = String.format("%d 分钟", interval)
             }
-            else -> {
+            else                          -> {
                 interval = diffTimeMil / DateUtil.SECOND
                 relativeTimeStr = String.format("%d 秒", interval)
             }
