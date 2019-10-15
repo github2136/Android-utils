@@ -14,6 +14,7 @@ object SPUtil {
     @Volatile
     private var sp: SharedPreferences? = null
 
+    @JvmStatic
     fun getSharedPreferences(context: Context): SharedPreferences {
         if (sp == null) {
             synchronized(SharedPreferences::class) {

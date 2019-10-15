@@ -11,19 +11,20 @@ import java.util.*
  *      日期格式化参数说明 http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
  */
 object DateUtil {
-    val SECOND: Long = 1000
-    val MINUTE = SECOND * 60
-    val HOUR = MINUTE * 60
-    val DAY = HOUR * 24
-    val WEEK = DAY * 7
+    const val SECOND: Long = 1000
+    const val MINUTE = SECOND * 60
+    const val HOUR = MINUTE * 60
+    const val DAY = HOUR * 24
+    const val WEEK = DAY * 7
 
-    val Date_pattern_default = "yyyy-MM-dd HH:mm:ss"
-    val Date_Pattern_Short1 = "yyyy-MM-dd"
+    const val Date_pattern_default = "yyyy-MM-dd HH:mm:ss"
+    const val Date_Pattern_Short1 = "yyyy-MM-dd"
 
 
     /**
      * 日期转文字
      */
+    @JvmStatic
     fun date2str(date: Date, pattern: String = Date_pattern_default, timeZone: String = TimeZone.getDefault().id): String {
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getTimeZone(timeZone)
@@ -33,6 +34,7 @@ object DateUtil {
     /**
      * 文字转日期
      */
+    @JvmStatic
     fun str2date(dateStr: String, pattern: String = Date_pattern_default, timeZone: String = TimeZone.getDefault().id): Date? {
         return try {
             val sdf = SimpleDateFormat(pattern, Locale.getDefault())
@@ -47,6 +49,7 @@ object DateUtil {
     /**
      * 获取现在的时间
      */
+    @JvmStatic
     fun getDateNow(pattern: String = Date_pattern_default, timeZone: String = TimeZone.getDefault().id): String {
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getTimeZone(timeZone)
@@ -56,6 +59,7 @@ object DateUtil {
     /**
      * UTC转换为指定时区时间格式
      */
+    @JvmStatic
     fun UTC2GMT(utc: String, timeZone: String = TimeZone.getDefault().id, pattern: String = Date_pattern_default): String {
         val utcDate: Date? = str2date(utc, pattern, TimeZone.getTimeZone("UTC").id)
         return utcDate?.let {
@@ -66,6 +70,7 @@ object DateUtil {
     /**
      * 获取相对今天的时间
      */
+    @JvmStatic
     fun getRelativeTimeString(date: Date): String {
         val interval: Long //相差时间
         val dateTimeMil = date.time
@@ -95,6 +100,7 @@ object DateUtil {
     /**
      * 获取两个时间差距date2必须晚于date1
      */
+    @JvmStatic
     fun getRelativeTimeString(date1: Date, date2: Date): String {
         val interval: Long //相差时间
         val dateTimeMil = date1.time

@@ -43,6 +43,7 @@ object AsymmetricEncryptionUtil {
     /**
      * 公钥加密
      */
+    @JvmStatic
     fun encryptByPublicKey(mKey: ByteArray,
                            mData: ByteArray,
                            @EncryptMode mMode: String = "",
@@ -88,6 +89,7 @@ object AsymmetricEncryptionUtil {
     /**
      * 私钥解密
      */
+    @JvmStatic
     fun decryptByPrivateKey(mKey: ByteArray,
                             mData: ByteArray,
                             @EncryptMode mMode: String = "",
@@ -132,6 +134,7 @@ object AsymmetricEncryptionUtil {
     /**
      * 私钥加密
      */
+    @JvmStatic
     fun encryptByPrivateKey(mKey: ByteArray,
                             mData: ByteArray,
                             @EncryptMode mMode: String = "",
@@ -178,6 +181,7 @@ object AsymmetricEncryptionUtil {
     /**
      * 公钥解密
      */
+    @JvmStatic
     fun decryptByPublicKey(mKey: ByteArray,
                            mData: ByteArray,
                            @EncryptMode mMode: String = "",
@@ -222,6 +226,7 @@ object AsymmetricEncryptionUtil {
     /**
      * 生成key
      */
+    @JvmStatic
     fun getKey(size: Int = 1024): KeyPair? {
         return try {
             val keyPairGenerator = KeyPairGenerator.getInstance(RSA)
