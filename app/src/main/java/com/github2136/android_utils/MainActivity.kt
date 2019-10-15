@@ -43,6 +43,15 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         Log.e("t", t2)
         MessageDigestUtil.getMessageDigest("ttt".toByteArray(), "MD5")
 
+        val calendar1 = Calendar.getInstance()
+        val calendar2 = Calendar.getInstance()
+//        calendar2.add(Calendar.DAY_OF_MONTH, 2)
+        calendar2.add(Calendar.HOUR, 23)
+        calendar2.add(Calendar.MINUTE, 10)
+        calendar2.add(Calendar.SECOND, 15)
+
+        val interval = DateUtil.getRelativeTimeString(calendar1.time, calendar2.time, DateUtil.MINUTE)
+        Log.e("interval", interval)
 
         val data = "12355484s5d8f1w5w"
 

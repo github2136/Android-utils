@@ -1,5 +1,6 @@
 package com.github2136.util
 
+import java.lang.StringBuilder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -108,23 +109,56 @@ object DateUtil {
         val relativeTimeStr: String
 
         when {
-            diffTimeMil > DateUtil.DAY    -> {
-                interval = diffTimeMil / DateUtil.DAY
+            diffTimeMil > DAY    -> {
+                interval = diffTimeMil / DAY
                 relativeTimeStr = String.format("%d 天", interval)
             }
-            diffTimeMil > DateUtil.HOUR   -> {
-                interval = diffTimeMil / DateUtil.HOUR
+            diffTimeMil > HOUR   -> {
+                interval = diffTimeMil / HOUR
                 relativeTimeStr = String.format("%d 小时", interval)
             }
-            diffTimeMil > DateUtil.MINUTE -> {
-                interval = diffTimeMil / DateUtil.MINUTE
+            diffTimeMil > MINUTE -> {
+                interval = diffTimeMil / MINUTE
                 relativeTimeStr = String.format("%d 分钟", interval)
             }
-            else                          -> {
-                interval = diffTimeMil / DateUtil.SECOND
+            else                 -> {
+                interval = diffTimeMil / SECOND
                 relativeTimeStr = String.format("%d 秒", interval)
             }
         }
         return relativeTimeStr
+    }
+
+    /**
+     * 获取两个时间差距date2必须晚于date1
+     * @param precision 表示精度
+     */
+    @JvmStatic
+    fun getRelativeTimeString(date1: Date, date2: Date, precision: Long): String {
+        var interval: Long //相差时间
+        val dateTimeMil = date1.time
+        var diffTimeMil = date2.time - dateTimeMil
+        val relativeTimeStr = StringBuilder()
+
+        if (precision <= DAY && diffTimeMil > DAY) {
+            interval = diffTimeMil / DAY
+            relativeTimeStr.append(String.format("%d天", interval))
+            diffTimeMil -= interval * DAY
+        }
+        if (precision <= HOUR && diffTimeMil > HOUR) {
+            interval = diffTimeMil / HOUR
+            relativeTimeStr.append(String.format("%02d小时", interval))
+            diffTimeMil -= interval * HOUR
+        }
+        if (precision <= MINUTE && diffTimeMil > MINUTE) {
+            interval = diffTimeMil / MINUTE
+            relativeTimeStr.append(String.format("%02d分钟", interval))
+            diffTimeMil -= interval * MINUTE
+        }
+        if (precision <= SECOND) {
+            interval = diffTimeMil / SECOND
+            relativeTimeStr.append(String.format("%02d秒", interval))
+        }
+        return relativeTimeStr.toString()
     }
 }
