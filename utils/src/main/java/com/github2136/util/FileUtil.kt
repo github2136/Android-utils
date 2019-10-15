@@ -136,11 +136,11 @@ object FileUtil {
     /**
      * 创建文件名称
      *
-     * @param prefix 前缀
      * @param suffix 后缀 .jpg .png
+     * @param prefix 前缀
      */
     @JvmStatic
-    fun createFileName(prefix: String? = null, suffix: String): String {
+    fun createFileName(suffix: String, prefix: String? = null): String {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(Date())
         return (if (prefix == null) "" else prefix + "_") + timeStamp + suffix
     }
