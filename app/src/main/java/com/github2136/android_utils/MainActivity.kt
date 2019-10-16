@@ -50,7 +50,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         calendar2.add(Calendar.MINUTE, 10)
         calendar2.add(Calendar.SECOND, 15)
 
-        val interval = DateUtil.getRelativeTimeString(calendar1.time, calendar2.time, DateUtil.MINUTE)
+        val interval = DateUtil.getRelativeTimeString(calendar1.time, calendar2.time, DateUtil.SECOND)
         Log.e("interval", interval)
 
         val data = "12355484s5d8f1w5w"

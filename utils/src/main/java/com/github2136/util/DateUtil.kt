@@ -1,6 +1,5 @@
 package com.github2136.util
 
-import java.lang.StringBuilder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -143,17 +142,17 @@ object DateUtil {
         if (precision <= DAY && diffTimeMil > DAY) {
             interval = diffTimeMil / DAY
             relativeTimeStr.append(String.format("%d天", interval))
-            diffTimeMil -= interval * DAY
+            diffTimeMil %= DAY
         }
         if (precision <= HOUR && diffTimeMil > HOUR) {
             interval = diffTimeMil / HOUR
             relativeTimeStr.append(String.format("%02d小时", interval))
-            diffTimeMil -= interval * HOUR
+            diffTimeMil %= HOUR
         }
         if (precision <= MINUTE && diffTimeMil > MINUTE) {
             interval = diffTimeMil / MINUTE
             relativeTimeStr.append(String.format("%02d分钟", interval))
-            diffTimeMil -= interval * MINUTE
+            diffTimeMil %= MINUTE
         }
         if (precision <= SECOND) {
             interval = diffTimeMil / SECOND
