@@ -1,5 +1,6 @@
 package com.github2136.util
 
+import android.Manifest
 import android.app.Application
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -7,10 +8,12 @@ import android.os.Build
 import android.os.Looper
 import android.os.Process
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * Created by yb on 2018/9/4.
@@ -53,14 +56,18 @@ class CrashHandler private constructor(val application: Application, val debug: 
             mDefaultHandler.uncaughtException(t, e)
         } else {
             // 使用Toast来显示异常信息
-            object : Thread() {
-                override fun run() {
-                    Looper.prepare()
-                    Toast.makeText(application, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_SHORT)
-                            .show()
-                    Looper.loop()
+            thread {
+                Looper.prepare()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    ContextCompat.checkSelfPermission(application, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    //没有权限，存储至外部私有目录
+                    Toast.makeText(application, "很抱歉,程序出现异常,即将退出,已将错误日志写至内部目录", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(application, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_SHORT).show()
+
                 }
-            }.start()
+                Looper.loop()
+            }
             try {
                 Thread.sleep(4000)
             } catch (e: InterruptedException) {
@@ -75,14 +82,21 @@ class CrashHandler private constructor(val application: Application, val debug: 
      */
     private fun saveException(application: Application, ex: Throwable) {
         val sb = getLog(ex)
-        val filename = FileUtil.createFileName("log", ".log")
-        val logFile = File(FileUtil.getExternalStoragePrivateLogPath(application), filename)
+        val filename = FileUtil.createFileName("log", ".txt")
+        var logFile = File(FileUtil.getExternalStorageProjectPath(application) + File.separator + "Log", filename)
+        //请求权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(application, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                //没有权限，存储至外部私有目录
+                logFile = File(FileUtil.getExternalStoragePrivateLogPath(application), filename)
+            }
+        }
         FileUtil.saveFile(logFile.path, sb.toString())
     }
 
     private fun getLog(ex: Throwable): StringBuffer {
         sb = StringBuffer()
-        map.map { entry ->  sb.append(entry.key).append(" = ").append( entry.value).append("\n")}
+        map.map { entry -> sb.append(entry.key).append(" = ").append(entry.value).append("\n") }
         sb.append(obtainExceptionInfo(ex))
         return sb
     }

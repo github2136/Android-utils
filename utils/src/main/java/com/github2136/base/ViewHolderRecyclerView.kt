@@ -66,7 +66,7 @@ open class ViewHolderRecyclerView(itemView: View,
      * @param resId
      * @param text
      */
-    fun setText(@IdRes resId: Int, text: CharSequence) {
+    fun setText(@IdRes resId: Int, text: CharSequence?) {
         getView<TextView>(resId)?.text = text
     }
 

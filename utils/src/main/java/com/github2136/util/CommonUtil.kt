@@ -9,11 +9,12 @@ import android.content.pm.PackageManager
  * 通用工具类
  */
 object CommonUtil {
+    @JvmStatic
     fun dp2px(context: Context, dp: Float): Int {
         val density = context.resources.displayMetrics.density
         return (dp * density + 0.5f).toInt()
     }
-
+    @JvmStatic
     fun px2dp(context: Context, px: Int): Int {
         val density = context.resources.displayMetrics.density
         return (px / density + 0.5f).toInt()
@@ -22,6 +23,7 @@ object CommonUtil {
     /**
      * 用来判断是否开启通知权限
      */
+    @JvmStatic
     fun isNotificationEnabled(context: Context): Boolean {
         val CHECK_OP_NO_THROW = "checkOpNoThrow"
         val OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION"
@@ -44,18 +46,5 @@ object CommonUtil {
             }
         }
         return true
-    }
-
-    /**
-     * 该Intent是否可执行
-     *
-     * @param context
-     * @param intent
-     * @return
-     */
-    fun isIntentExisting(context: Context, intent: Intent): Boolean {
-        val packageManager = context.packageManager
-        val resolveInfo = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        return resolveInfo.size > 0
     }
 }

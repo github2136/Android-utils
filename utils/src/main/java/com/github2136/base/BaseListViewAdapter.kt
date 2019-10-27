@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 /**
  * Created by yb on 2018/10/27.
  */
-abstract class BaseListAdapter<T>(protected var list: MutableList<T>? = null) : BaseAdapter() {
+abstract class BaseListViewAdapter<T>(protected var list: MutableList<T>? = null) : BaseAdapter() {
     lateinit var layoutInflater: LayoutInflater
     /**
      * 需要返回item布局的resource id

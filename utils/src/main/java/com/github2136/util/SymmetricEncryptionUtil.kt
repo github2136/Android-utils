@@ -53,6 +53,7 @@ object SymmetricEncryptionUtil {
     /**
      * 加密
      */
+    @JvmStatic
     fun encrypt(mKey: ByteArray,
                 @EncryptType mEncryptType: String,
                 mData: ByteArray,
@@ -75,6 +76,10 @@ object SymmetricEncryptionUtil {
         }
     }
 
+    /**
+     * 解密
+     */
+    @JvmStatic
     fun decrypt(mKey: ByteArray,
                 @EncryptType mEncryptType: String,
                 mData: ByteArray,
@@ -100,6 +105,7 @@ object SymmetricEncryptionUtil {
     /**
      * 生成key
      */
+    @JvmStatic
     fun getKey(@EncryptType type: String, size: Int): SecretKey? {
         return try {
             val keyGenerator = KeyGenerator.getInstance(type)

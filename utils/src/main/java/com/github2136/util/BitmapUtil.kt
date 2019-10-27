@@ -293,7 +293,6 @@ class BitmapUtil private constructor(path: String) {
     }
 
     companion object {
-
         fun getInstance(path: String): BitmapUtil = BitmapUtil(path)
     }
 }
