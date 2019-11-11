@@ -3,9 +3,7 @@ package com.github2136.android_utils.load_more
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.github2136.android_utils.R
-import com.github2136.base.BaseRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_list.*
 import java.util.*
 
