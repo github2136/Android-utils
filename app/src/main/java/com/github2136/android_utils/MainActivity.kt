@@ -136,6 +136,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         sp.getString("abc","")
 
         FileUtil.getExternalStoragePrivateRootPath(this,"abc")
+
+        val n1 = FileUtil.createFileName("log", ".txt")
+        val n2 = FileUtil.createFileName(".txt")
+
     }
 
     override fun onRestart() {

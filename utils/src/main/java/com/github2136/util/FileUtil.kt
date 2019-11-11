@@ -3,7 +3,6 @@ package com.github2136.util
 import android.annotation.TargetApi
 import android.content.ContentUris
 import android.content.Context
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -11,7 +10,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.text.TextUtils
 import android.util.Log
 import java.io.*
 import java.text.DecimalFormat
@@ -137,11 +135,21 @@ object FileUtil {
      * 创建文件名称
      *
      * @param suffix 后缀 .jpg .png
-     * @param prefix 前缀
      */
     @JvmStatic
-    fun createFileName(suffix: String, prefix: String? = null): String {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(Date())
+    fun createFileName(suffix: String): String {
+        return createFileName(null, suffix)
+    }
+
+    /**
+     * 创建文件名称
+     *
+     * @param prefix 前缀
+     * @param suffix 后缀 .jpg .png
+     */
+    @JvmStatic
+    fun createFileName(prefix: String?, suffix: String): String {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.CHINA).format(Date())
         return (if (prefix == null) "" else prefix + "_") + timeStamp + suffix
     }
 
