@@ -15,8 +15,4 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep public class com.github2136.util.AsymmetricEncryptionUtil
-
--keepclassmembers class com.github2136.util.AsymmetricEncryptionUtil {
-    <init>(*);
-}
+-keepclasseswithmembernames class com.google.gson.**{*;}
