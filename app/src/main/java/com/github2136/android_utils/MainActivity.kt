@@ -11,7 +11,7 @@ import androidx.collection.ArrayMap
 import androidx.core.content.edit
 import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
-import com.github2136.android_utils.proguard.ProguardClass
+import com.github2136.android_utils.proguard_class.ProguardClass
 import com.github2136.util.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
