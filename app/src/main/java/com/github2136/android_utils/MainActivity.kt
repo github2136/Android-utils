@@ -144,6 +144,23 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         Log.e("init","-----")
         val c1 = ProguardClass("aa")
 
+
+        val signKey = SignUtil.getKey(2048, mEncryptType = SignUtil.DSA)
+        signKey?.apply {
+            val signPublicKey = Base64.encodeToString(public.encoded, Base64.NO_WRAP)
+            val signPrivateKey = Base64.encodeToString(private.encoded, Base64.NO_WRAP)
+            Log.e("sign", "private key $signPrivateKey")
+            Log.e("sign", "public key $signPublicKey")
+            val content = "xxx111555999"
+            val pri = Base64.decode(signPrivateKey, Base64.NO_WRAP)
+            val pub = Base64.decode(signPublicKey, Base64.NO_WRAP)
+            val sign = SignUtil.sign(pri, content.toByteArray(), SignUtil.SIGN_SHA256withDSA)
+            val signStr = Base64.encodeToString(sign, Base64.NO_WRAP)
+
+            Log.e("sign", "signStr $signStr")
+            val v = SignUtil.verify(pub, content.toByteArray(), sign!!, SignUtil.SIGN_SHA256withDSA)
+            Log.e("sign", "v $v")
+        }
     }
 
     override fun onRestart() {

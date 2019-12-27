@@ -21,6 +21,7 @@ import javax.crypto.Cipher
  */
 object AsymmetricEncryptionUtil {
     const val RSA = "RSA"//1024+
+
     //如果添加了mode就必须添加padding
     const val MODE_ECB = "/ECB"// RSA
     const val MODE_NONE = "/NONE"//RSA
@@ -30,6 +31,7 @@ object AsymmetricEncryptionUtil {
     const val PADDING_OAEP_SHA_1 = "/OAEPwithSHA-1andMGF1Padding"//支持长度 keySize/8 - 42
     const val PADDING_OAEP_SHA_256 = "/OAEPwithSHA-256andMGF1Padding"//支持长度 keySize/8 -66
     const val PADDING_PKCS1 = "/PKCS1Padding" //支持长度 keySize/8 - 11
+
 
     @StringDef(RSA)
     internal annotation class EncryptType
@@ -55,7 +57,7 @@ object AsymmetricEncryptionUtil {
             val encryptSize = getEncryptDataSize(mKeySize, mPadding)
 
             val x509eks = X509EncodedKeySpec(mKey)
-            val keyFactory = KeyFactory.getInstance(RSA)
+            val keyFactory = KeyFactory.getInstance(mEncryptType)
             val key = keyFactory.generatePublic(x509eks)
 
             val cipher = Cipher.getInstance(mEncryptType + mMode + mPadding)
@@ -100,7 +102,7 @@ object AsymmetricEncryptionUtil {
             val decryptSize = mKeySize / 8
 
             val pkcs8eks = PKCS8EncodedKeySpec(mKey)
-            val keyFactory = KeyFactory.getInstance(RSA)
+            val keyFactory = KeyFactory.getInstance(mEncryptType)
             val key = keyFactory.generatePrivate(pkcs8eks)
 
             val cipher = Cipher.getInstance(mEncryptType + mMode + mPadding)
@@ -146,7 +148,7 @@ object AsymmetricEncryptionUtil {
             val encryptSize = getEncryptDataSize(mKeySize, mPadding)
 
             val pkcs8eks = PKCS8EncodedKeySpec(mKey)
-            val keyFactory = KeyFactory.getInstance(RSA)
+            val keyFactory = KeyFactory.getInstance(mEncryptType)
             val key = keyFactory.generatePrivate(pkcs8eks)
 
             val cipher = Cipher.getInstance(mEncryptType + mMode + mPadding)
@@ -192,7 +194,7 @@ object AsymmetricEncryptionUtil {
             val decryptSize = mKeySize / 8
 
             val x509eks = X509EncodedKeySpec(mKey)
-            val keyFactory = KeyFactory.getInstance(RSA)
+            val keyFactory = KeyFactory.getInstance(mEncryptType)
             val key = keyFactory.generatePublic(x509eks)
 
             val cipher = Cipher.getInstance(mEncryptType + mMode + mPadding)
@@ -227,9 +229,9 @@ object AsymmetricEncryptionUtil {
      * 生成key
      */
     @JvmStatic
-    fun getKey(size: Int = 1024): KeyPair? {
+    fun getKey(size: Int = 1024, @EncryptType mEncryptType: String = RSA): KeyPair? {
         return try {
-            val keyPairGenerator = KeyPairGenerator.getInstance(RSA)
+            val keyPairGenerator = KeyPairGenerator.getInstance(mEncryptType)
             keyPairGenerator.initialize(size, SecureRandom())
             keyPairGenerator.genKeyPair()
         } catch (e: NoSuchAlgorithmException) {
@@ -243,9 +245,9 @@ object AsymmetricEncryptionUtil {
      */
     private fun getEncryptDataSize(keySize: Int, padding: String) = when (padding) {
         PADDING_OAEP, PADDING_OAEP_SHA_1 -> keySize / 8 - 42
-        PADDING_OAEP_SHA_256 -> keySize / 8 - 66
-        PADDING_PKCS1 -> keySize / 8 - 11
+        PADDING_OAEP_SHA_256             -> keySize / 8 - 66
+        PADDING_PKCS1                    -> keySize / 8 - 11
         //默认为PADDING_NO
-        else -> keySize / 8
+        else                             -> keySize / 8
     }
 }
