@@ -162,7 +162,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             val v = SignUtil.verify(pub, content.toByteArray(), sign!!, SignUtil.SIGN_SHA256withDSA)
             Log.e("sign", "v $v")
         }
-        FileUtil.getAutoFilesSize(File(FileUtil.getExternalStorageRootPath()+"/ForestAll"))
+        FileUtil.getFileSize(File(FileUtil.getExternalStorageRootPath()+"/ForestAll"))
+        FileUtil.getAutoFileSize(22L)
     }
 
     override fun onRestart() {

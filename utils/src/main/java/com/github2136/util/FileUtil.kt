@@ -242,8 +242,9 @@ object FileUtil {
     /**
      * 获取指定文件夹大小
      */
+    @JvmStatic
     @Throws(Exception::class)
-    private fun getFileSize(f: File): Long {
+    fun getFileSize(f: File): Long {
         var size: Long = 0
         if (f.isDirectory) {
             val files = f.listFiles()
@@ -257,23 +258,21 @@ object FileUtil {
         return size
     }
 
+    @JvmStatic
+    fun getFileSize(path: String): Long {
+        return getFileSize(File(path))
+    }
+
     /**
      * 调用此方法自动计算指定文件或指定文件夹的大小
      *
-     * @param f 文件
+     * @param
      * @return 计算好的带1B、1KB、1MB、1GB的字符串
      */
     @JvmStatic
-    fun getAutoFilesSize(f: File): String {
-        var blockSize: Long = 0
-        try {
-            blockSize = getFileSize(f)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e("获取文件大小", "获取失败!")
-        }
-        val df = DecimalFormat("#.00")
-        return df.format(getAutoFileSize(blockSize)) + getAutoFileSizeUnit(blockSize)
+    fun getAutoFileSizeStr(fileS: Long, format: String = "#.00"): String {
+        val df = DecimalFormat(format)
+        return df.format(getAutoFileSize(fileS)) + getAutoFileSizeUnit(fileS)
     }
 
     /**
@@ -288,16 +287,7 @@ object FileUtil {
             else                -> fileS.toDouble() / SIZETYPE_GB
         }
     }
-
-    /**
-     * 根据文件长度获取大小 1 2 5等,指定转换的类型
-     */
-    @JvmStatic
-    fun getFilesSize(fileS: Long, sizeType: Int): Double {
-        val df = DecimalFormat("#.00")
-        return df.format(fileS.toDouble() / sizeType).toDouble()
-    }
-
+//
     /**
      * 根据文件大小自动获取文件单位
      */
