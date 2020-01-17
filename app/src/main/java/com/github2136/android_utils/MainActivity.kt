@@ -14,6 +14,7 @@ import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
 import com.github2136.util.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 import java.util.*
 
 /**
@@ -161,6 +162,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             val v = SignUtil.verify(pub, content.toByteArray(), sign!!, SignUtil.SIGN_SHA256withDSA)
             Log.e("sign", "v $v")
         }
+        FileUtil.getAutoFilesSize(File(FileUtil.getExternalStorageRootPath()+"/ForestAll"))
     }
 
     override fun onRestart() {
