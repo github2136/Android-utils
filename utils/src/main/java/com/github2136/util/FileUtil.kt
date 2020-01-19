@@ -8,9 +8,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.StatFs
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.util.Log
 import java.io.*
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -287,7 +287,7 @@ object FileUtil {
             else                -> fileS.toDouble() / SIZETYPE_GB
         }
     }
-//
+
     /**
      * 根据文件大小自动获取文件单位
      */
@@ -300,6 +300,35 @@ object FileUtil {
             else                -> "GB"
         }
     }
+
+    /**
+     * 获取外部存储总容量
+     */
+    fun getExternalStorageSize(): Long {
+        val stat = StatFs(getExternalStorageRootPath())
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            stat.totalBytes
+        } else {
+            val bs = stat.blockSize.toLong()
+            val bc = stat.blockCount.toLong()
+            bs * bc
+        }
+    }
+
+    /**
+     * 获取外部存储剩余容量
+     */
+    fun getExternalStorageFreeSize(): Long {
+        val stat = StatFs(getExternalStorageRootPath())
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            stat.availableBytes
+        } else {
+            val bs = stat.blockSize.toLong()
+            val bc = stat.availableBlocks.toLong()
+            bs * bc
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // 文件操作
     ///////////////////////////////////////////////////////////////////////////

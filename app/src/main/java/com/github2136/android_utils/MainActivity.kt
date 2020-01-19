@@ -16,6 +16,7 @@ import com.github2136.util.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * Created by yb on 2018/10/30.
@@ -134,36 +135,39 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             putString("abc", "def")
             putInt("aaa", 111)
         }
-        sp.getString("abc","")
+        sp.getString("abc", "")
 
-        FileUtil.getExternalStoragePrivateRootPath(this,"abc")
+        FileUtil.getExternalStoragePrivateRootPath(this, "abc")
 
         val n1 = FileUtil.createFileName("log", ".txt")
         val n2 = FileUtil.createFileName(".txt")
 
         val c = ProguardClass()
-        Log.e("init","-----")
+        Log.e("init", "-----")
         val c1 = ProguardClass("aa")
 
+        thread {
+            val signKey = SignUtil.getKey(2048, mEncryptType = SignUtil.DSA)
+            signKey?.apply {
+                val signPublicKey = Base64.encodeToString(public.encoded, Base64.NO_WRAP)
+                val signPrivateKey = Base64.encodeToString(private.encoded, Base64.NO_WRAP)
+                Log.e("sign", "private key $signPrivateKey")
+                Log.e("sign", "public key $signPublicKey")
+                val content = "xxx111555999"
+                val pri = Base64.decode(signPrivateKey, Base64.NO_WRAP)
+                val pub = Base64.decode(signPublicKey, Base64.NO_WRAP)
+                val sign = SignUtil.sign(pri, content.toByteArray(), SignUtil.SIGN_SHA256withDSA)
+                val signStr = Base64.encodeToString(sign, Base64.NO_WRAP)
 
-        val signKey = SignUtil.getKey(2048, mEncryptType = SignUtil.DSA)
-        signKey?.apply {
-            val signPublicKey = Base64.encodeToString(public.encoded, Base64.NO_WRAP)
-            val signPrivateKey = Base64.encodeToString(private.encoded, Base64.NO_WRAP)
-            Log.e("sign", "private key $signPrivateKey")
-            Log.e("sign", "public key $signPublicKey")
-            val content = "xxx111555999"
-            val pri = Base64.decode(signPrivateKey, Base64.NO_WRAP)
-            val pub = Base64.decode(signPublicKey, Base64.NO_WRAP)
-            val sign = SignUtil.sign(pri, content.toByteArray(), SignUtil.SIGN_SHA256withDSA)
-            val signStr = Base64.encodeToString(sign, Base64.NO_WRAP)
-
-            Log.e("sign", "signStr $signStr")
-            val v = SignUtil.verify(pub, content.toByteArray(), sign!!, SignUtil.SIGN_SHA256withDSA)
-            Log.e("sign", "v $v")
+                Log.e("sign", "signStr $signStr")
+                val v = SignUtil.verify(pub, content.toByteArray(), sign!!, SignUtil.SIGN_SHA256withDSA)
+                Log.e("sign", "v $v")
+            }
         }
-        FileUtil.getFileSize(File(FileUtil.getExternalStorageRootPath()+"/ForestAll"))
-        FileUtil.getAutoFileSize(22L)
+
+        Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getFileSize(File(FileUtil.getExternalStorageRootPath() + "/ForestAll"))))
+        Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getExternalStorageSize()))
+        Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getExternalStorageFreeSize()))
     }
 
     override fun onRestart() {
@@ -179,9 +183,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         var intent: Intent? = null
         when (v?.id) {
-            R.id.btn_bitmap -> intent = Intent(this, BitmapActivity::class.java)
-            R.id.btn_date -> intent = Intent(this, DateActivity::class.java)
-            R.id.btn_list_adapter -> intent = Intent(this, ListActivity::class.java)
+            R.id.btn_bitmap            -> intent = Intent(this, BitmapActivity::class.java)
+            R.id.btn_date              -> intent = Intent(this, DateActivity::class.java)
+            R.id.btn_list_adapter      -> intent = Intent(this, ListActivity::class.java)
             R.id.btn_list_view_adapter -> intent = Intent(this, ListViewActivity::class.java)
         }
         intent?.let {
