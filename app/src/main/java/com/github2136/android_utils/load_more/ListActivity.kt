@@ -1,9 +1,12 @@
 package com.github2136.android_utils.load_more
 
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github2136.android_utils.R
+import com.github2136.base.divider.Divider
 import kotlinx.android.synthetic.main.activity_list.*
 import java.util.*
 
@@ -15,11 +18,37 @@ class ListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
         val s = ArrayList<String>()
-        s.add("asdf1")
-        s.add("asdf2")
-        s.add("asdf3")
-        s.add("asdf4")
-        s.add("asdf5")
+        s.add("aaaaaa")
+        s.add("aaaaaa")
+        s.add("aaaaaa")
+        s.add("aaaaaa")
+        s.add("aaaaaa")
+        s.add("aaaaaa")
+        s.add("aaaaaa")
+        s.add("aaaaaa")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("bbbbbb")
+        s.add("cccccc")
+        s.add("cccccc")
+        s.add("cccccc")
+        s.add("cccccc")
+        s.add("ddddd")
+        s.add("ddddd")
+        s.add("ddddd")
+        s.add("ddddd")
+        s.add("eeeeee")
+        s.add("eeeeee")
+        s.add("eeeeee")
         s.add("asdf6")
         s.add("asdf7")
         s.add("asdf8")
@@ -27,6 +56,10 @@ class ListActivity : AppCompatActivity() {
         s.add("asdf10")
         val adapter = ListAdapter(s)
         rv_content.adapter = adapter
+        val d = Divider(this)
+        d.align = Paint.Align.CENTER
+        d.backgroundColor = Color.parseColor("#FFE58D")
+        rv_content.addItemDecoration(d)
         adapter.setOnItemClickListener { position -> Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show() }
         adapter.setOnItemLongClickListener { position -> Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show() }
     }

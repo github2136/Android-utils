@@ -23,3 +23,4 @@ android-utils
 **base** 目录中是一些常用的基础类  
 **BaseListAdapter** ListView使用的BaseAdapter  
 **BaseRecyclerAdapter** RecyclerView使用的BaseAdapter  
+**Divider**带分组的分割线
