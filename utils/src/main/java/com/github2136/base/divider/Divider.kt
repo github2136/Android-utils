@@ -24,7 +24,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
     private var mDivider: Drawable
     private val mBounds = Rect()
     private val bgPaint = Paint()
-    private val txtPaint = TextPaint()
+    private val txtPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
     private var groupHeight: Int
     private val txtBottom: Int
 
