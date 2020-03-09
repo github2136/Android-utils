@@ -1,7 +1,6 @@
 package com.github2136.android_utils.load_more
 
 import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -57,8 +56,7 @@ class ListActivity : AppCompatActivity() {
         val adapter = ListAdapter(s)
         rv_content.adapter = adapter
         val d = Divider(this)
-        d.align = Paint.Align.CENTER
-        d.backgroundColor = Color.parseColor("#FFE58D")
+        d.lineColor = Color.parseColor("#ff0000")
         rv_content.addItemDecoration(d)
         adapter.setOnItemClickListener { position -> Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show() }
         adapter.setOnItemLongClickListener { position -> Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show() }

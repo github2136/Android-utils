@@ -25,8 +25,10 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
     private val mBounds = Rect()
     private val bgPaint = Paint()
     private val txtPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+    private val linePaint = Paint()
     private var groupHeight: Int
     private val txtBottom: Int
+    private var realLineHeight: Int
 
     var leftPadding = CommonUtil.dp2px(context, 8f)
     var rightPadding = CommonUtil.dp2px(context, 8f)
@@ -55,12 +57,30 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
             txtPaint.textAlign = value
         }
 
+    var lineHeight = CommonUtil.dp2px(context, 1f)
+        set(value) {
+            field = value
+            linePaint.strokeWidth = value.toFloat()
+            realLineHeight = value / 2
+        }
+
+    var lineColor = Color.parseColor("#1F000000")
+        set(value) {
+            field = value
+            linePaint.color = value
+        }
+
     init {
         txtPaint.textSize = textSize
         txtPaint.color = textColor
         txtPaint.textAlign = align
 
         bgPaint.color = backgroundColor
+
+        linePaint.strokeWidth = lineHeight.toFloat()
+        linePaint.color = lineColor
+
+        realLineHeight = lineHeight / 2
 
         val font = txtPaint.fontMetricsInt
         txtBottom = font.descent
@@ -145,6 +165,8 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                             }
                             c.drawRect(left.toFloat(), groupTop, right.toFloat(), groupTop + groupHeight.toFloat(), bgPaint)
 
+                            c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, right.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, linePaint)
+
                             txtWidth = right - left - leftPadding - rightPadding
                             txt = if (txtPaint.measureText(this) > txtWidth) {
                                 val subIndex = txtPaint.breakText(this, 0, this.length, true, txtWidth.toFloat(), null)
@@ -162,6 +184,9 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                             if (this != preTxt) {
                                 val groupTop = mBounds.top.toFloat()
                                 c.drawRect(left.toFloat(), groupTop, right.toFloat(), groupTop + groupHeight.toFloat(), bgPaint)
+
+                                c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, right.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, linePaint)
+
                                 txtWidth = right - left - leftPadding - rightPadding
                                 txt = if (txtPaint.measureText(this) > txtWidth) {
                                     val subIndex = txtPaint.breakText(this, 0, this.length, true, txtWidth.toFloat(), null)
@@ -185,6 +210,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                         if (this != preTxt) {
                             val groupTop = mBounds.top.toFloat()
                             c.drawRect(left.toFloat(), groupTop, right.toFloat(), groupTop + groupHeight.toFloat(), bgPaint)
+                            c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, right.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, linePaint)
                             txtWidth = right - left - leftPadding - rightPadding
                             txt = if (txtPaint.measureText(this) > txtWidth) {
                                 val subIndex = txtPaint.breakText(this, 0, this.length, true, txtWidth.toFloat(), null)
