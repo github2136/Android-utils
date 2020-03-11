@@ -5,8 +5,18 @@
     <color name="colorTextDisableLight">#61000000</color>
     <color name="colorDividersLight">#1F000000</color>
 
+    <color name="colorTextPrimaryLightOpaque">#212121</color>
+    <color name="colorTextSecondaryLightOpaque">#757575</color>
+    <color name="colorTextDisableLightOpaque">#9E9E9E</color>
+    <color name="colorDividersLightOpaque">#E0E0E0</color>
+
     <color name="colorTextPrimaryDark">#FFFFFFFF</color>
     <color name="colorTextSecondaryDark">#B3FFFFFF</color>
     <color name="colorTextDisableDark">#80FFFFFF</color>
     <color name="colorDividersDark">#1FFFFFFF</color>
+
+    <color name="colorTextPrimaryDarkOpaque">#FFFFFF</color>
+    <color name="colorTextSecondaryDarkOpaque">#B3B3B3</color>
+    <color name="colorTextDisableDarkOpaque">#808080</color>
+    <color name="colorDividersDarkOpaque">#1F1F1F</color>
 </resources>
