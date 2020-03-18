@@ -1,8 +1,10 @@
 package com.github2136.util
 
+import android.app.Activity
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.view.inputmethod.InputMethodManager
 
 /**
  * 通用工具类
@@ -74,5 +76,14 @@ object CommonUtil {
             }
         }
         return true
+    }
+
+    /**
+     * 关闭键盘
+     */
+    @JvmStatic
+    fun closeKeybord(activity: Activity) {
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(activity.window.decorView.windowToken, 0)
     }
 }

@@ -24,3 +24,5 @@ android-utils
 **BaseListAdapter** ListView使用的BaseAdapter  
 **BaseRecyclerAdapter** RecyclerView使用的BaseAdapter  
 **Divider**粘滞分组、分割线
+
+`app`模块中`util`目录中有些不常用的工具类
