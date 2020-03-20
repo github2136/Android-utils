@@ -25,4 +25,6 @@ android-utils
 **BaseRecyclerAdapter** RecyclerView使用的BaseAdapter  
 **Divider**粘滞分组、分割线
 
-`app`模块中`util`目录中有些不常用的工具类
+`app`模块中`util`目录中有些不常用的工具类  
+**GPSUtil** 坐标系转换，经纬度瓦片图编号互转   
+**SSLUtil**https证书验证
