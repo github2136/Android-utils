@@ -1,13 +1,14 @@
 package com.github2136.android_utils.util
 
-import java.io.IOException
 import java.io.InputStream
-import java.security.GeneralSecurityException
 import java.security.KeyStore
 import java.security.SecureRandom
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
-import javax.net.ssl.*
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 /**
  * Created by YB on 2020/3/20
@@ -45,39 +46,27 @@ object SSLUtil {
      * //不建议忽略主机验证
      * .hostnameVerifier(HostnameVerifier { hostname, session -> true })
      */
-    fun verified(vararg cer: InputStream): SSlObj {
-        val certificateFactory = CertificateFactory.getInstance("X.509")
-        val password = "password".toCharArray()
-        val keyStore = newEmptyKeyStore(password)
-        for ((index, certificate) in cer.withIndex()) {
-            val certificates = certificateFactory.generateCertificate(certificate)
-            val certificateAlias = index.toString()
-            keyStore.setCertificateEntry(certificateAlias, certificates)
+    fun verified(vararg inputStream: InputStream): SSlObj {
+        val cf: CertificateFactory = CertificateFactory.getInstance("X.509")
+        val keyStoreType = KeyStore.getDefaultType()
+        val keyStore = KeyStore.getInstance(keyStoreType).apply {
+            load(null, null)
         }
-        val keyManagerFactory = KeyManagerFactory.getInstance(
-            KeyManagerFactory.getDefaultAlgorithm()
-        )
-        keyManagerFactory.init(keyStore, password)
-        val trustManagerFactory = TrustManagerFactory.getInstance(
-            TrustManagerFactory.getDefaultAlgorithm()
-        )
-        trustManagerFactory.init(keyStore)
-
-        val sslContext = SSLContext.getInstance("TLS")
-        sslContext.init(keyManagerFactory.keyManagers, trustManagerFactory.trustManagers, null)
-        return SSlObj(sslContext.socketFactory, trustManagerFactory.trustManagers[0] as X509TrustManager)
-    }
-
-    @Throws(GeneralSecurityException::class)
-    private fun newEmptyKeyStore(password: CharArray): KeyStore {
-        try {
-            val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-            val `in`: InputStream? = null // By convention, 'null' creates an empty key store.
-            keyStore.load(`in`, password)
-            return keyStore
-        } catch (e: IOException) {
-            throw AssertionError(e)
+        for ((index, caInput) in inputStream.withIndex()) {
+            val ca: X509Certificate = caInput.use {
+                cf.generateCertificate(it) as X509Certificate
+            }
+            keyStore.setCertificateEntry("ca$index", ca)
         }
+
+        val tmfAlgorithm: String = TrustManagerFactory.getDefaultAlgorithm()
+        val tmf: TrustManagerFactory = TrustManagerFactory.getInstance(tmfAlgorithm).apply {
+            init(keyStore)
+        }
+        val sslContext: SSLContext = SSLContext.getInstance("TLS").apply {
+            init(null, tmf.trustManagers, null)
+        }
+        return SSlObj(sslContext.socketFactory, tmf.trustManagers[0] as X509TrustManager)
     }
 }
 

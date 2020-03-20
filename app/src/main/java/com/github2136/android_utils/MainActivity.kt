@@ -12,11 +12,16 @@ import androidx.core.content.edit
 import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
+import com.github2136.android_utils.util.SSLUtil
 import com.github2136.util.*
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.net.URL
 import java.util.*
+import javax.net.ssl.HttpsURLConnection
 import kotlin.concurrent.thread
+
 
 /**
  * Created by yb on 2018/10/30.
@@ -165,9 +170,31 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
         }
 
-        Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getFileSize(File(FileUtil.getExternalStorageRootPath() + "/ForestAll"))))
+//        Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getFileSize(File(FileUtil.getExternalStorageRootPath() + "/ForestAll"))))
         Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getExternalStorageSize()))
         Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getExternalStorageFreeSize()))
+
+        getHttps()
+    }
+
+    fun getHttps() {
+        thread {
+            val sslContext = SSLUtil.verified(assets.open("a.cer"),assets.open("b.cer"))
+
+            // Tell the URLConnection to use a SocketFactory from our SSLContext
+            val url = URL("https://certs.cac.washington.edu/CAtest/")
+            val urlConnection = url.openConnection() as HttpsURLConnection
+            urlConnection.sslSocketFactory = sslContext.socketFactory
+            val inputStream: InputStream = urlConnection.inputStream
+            val result = ByteArrayOutputStream()
+            val buffer = ByteArray(1024)
+            var length: Int = -1
+            while (({ length = inputStream.read(buffer); length }()) != -1) {
+                result.write(buffer, 0, length)
+            }
+            val str = result.toString("UTF-8")
+            Log.e("https", str)
+        }
     }
 
     override fun onRestart() {
