@@ -3,11 +3,14 @@ package com.github2136.android_utils
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.collection.ArrayMap
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
 import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
@@ -175,11 +178,39 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getExternalStorageFreeSize()))
 
         getHttps()
+
+        //通知权限是否打开
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            Log.e("xxx", "xxxxx")
+        } else {
+            Log.e("xxx", "yyyy")
+            val intent = Intent()
+            when {
+                Build.VERSION.SDK_INT >= 26 -> {
+                    // android 8.0引导
+                    intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                    intent.putExtra("android.provider.extra.APP_PACKAGE", packageName)
+                }
+                Build.VERSION.SDK_INT >= 21 -> {
+                    // android 5.0-7.0
+                    intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                    intent.putExtra("app_package", packageName)
+                    intent.putExtra("app_uid", applicationInfo.uid)
+                }
+                else                        -> {
+                    // 其他
+                    intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
+                    intent.data = Uri.fromParts("package", packageName, null)
+                }
+            }
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
     }
 
     fun getHttps() {
         thread {
-            val sslContext = SSLUtil.verified(assets.open("a.cer"),assets.open("b.cer"))
+            val sslContext = SSLUtil.verified(assets.open("a.cer"), assets.open("b.cer"))
 
             // Tell the URLConnection to use a SocketFactory from our SSLContext
             val url = URL("https://certs.cac.washington.edu/CAtest/")
