@@ -30,12 +30,12 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
     private val txtBottom: Int
     private var realLineHeight: Int
 
-    var leftPadding = CommonUtil.dp2px(context, 8f)
-    var rightPadding = CommonUtil.dp2px(context, 8f)
-    var topPadding = CommonUtil.dp2px(context, 8f)
-    var bottomPadding = CommonUtil.dp2px(context, 8f)
+    var leftPadding = CommonUtil.dp2px(context, 16f)
+    var rightPadding = CommonUtil.dp2px(context, 16f)
+    var topPadding = CommonUtil.dp2px(context, 16f)
+    var bottomPadding = CommonUtil.dp2px(context, 16f)
 
-    var textSize = CommonUtil.sp2px(context, 24f)
+    var textSize = CommonUtil.sp2px(context, 20f)
         set(value) {
             field = value
             txtPaint.textSize = value
