@@ -15,7 +15,7 @@ android-utils
 **SPUtil** SharedPreferences处理类。**可以在Manifest中添加SP名（util_sp_name）**  
 **PermissionUtil** 6.0动态权限请求类  
 **NetworkUtil** 网络状态判定  
-**CrashHandler** 异常捕获类，默认把异常信息存储外部存储目录下的Log目录下  
+**CrashHandler** 异常捕获类，把异常信息存储外部私有目录下的Log目录下  
 **AsymmetricEncryptionUtil** 非对称加密类  
 **SymmetricEncryptionUtil** 对称加密类  
 **MessageDigestUtil** 信息摘要类

@@ -1,6 +1,5 @@
 package com.github2136.util
 
-import android.Manifest
 import android.app.Application
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -8,7 +7,6 @@ import android.os.Build
 import android.os.Looper
 import android.os.Process
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -94,13 +92,7 @@ class CrashHandler private constructor(val application: Application, val debug: 
             // 使用Toast来显示异常信息
             thread {
                 Looper.prepare()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    ContextCompat.checkSelfPermission(application, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    //没有权限，存储至外部私有目录
-                    Toast.makeText(application, "很抱歉,程序出现异常,即将退出,已将错误日志写至内部目录", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(application, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(application, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_SHORT).show()
                 Looper.loop()
             }
             try {
@@ -118,14 +110,8 @@ class CrashHandler private constructor(val application: Application, val debug: 
     private fun saveException(application: Application, ex: Throwable) {
         val sb = getLog(ex)
         val filename = FileUtil.createFileName("log", ".txt")
-        var logFile = File(FileUtil.getExternalStorageProjectPath(application) + File.separator + "Log", filename)
-        //请求权限
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(application, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                //没有权限，存储至外部私有目录
-                logFile = File(FileUtil.getExternalStoragePrivateLogPath(application), filename)
-            }
-        }
+        //存储至外部私有目录
+        val logFile = File(FileUtil.getExternalStoragePrivateLogPath(application), filename)
         FileUtil.saveFile(logFile.path, sb.toString())
     }
 
