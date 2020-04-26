@@ -44,7 +44,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         btn_list_adapter.setOnClickListener(this)
         btn_list_view_adapter.setOnClickListener(this)
 
-
         val UTC = DateUtil.date2str(Date(), timeZone = TimeZone.getTimeZone("UTC").id)
         val UTCDate = DateUtil.str2date(UTC, timeZone = TimeZone.getTimeZone("UTC").id)
         val t = DateUtil.getDateNow(timeZone = TimeZone.getTimeZone("UTC").id)
@@ -135,7 +134,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         permissionArrayMap[Manifest.permission.READ_PHONE_STATE] = "获取手机信息"
 
         permissionUtil.getPermission(permissionArrayMap) {
-            showToast("ok")
+            Log.e("permissionUtil", "ok")
         }
         val sp = SPUtil.getSharedPreferences(this)
         getPreferences(Context.MODE_PRIVATE)
@@ -144,7 +143,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             putInt("aaa", 111)
         }
         sp.getString("abc", "")
-
+//
         FileUtil.getExternalStoragePrivateRootPath(this, "abc")
 
         val n1 = FileUtil.createFileName("log", ".txt")
@@ -210,21 +209,24 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     fun getHttps() {
         thread {
-            val sslContext = SSLUtil.verified(assets.open("a.cer"), assets.open("b.cer"))
+            try {
+                val sslContext = SSLUtil.verified(assets.open("a.cer"), assets.open("b.cer"))
 
-            // Tell the URLConnection to use a SocketFactory from our SSLContext
-            val url = URL("https://certs.cac.washington.edu/CAtest/")
-            val urlConnection = url.openConnection() as HttpsURLConnection
-            urlConnection.sslSocketFactory = sslContext.socketFactory
-            val inputStream: InputStream = urlConnection.inputStream
-            val result = ByteArrayOutputStream()
-            val buffer = ByteArray(1024)
-            var length: Int = -1
-            while (({ length = inputStream.read(buffer); length }()) != -1) {
-                result.write(buffer, 0, length)
+                // Tell the URLConnection to use a SocketFactory from our SSLContext
+                val url = URL("https://certs.cac.washington.edu/CAtest/")
+                val urlConnection = url.openConnection() as HttpsURLConnection
+                urlConnection.sslSocketFactory = sslContext.socketFactory
+                val inputStream: InputStream = urlConnection.inputStream
+                val result = ByteArrayOutputStream()
+                val buffer = ByteArray(1024)
+                var length: Int = -1
+                while (({ length = inputStream.read(buffer); length }()) != -1) {
+                    result.write(buffer, 0, length)
+                }
+                val str = result.toString("UTF-8")
+                Log.e("https", str)
+            } catch (e: Exception) {
             }
-            val str = result.toString("UTF-8")
-            Log.e("https", str)
         }
     }
 
