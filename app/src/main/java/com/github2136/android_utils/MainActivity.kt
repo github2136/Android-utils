@@ -13,8 +13,8 @@ import androidx.collection.ArrayMap
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
 import com.github2136.android_utils.load_more.ListActivity
-import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
+import com.github2136.android_utils.service.ServiceActivity
 import com.github2136.android_utils.util.SSLUtil
 import com.github2136.util.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -43,6 +43,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         btn_date.setOnClickListener(this)
         btn_list_adapter.setOnClickListener(this)
         btn_list_view_adapter.setOnClickListener(this)
+        btn_service.setOnClickListener(this)
 
         val UTC = DateUtil.date2str(Date(), timeZone = TimeZone.getTimeZone("UTC").id)
         val UTCDate = DateUtil.str2date(UTC, timeZone = TimeZone.getTimeZone("UTC").id)
@@ -241,15 +242,23 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        var intent: Intent? = null
         when (v?.id) {
-            R.id.btn_bitmap            -> intent = Intent(this, BitmapActivity::class.java)
-            R.id.btn_date              -> intent = Intent(this, DateActivity::class.java)
-            R.id.btn_list_adapter      -> intent = Intent(this, ListActivity::class.java)
-            R.id.btn_list_view_adapter -> intent = Intent(this, ListViewActivity::class.java)
-        }
-        intent?.let {
-            startActivity(it)
+            R.id.btn_bitmap       -> {
+                intent = Intent(this, BitmapActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.btn_date         -> {
+                intent = Intent(this, DateActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.btn_list_adapter -> {
+                intent = Intent(this, ListActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.btn_service      -> {
+                intent = Intent(this, ServiceActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 }

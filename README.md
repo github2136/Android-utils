@@ -27,4 +27,5 @@ android-utils
 
 `app`模块中`util`目录中有些不常用的工具类  
 **GPSUtil** 坐标系转换，经纬度瓦片图编号互转   
-**SSLUtil**https证书验证
+**SSLUtil**https证书验证  
+**SettingUtil**允许后台允许设置（小米、华为使用真机测试，其他并未使用真机测试）[来源](https://juejin.im/post/5dfaeccbf265da33910a441d)
