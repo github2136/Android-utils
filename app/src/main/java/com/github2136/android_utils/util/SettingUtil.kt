@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
+import com.github2136.android_utils.R
 
 
 /**
@@ -41,7 +42,7 @@ object SettingUtil {
      * @return
      */
     fun isIgnoringBatteryOptimizations(context: Context): Boolean {
-        var isIgnoring = false
+        var isIgnoring = true
         val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             isIgnoring = powerManager.isIgnoringBatteryOptimizations(context.packageName)
@@ -87,9 +88,8 @@ object SettingUtil {
     val isVIVO: Boolean
         get() = Build.BRAND != null && Build.BRAND.toLowerCase() == "vivo"
 
-    val isMeizu: Boolean
-        get() = Build.BRAND != null && Build.BRAND.toLowerCase() == "meizu"
-
+//    val isMeizu: Boolean
+//        get() = Build.BRAND != null && Build.BRAND.toLowerCase() == "meizu"
 //    val isSamsung: Boolean
 //        get() = Build.BRAND != null && Build.BRAND.toLowerCase() == "samsung"
 //
@@ -124,6 +124,9 @@ object SettingUtil {
         }
     }
 
+    fun getHuaweiAutoStartSettingStr(context: Context) =
+        "手机管家 -> 应用启动管理 -> ${context.resources.getString(R.string.app_name)} -> 关闭自动管理 -> 手动管理设置全部打开"
+
     /**
      * 电池管理
      * 手机管家->电池标志->关闭省电模式->更多电池设置->休眠时始终保持网络连接
@@ -135,6 +138,9 @@ object SettingUtil {
             "com.huawei.systemmanager.power.ui.HwPowerManagerActivity"
         )
     }
+
+    fun getHuaweiPowerKeeperSettingStr(context: Context) = "手机管家 -> 电池标志 -> 关闭省电模式 -> 更多电池设置 -> 休眠时始终保持网络连接"
+
 
     ///////////////////////////////////////////////////////////////////////////
     // 小米 打开多任务界面，长按应用加锁
@@ -151,9 +157,11 @@ object SettingUtil {
         )
     }
 
+    fun getXiaomiAutoStartSettingStr(context: Context) = "手机管家 -> 应用管理 -> 权限 -> 自启动管理 -> ${context.resources.getString(R.string.app_name)} -> 允许启动"
+
     /**
      * 电池管理
-     * 设置 ->电池与性能->（关闭省电模式） 右上齿轮->（锁屏断开数据（从不），锁屏清理内存从不）应用智能省电->APP->省电策略->无限制
+     * 手机管家 ->电池与性能->（关闭省电模式）右上齿轮->（锁屏断开数据（从不），锁屏清理内存从不）应用智能省电->APP->省电策略->无限制
      * APP->省电策略->无限制
      */
     fun goXiaomiPowerKeeperSetting(context: Context) {
@@ -163,6 +171,12 @@ object SettingUtil {
         )
     }
 
+    fun getXiaomiPowerKeeperSettingStr(context: Context) =
+        "手机管家 -> 电池与性能 ->（关闭省电模式）右上齿轮 ->（锁屏断开数据（从不），锁屏清理内存从不）应用智能省电 -> ${context.resources.getString(R.string.app_name)} -> 省电策略 -> 无限制"
+
+    ///////////////////////////////////////////////////////////////////////////
+    // OPPO
+    ///////////////////////////////////////////////////////////////////////////
     /**
      * 权限隐私 -> 自启动管理 -> 允许应用自启动
      *
@@ -184,6 +198,35 @@ object SettingUtil {
         }
     }
 
+    fun getOPPOSettingStr(context: Context) =
+        "手机管家 -> 权限隐私 -> 应用权限管理 -> ${context.resources.getString(R.string.app_name)} -> 允许应用自启动"
+
+    /**
+     * 设置页
+     */
+    fun goOPPOBatterySetting(context: Context) {
+        try {
+            showActivity(context, "com.coloros.phonemanager")
+        } catch (e1: Exception) {
+            try {
+                showActivity(context, "com.oppo.safe")
+            } catch (e2: Exception) {
+                try {
+                    showActivity(context, "com.coloros.oppoguardelf")
+                } catch (e3: Exception) {
+                    showActivity(context, "com.coloros.safecenter")
+                }
+            }
+        }
+    }
+
+    fun getOPPOBatterySettingStr(context: Context) =
+        "设置 -> 电池 -> 耗电保护 -> ${context.resources.getString(R.string.app_name)} -> 关闭后台冻结，关闭自动优化，关闭深度睡眠"
+
+    ///////////////////////////////////////////////////////////////////////////
+    // VIVO
+    ///////////////////////////////////////////////////////////////////////////
+
     /**
      * 权限管理 -> 自启动 -> 允许应用自启动
      *
@@ -193,14 +236,28 @@ object SettingUtil {
         showActivity(context, "com.iqoo.secure")
     }
 
+    fun getVIVOSettingStr(context: Context) =
+        "i管家 -> 软件管理 -> 自启动管理 -> ${context.resources.getString(R.string.app_name)} -> 允许应用自启动"
+
     /**
-     * 权限管理 -> 后台管理 -> 点击应用 -> 允许后台运行
-     *
-     * @param context
+     * 设置页
      */
-    fun goMeizuSetting(context: Context) {
-        showActivity(context, "com.meizu.safe")
+    fun goVIVOBatterySetting(context: Context) {
+        showActivity(context, "com.iqoo.secure")
     }
+
+    fun getVIVOBatterySettingStr(context: Context) =
+        "i管家 -> 省电管理 -> 后台高耗电 -> ${context.resources.getString(R.string.app_name)} -> 允许后台运行"
+
+
+//    /**
+//     * 权限管理 -> 后台管理 -> 点击应用 -> 允许后台运行
+//     *
+//     * @param context
+//     */
+//    fun goMeizuSetting(context: Context) {
+//        showActivity(context, "com.meizu.safe")
+//    }
 //
 //    /**
 //     * 自动运行应用程序 -> 打开应用开关 -> 电池管理 -> 未监视的应用程序 -> 添加应用
@@ -227,16 +284,28 @@ object SettingUtil {
 //        )
 //    }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Other
+    ///////////////////////////////////////////////////////////////////////////
     /**
      * 其他系统
      * 允许自启动，省电策略->无限制或电池优化->未优化或允许后台活动
      */
     fun goOtherSetting(context: Context) {
+        val intent = Intent(Settings.ACTION_SETTINGS)
+        context.startActivity(intent)
+    }
+
+    fun getOtherSettingStr(context: Context) = "设置 -> 自启动管理或权限管理  -> ${context.resources.getString(R.string.app_name)} -> 允许后台运行，允许自启动"
+
+    fun goOtherBatterySetting(context: Context) {
+
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.data = Uri.parse("package:" + context.packageName)
         context.startActivity(intent)
     }
 
+    fun getOtherBatterySettingStr(context: Context) = "设置 -> 电池或电量  -> 关闭省电模式 -> 电池优化 -> ${context.resources.getString(R.string.app_name)} -> 不优化"
     /**
      * 自启动后台运行设置
      */
@@ -244,11 +313,21 @@ object SettingUtil {
         when {
             isHuawei -> goHuaweiAutoStartSetting(context)
             isXiaomi -> goXiaomiAutoStartSetting(context)
-            isOPPO -> goOPPOSetting(context)
-            isVIVO -> goVIVOSetting(context)
-            isMeizu -> goMeizuSetting(context)
-            else -> goOtherSetting(context)
+            isOPPO   -> goOPPOSetting(context)
+            isVIVO   -> goVIVOSetting(context)
+            else     -> goOtherSetting(context)
         }
+    }
+
+    /**
+     * 获取
+     */
+    fun getAutoStartSettingStr(context: Context) = when {
+        isHuawei -> getHuaweiAutoStartSettingStr(context)
+        isXiaomi -> getXiaomiAutoStartSettingStr(context)
+        isOPPO   -> getOPPOSettingStr(context)
+        isVIVO   -> getVIVOSettingStr(context)
+        else     -> getOtherSettingStr(context)
     }
 
     /**
@@ -258,10 +337,17 @@ object SettingUtil {
         when {
             isHuawei -> goHuaweiPowerKeeperSetting(context)
             isXiaomi -> goXiaomiPowerKeeperSetting(context)
-            isOPPO -> goOPPOSetting(context)
-            isVIVO -> goVIVOSetting(context)
-            isMeizu -> goMeizuSetting(context)
-            else -> goOtherSetting(context)
+            isOPPO   -> goOPPOBatterySetting(context)
+            isVIVO   -> goVIVOBatterySetting(context)
+            else     -> goOtherBatterySetting(context)
         }
+    }
+
+    fun getPowerKeeperSettingStr(context: Context) = when {
+        isHuawei -> getHuaweiPowerKeeperSettingStr(context)
+        isXiaomi -> getXiaomiPowerKeeperSettingStr(context)
+        isOPPO   -> getOPPOBatterySettingStr(context)
+        isVIVO   -> getVIVOBatterySettingStr(context)
+        else     -> getOtherBatterySettingStr(context)
     }
 }
