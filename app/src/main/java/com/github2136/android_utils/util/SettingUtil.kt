@@ -90,6 +90,7 @@ object SettingUtil {
 
 //    val isMeizu: Boolean
 //        get() = Build.BRAND != null && Build.BRAND.toLowerCase() == "meizu"
+
 //    val isSamsung: Boolean
 //        get() = Build.BRAND != null && Build.BRAND.toLowerCase() == "samsung"
 //
@@ -132,15 +133,14 @@ object SettingUtil {
      * 手机管家->电池标志->关闭省电模式->更多电池设置->休眠时始终保持网络连接
      * 更多电池设置->休眠时始终保持网络连接
      */
-    fun goHuaweiPowerKeeperSetting(context: Context) {
+    fun goHuaweiBatterySetting(context: Context) {
         showActivity(
             context, "com.huawei.systemmanager",
             "com.huawei.systemmanager.power.ui.HwPowerManagerActivity"
         )
     }
 
-    fun getHuaweiPowerKeeperSettingStr(context: Context) = "手机管家 -> 电池标志 -> 关闭省电模式 -> 更多电池设置 -> 休眠时始终保持网络连接"
-
+    fun getHuaweiBatterySettingStr(context: Context) = "手机管家 -> 电池标志 -> 关闭省电模式 -> 更多电池设置 -> 休眠时始终保持网络连接"
 
     ///////////////////////////////////////////////////////////////////////////
     // 小米 打开多任务界面，长按应用加锁
@@ -164,14 +164,14 @@ object SettingUtil {
      * 手机管家 ->电池与性能->（关闭省电模式）右上齿轮->（锁屏断开数据（从不），锁屏清理内存从不）应用智能省电->APP->省电策略->无限制
      * APP->省电策略->无限制
      */
-    fun goXiaomiPowerKeeperSetting(context: Context) {
+    fun goXiaomiBatterySetting(context: Context) {
         showActivity(
             context, "com.miui.powerkeeper",
             "com.miui.powerkeeper.ui.HiddenAppsContainerManagementActivity"
         )
     }
 
-    fun getXiaomiPowerKeeperSettingStr(context: Context) =
+    fun getXiaomiBatterySettingStr(context: Context) =
         "手机管家 -> 电池与性能 ->（关闭省电模式）右上齿轮 ->（锁屏断开数据（从不），锁屏清理内存从不）应用智能省电 -> ${context.resources.getString(R.string.app_name)} -> 省电策略 -> 无限制"
 
     ///////////////////////////////////////////////////////////////////////////
@@ -333,19 +333,19 @@ object SettingUtil {
     /**
      * 电池管理
      */
-    fun goPowerKeeperSetting(context: Context) {
+    fun goBatterySetting(context: Context) {
         when {
-            isHuawei -> goHuaweiPowerKeeperSetting(context)
-            isXiaomi -> goXiaomiPowerKeeperSetting(context)
+            isHuawei -> goHuaweiBatterySetting(context)
+            isXiaomi -> goXiaomiBatterySetting(context)
             isOPPO   -> goOPPOBatterySetting(context)
             isVIVO   -> goVIVOBatterySetting(context)
             else     -> goOtherBatterySetting(context)
         }
     }
 
-    fun getPowerKeeperSettingStr(context: Context) = when {
-        isHuawei -> getHuaweiPowerKeeperSettingStr(context)
-        isXiaomi -> getXiaomiPowerKeeperSettingStr(context)
+    fun getBatterySettingStr(context: Context) = when {
+        isHuawei -> getHuaweiBatterySettingStr(context)
+        isXiaomi -> getXiaomiBatterySettingStr(context)
         isOPPO   -> getOPPOBatterySettingStr(context)
         isVIVO   -> getVIVOBatterySettingStr(context)
         else     -> getOtherBatterySettingStr(context)
