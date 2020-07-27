@@ -1,6 +1,7 @@
 package com.github2136.android_utils.util
 
 import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.*
 
 /**
@@ -75,26 +76,26 @@ object GPSUtil {
     /**
      * 将小数转换为度分秒，返回数组分别为度，分，秒
      */
-    fun convertToDegrees(num: String): Array<String> {
+    fun convertToDegrees(num: String, scale: Int = 2): Array<String> {
         val numBig = BigDecimal(num)
         val degree = numBig.setScale(0, BigDecimal.ROUND_DOWN).toString()
         val minuteBig = numBig.remainder(BigDecimal.ONE).multiply(BigDecimal(60))
         val minute = minuteBig.setScale(0, BigDecimal.ROUND_DOWN).toString()
-        val secondBig = minuteBig.remainder(BigDecimal.ONE).multiply(BigDecimal(60))
+        val secondBig = minuteBig.remainder(BigDecimal.ONE).multiply(BigDecimal(60)).setScale(scale, RoundingMode.DOWN)
         val second = secondBig.toString()
         return arrayOf(degree, minute, second)
     }
 
     /**
-     * 将度分秒转小数进制15位小数精度
+     * 将度分秒转小数进制
      */
-    fun convertToDecimal(degree: String, minute: String, second: String): String {
+    fun convertToDecimal(degree: String, minute: String, second: String, scale: Int = 8): String {
         val degreeBig = BigDecimal(degree)
         val minuteBig = BigDecimal(minute)
         val secondBig = BigDecimal(second)
 
-        val t1 = secondBig.divide(BigDecimal(60), 15, BigDecimal.ROUND_HALF_UP)
-        val t2 = t1.add(minuteBig).divide(BigDecimal(60), 15, BigDecimal.ROUND_HALF_UP)
+        val t1 = secondBig.divide(BigDecimal(60), scale, BigDecimal.ROUND_HALF_UP)
+        val t2 = t1.add(minuteBig).divide(BigDecimal(60), scale, BigDecimal.ROUND_HALF_UP)
         return degreeBig.add(t2).toString()
     }
 
