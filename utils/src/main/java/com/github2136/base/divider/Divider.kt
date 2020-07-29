@@ -161,7 +161,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                 currentTxt = adapter.getShowTxt(position)
                 nextTxt = if (position + 2 < adapter.itemCount) adapter.getShowTxt(position + 1) else null
 
-                if (nextTxt == currentTxt) {
+                if (nextTxt == null || nextTxt == currentTxt) {
                     parent.getDecoratedBoundsWithMargins(child, mBounds)
                     val dividerBottom = mBounds.bottom + child.translationY.roundToInt()
                     val dividerTop = dividerBottom - mDivider.intrinsicHeight
