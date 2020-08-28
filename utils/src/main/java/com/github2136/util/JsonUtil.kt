@@ -35,7 +35,7 @@ class JsonUtil private constructor() {
     companion object {
         var dateFormat = "yyyy-MM-dd HH:mm:ss"
         var mGson = GsonBuilder().setDateFormat(dateFormat).create()
-        val instance: JsonUtil by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        val instance: JsonUtil by lazy {
             JsonUtil()
         }
 
