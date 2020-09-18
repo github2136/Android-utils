@@ -40,7 +40,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
     var textSize = CommonUtil.sp2px(context, 20f)
         set(value) {
             field = value
-            txtPaint.textSize = value
+            txtPaint.textSize = value.toFloat()
         }
     var textColor = Color.parseColor("#DE000000")
         set(value) {
@@ -88,7 +88,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
         }
 
     init {
-        txtPaint.textSize = textSize
+        txtPaint.textSize = textSize.toFloat()
         txtPaint.color = textColor
         txtPaint.textAlign = align
 
