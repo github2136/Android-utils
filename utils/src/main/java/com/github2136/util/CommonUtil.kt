@@ -58,4 +58,15 @@ object CommonUtil {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(activity.window.decorView.windowToken, 0)
     }
+
+    /**
+     * 获取状态栏高度
+     */
+    @JvmStatic
+    fun getStatusBarHeight(context: Context): Int {
+        val resources = context.resources
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        val height = resources.getDimensionPixelSize(resourceId)
+        return height
+    }
 }
