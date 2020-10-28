@@ -22,7 +22,7 @@ class Appli : Application() {
         //自定义Gson
         JsonUtil.mGson = GsonBuilder()
             .serializeNulls()
-            .setDateFormat(DateUtil.Date_pattern_default)
+            .setDateFormat(DateUtil.DATE_PATTERN_YMDHMS)
             .create()
 
         //默认实例操作
@@ -30,7 +30,7 @@ class Appli : Application() {
 
         JsonUtil.mGson = GsonBuilder()
             .serializeNulls()
-            .setDateFormat(DateUtil.Date_Pattern_Short1)
+            .setDateFormat(DateUtil.DATE_PATTERN_YMD)
             .create()
         //新实例操作，每次newInstance都会调用有新的对象
         val str2 = JsonUtil.newInstance().getGson().toJson(Date())
