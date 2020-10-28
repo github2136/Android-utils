@@ -1,12 +1,16 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+def version = rootProject.ext.android
+def lib = rootProject.ext.dependencies
+
 android {
-    compileSdkVersion 28
+    compileSdkVersion version.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 28
+        minSdkVersion version.minSdkVersion
+        targetSdkVersion version.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -22,10 +26,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    compileOnly 'androidx.appcompat:appcompat:1.0.2'
-    compileOnly 'androidx.recyclerview:recyclerview:1.0.0'
-    compileOnly 'com.google.code.gson:gson:2.8.5'
+    implementation lib['kotlin-stdlib']
+    implementation lib['kotlin-ktx']
+    compileOnly lib['android-appcompat']
+    compileOnly lib['android-recyclerview']
+    compileOnly lib['gson']
+
+    androidTestImplementation lib['android-test']
+    testImplementation lib['junit']
+    androidTestImplementation lib['espresso']
 }
 // 指定编码
 tasks.withType(JavaCompile) {

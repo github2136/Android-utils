@@ -42,7 +42,7 @@ class MyService : Service() {
         run = true
         thread {
             while (run) {
-                FileUtil.appendFile(fileName, "${DateUtil.getDateNow()} \n".toByteArray())
+                File(fileName).appendText("${DateUtil.getDateNow()} \n")
                 Thread.sleep(5000)
             }
         }

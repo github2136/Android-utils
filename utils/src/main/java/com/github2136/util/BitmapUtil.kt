@@ -11,19 +11,20 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.concurrent.Executors
 
 /**
-*       图片处理
-*       首先设置图片路径BitmapUtil.getInstance(filePath)
-*       然后就可以在通过其他方法来对图片进行处理
-*       rotation//图片旋转为正
-*       limit(int max)//显示图片最大宽高 0 表示不限制
-*       limitSize(int maxSize)//显示图片最大大小，单位为KB 0 表示不限制
-*       get***()//获取图片的bitmap、base64、byte[]
-*       correct()//图片是否为正的
-*       values()//获取图片宽高[0]表示为宽[1]表示为高
-*       save(String filepath,callback)//保存至指定目录
-*/
+ *       图片处理
+ *       首先设置图片路径BitmapUtil.getInstance(filePath)
+ *       然后就可以在通过其他方法来对图片进行处理
+ *       rotation//图片旋转为正
+ *       limit(int max)//显示图片最大宽高 0 表示不限制
+ *       limitSize(int maxSize)//显示图片最大大小，单位为KB 0 表示不限制
+ *       get***()//获取图片的bitmap、base64、byte[]
+ *       correct()//图片是否为正的
+ *       values()//获取图片宽高[0]表示为宽[1]表示为高
+ *       save(String filepath,callback)//保存至指定目录
+ */
 class BitmapUtil private constructor(path: String) {
     //图片路径
     private var mFilePath: String = path
@@ -124,9 +125,9 @@ class BitmapUtil private constructor(path: String) {
             val exifInterface = ExifInterface(path)
             // 获取图片的旋转信息
             val orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface
-                    .ORIENTATION_NORMAL)
+                .ORIENTATION_NORMAL)
             when (orientation) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> degree = 90
+                ExifInterface.ORIENTATION_ROTATE_90  -> degree = 90
                 ExifInterface.ORIENTATION_ROTATE_180 -> degree = 180
                 ExifInterface.ORIENTATION_ROTATE_270 -> degree = 270
             }
@@ -147,7 +148,7 @@ class BitmapUtil private constructor(path: String) {
         matrix.postRotate(degree.toFloat())
         // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
         retBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0,
-                sourceBitmap.width, sourceBitmap.height, matrix, true)
+                                        sourceBitmap.width, sourceBitmap.height, matrix, true)
         sourceBitmap.recycle()
         return retBitmap
     }
@@ -166,7 +167,7 @@ class BitmapUtil private constructor(path: String) {
         matrix.setScale(scale, scale)
         // 将原始图片按照比例矩阵进行压缩，并得到新的图片
         retBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0,
-                sourceBitmap.width, sourceBitmap.height, matrix, true)
+                                        sourceBitmap.width, sourceBitmap.height, matrix, true)
         sourceBitmap.recycle()
         return retBitmap
     }
@@ -240,47 +241,52 @@ class BitmapUtil private constructor(path: String) {
      * 获取图片
      */
     fun get(callBack: (Bitmap?) -> Unit) {
-        Thread {
+        executor.execute {
             val mBitmap = getBitmap()
             mHandler.post { callBack(mBitmap) }
-        }.start()
+        }
     }
 
-    fun getByte(callBack: (ByteArray?) -> Unit) = Thread {
-        var bytes: ByteArray? = null
-        val mBitmap = getBitmap()
-        try {
-            val baos = ByteArrayOutputStream()
-            mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
-            baos.flush()
-            baos.close()
-            bytes = baos.toByteArray()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        mHandler.post { callBack(bytes) }
-    }.start()
+    fun getByte(callBack: (ByteArray?) -> Unit) {
+        executor.execute {
+            var bytes: ByteArray? = null
+            val mBitmap = getBitmap()
+            try {
+                val baos = ByteArrayOutputStream()
+                mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
+                baos.flush()
+                baos.close()
+                bytes = baos.toByteArray()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            mHandler.post { callBack(bytes) }
 
-    fun getBase64(callBack: (String?) -> Unit) = Thread {
-        var base64: String? = null
-        val mBitmap = getBitmap()
-        try {
-            val baos = ByteArrayOutputStream()
-            mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
-            baos.flush()
-            baos.close()
-            base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
-        mHandler.post { callBack(base64) }
-    }.start()
+    }
+
+    fun getBase64(callBack: (String?) -> Unit) {
+        executor.execute {
+            var base64: String? = null
+            val mBitmap = getBitmap()
+            try {
+                val baos = ByteArrayOutputStream()
+                mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
+                baos.flush()
+                baos.close()
+                base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            mHandler.post { callBack(base64) }
+        }
+    }
 
     /**
      * 保存图片
      */
     fun save(filePath: String, callBack: (String) -> Unit) {
-        Thread {
+        executor.execute {
             val mBitmap = getBitmap()
             if (mBitmap == null) {
                 mHandler.post { callBack("") }
@@ -289,10 +295,12 @@ class BitmapUtil private constructor(path: String) {
                 mBitmap.recycle()
                 mHandler.post { callBack(if (isSave) filePath else "") }
             }
-        }.start()
+        }
     }
 
     companion object {
         fun getInstance(path: String): BitmapUtil = BitmapUtil(path)
     }
 }
+
+private val executor by lazy { Executors.newCachedThreadPool() }

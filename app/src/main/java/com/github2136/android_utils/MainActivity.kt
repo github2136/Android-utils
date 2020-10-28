@@ -39,6 +39,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        val px = CommonUtil.dp2px(this, 10f)
+        val dp = CommonUtil.px2dp(this, px)
+
+        val px2 = CommonUtil.sp2px(this, 12f)
+        val dp2 = CommonUtil.px2sp(this, px2)
+
         btn_bitmap.setOnClickListener(this)
         btn_date.setOnClickListener(this)
         btn_list_adapter.setOnClickListener(this)

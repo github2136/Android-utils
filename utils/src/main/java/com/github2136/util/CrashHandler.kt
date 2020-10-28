@@ -111,8 +111,7 @@ class CrashHandler private constructor(val application: Application, val debug: 
         val sb = getLog(ex)
         val filename = FileUtil.createFileName("log", ".txt")
         //存储至外部私有目录
-        val logFile = File(FileUtil.getExternalStoragePrivateLogPath(application), filename)
-        FileUtil.saveFile(logFile.path, sb.toString())
+        File(FileUtil.getExternalStoragePrivateLogPath(application), filename).writeText(sb.toString())
     }
 
     private fun getLog(ex: Throwable): StringBuffer {

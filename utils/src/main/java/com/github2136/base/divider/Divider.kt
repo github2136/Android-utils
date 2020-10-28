@@ -23,12 +23,14 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
     private val ATTRS = intArrayOf(android.R.attr.listDivider)
     private var mDivider: Drawable
     private val mBounds = Rect()
-    private val bgPaint = Paint()
-    private val txtPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-    private val linePaint = Paint()
-    private var groupHeight: Int
-    private val txtBottom: Int
-    private var realLineHeight: Int
+    private val bgPaint = Paint()//背景图
+    private val txtPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)//文字
+    private val linePaintTop = Paint()//上方线
+    private val linePaintBottom = Paint()//底部线
+    private var groupHeight: Int//分组项总高度，填充+线高度+字体高度
+    private val txtBottom: Int//文字绘制底部距离
+    private var lineHeightTop2: Int//上方线高度的一半
+    private var lineHeightBottom2: Int//下方线高度的一半
 
     var leftPadding = CommonUtil.dp2px(context, 8f)
     var rightPadding = CommonUtil.dp2px(context, 8f)
@@ -38,7 +40,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
     var textSize = CommonUtil.sp2px(context, 20f)
         set(value) {
             field = value
-            txtPaint.textSize = value
+            txtPaint.textSize = value.toFloat()
         }
     var textColor = Color.parseColor("#DE000000")
         set(value) {
@@ -57,34 +59,52 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
             txtPaint.textAlign = value
         }
 
-    var lineHeight = CommonUtil.dp2px(context, 1f)
+    var lineHeightBottom = CommonUtil.dp2px(context, 1f)
         set(value) {
             field = value
-            linePaint.strokeWidth = value.toFloat()
-            realLineHeight = value / 2
+            lineHeightBottom2 = value / 2
+            linePaintBottom.strokeWidth = value.toFloat()
+            groupHeight = (lineHeightTop + topPadding + txtPaint.fontSpacing + bottomPadding + value).toInt()
         }
 
-    var lineColor = Color.parseColor("#1F000000")
+    var lineColorBottom = Color.parseColor("#1F000000")
         set(value) {
             field = value
-            linePaint.color = value
+            linePaintBottom.color = value
+        }
+
+    var lineHeightTop = CommonUtil.dp2px(context, 1f)
+        set(value) {
+            field = value
+            lineHeightTop2 = value / 2
+            linePaintTop.strokeWidth = value.toFloat()
+            groupHeight = (value + topPadding + txtPaint.fontSpacing + bottomPadding + lineHeightBottom).toInt()
+        }
+
+    var lineColorTop = Color.parseColor("#1F000000")
+        set(value) {
+            field = value
+            linePaintTop.color = value
         }
 
     init {
-        txtPaint.textSize = textSize
+        txtPaint.textSize = textSize.toFloat()
         txtPaint.color = textColor
         txtPaint.textAlign = align
 
         bgPaint.color = backgroundColor
 
-        linePaint.strokeWidth = lineHeight.toFloat()
-        linePaint.color = lineColor
+        linePaintTop.strokeWidth = lineHeightTop.toFloat()
+        linePaintTop.color = lineColorTop
+        lineHeightTop2 = lineHeightTop / 2
 
-        realLineHeight = lineHeight / 2
+        linePaintBottom.strokeWidth = lineHeightBottom.toFloat()
+        linePaintBottom.color = lineColorBottom
+        lineHeightBottom2 = lineHeightBottom / 2
 
         val font = txtPaint.fontMetricsInt
         txtBottom = font.descent
-        groupHeight = (topPadding + bottomPadding + txtPaint.fontSpacing).toInt()// font.descent - font.ascent
+        groupHeight = (lineHeightTop + topPadding + txtPaint.fontSpacing + bottomPadding + lineHeightBottom).toInt()
 
         val a = context.obtainStyledAttributes(ATTRS)
         mDivider = a.getDrawable(0)
@@ -127,25 +147,34 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
         }
         val childCount = parent.childCount
 
-        for (i in 0 until childCount) {
-            val child = parent.getChildAt(i)
-            parent.getDecoratedBoundsWithMargins(child, mBounds)
-            val dividerBottom = mBounds.bottom + child.translationY.roundToInt()
-            val dividerTop = dividerBottom - mDivider.intrinsicHeight
-            mDivider.setBounds(left, dividerTop, right, dividerBottom)
-            mDivider.draw(c)
-        }
-
         val adapter = parent.adapter
-
-        var preTxt: String?
-        var currentTxt: String?
-        var nextTxt: String?
-        var position: Int
-        var txtWidth: Int
-        var txt: String
-        var txtX: Float
         if (adapter is IDivider) {
+            var preTxt: String?
+            var nextTxt: String?
+            var currentTxt: String?
+            var position: Int
+            for (i in 0 until childCount) {
+                val child = parent.getChildAt(i)
+                parent.getDecoratedBoundsWithMargins(child, mBounds)
+                position = parent.getChildAdapterPosition(child)
+
+                currentTxt = adapter.getShowTxt(position)
+                nextTxt = if (position + 2 < adapter.itemCount) adapter.getShowTxt(position + 1) else null
+
+                if (nextTxt == null || nextTxt == currentTxt) {
+                    parent.getDecoratedBoundsWithMargins(child, mBounds)
+                    val dividerBottom = mBounds.bottom + child.translationY.roundToInt()
+                    val dividerTop = dividerBottom - mDivider.intrinsicHeight
+                    mDivider.setBounds(left, dividerTop, right, dividerBottom)
+                    mDivider.draw(c)
+                }
+            }
+
+
+            var txtWidth: Int
+            var txt: String
+            var txtX: Float
+
             for (i in 0 until childCount) {
                 val child = parent.getChildAt(i)
                 parent.getDecoratedBoundsWithMargins(child, mBounds)
@@ -157,15 +186,18 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
 
                     currentTxt?.apply {
                         if (position == 0 || (mBounds.top <= top && mBounds.bottom >= top)) {
+                            //第一个或固定的头部的项
                             var groupTop = top.toFloat()
                             if (currentTxt != nextTxt) {
                                 if (mBounds.bottom < groupHeight + top) {
                                     groupTop = -groupHeight + mBounds.bottom.toFloat()
                                 }
                             }
+                            //背景绘制
                             c.drawRect(left.toFloat(), groupTop, right.toFloat(), groupTop + groupHeight.toFloat(), bgPaint)
 
-                            c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, right.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, linePaint)
+                            //上方线绘制
+                            c.drawLine(left.toFloat(), groupTop + lineHeightTop2, right.toFloat(), groupTop + lineHeightTop2, linePaintTop)
 
                             txtWidth = right - left - leftPadding - rightPadding
                             txt = if (txtPaint.measureText(this) > txtWidth) {
@@ -179,13 +211,19 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                                 Paint.Align.CENTER -> left.toFloat() + leftPadding + txtWidth / 2
                                 Paint.Align.RIGHT  -> left.toFloat() + leftPadding + txtWidth
                             }
-                            c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom, txtPaint)
+                            //文字绘制
+                            c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom - lineHeightBottom, txtPaint)
+                            //下方线绘制
+                            c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - lineHeightBottom2, right.toFloat(), groupTop + groupHeight.toFloat() - lineHeightBottom2, linePaintBottom)
                         } else {
                             if (this != preTxt) {
+                                //绘制跟随屏幕滚动的项
                                 val groupTop = mBounds.top.toFloat()
+                                //背景绘制
                                 c.drawRect(left.toFloat(), groupTop, right.toFloat(), groupTop + groupHeight.toFloat(), bgPaint)
 
-                                c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, right.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, linePaint)
+                                //上方线绘制
+                                c.drawLine(left.toFloat(), groupTop + lineHeightTop2, right.toFloat(), groupTop + lineHeightTop2, linePaintTop)
 
                                 txtWidth = right - left - leftPadding - rightPadding
                                 txt = if (txtPaint.measureText(this) > txtWidth) {
@@ -199,18 +237,24 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                                     Paint.Align.CENTER -> left.toFloat() + leftPadding + txtWidth / 2
                                     Paint.Align.RIGHT  -> left.toFloat() + leftPadding + txtWidth
                                 }
-                                c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom, txtPaint)
+                                //文字绘制
+                                c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom - lineHeightBottom, txtPaint)
+                                //下方线绘制
+                                c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - lineHeightBottom2, right.toFloat(), groupTop + groupHeight.toFloat() - lineHeightBottom2, linePaintBottom)
                             }
                         }
                     }
                 } else {
+                    // 非粘性项
                     preTxt = if (position > 0) adapter.getShowTxt(position - 1) else null
                     currentTxt = adapter.getShowTxt(position)
                     currentTxt?.apply {
                         if (this != preTxt) {
                             val groupTop = mBounds.top.toFloat()
                             c.drawRect(left.toFloat(), groupTop, right.toFloat(), groupTop + groupHeight.toFloat(), bgPaint)
-                            c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, right.toFloat(), groupTop + groupHeight.toFloat() - realLineHeight, linePaint)
+                            //上方线绘制
+                            c.drawLine(left.toFloat(), groupTop + lineHeightTop2, right.toFloat(), groupTop + lineHeightTop2, linePaintTop)
+
                             txtWidth = right - left - leftPadding - rightPadding
                             txt = if (txtPaint.measureText(this) > txtWidth) {
                                 val subIndex = txtPaint.breakText(this, 0, this.length, true, txtWidth.toFloat(), null)
@@ -223,7 +267,10 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                                 Paint.Align.CENTER -> left.toFloat() + leftPadding + txtWidth / 2
                                 Paint.Align.RIGHT  -> left.toFloat() + leftPadding + txtWidth
                             }
-                            c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom, txtPaint)
+                            //文字绘制
+                            c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom - lineHeightBottom, txtPaint)
+                            //下方线绘制
+                            c.drawLine(left.toFloat(), groupTop + groupHeight.toFloat() - lineHeightBottom2, right.toFloat(), groupTop + groupHeight.toFloat() - lineHeightBottom2, linePaintBottom)
                         }
                     }
                 }

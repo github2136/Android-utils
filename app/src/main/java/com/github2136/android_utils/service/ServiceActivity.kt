@@ -24,52 +24,20 @@ class ServiceActivity : AppCompatActivity() {
         }
 
         btn_auto_start.setOnClickListener {
-            if (SettingUtil.isHuawei) {
-                AlertDialog.Builder(this)
-                    .setTitle("启动管理设置")
-                    .setMessage("找到${resources.getString(R.string.app_name)}，关闭自动管理，设置允许自启动，允许关联启动，允许后台活动")
-                    .setPositiveButton("确定") { _, _ ->
-                        SettingUtil.goHuaweiAutoStartSetting(this)
-                    }.show()
-            } else if (SettingUtil.isXiaomi) {
-                AlertDialog.Builder(this)
-                    .setTitle("启动管理设置")
-                    .setMessage("找到${resources.getString(R.string.app_name)}，允许自启动")
-                    .setPositiveButton("确定") { _, _ ->
-                        SettingUtil.goXiaomiAutoStartSetting(this)
-                    }.show()
-            } else {
-                AlertDialog.Builder(this)
-                    .setTitle("启动管理设置")
-                    .setMessage("找到启动设置，允许自启动")
-                    .setPositiveButton("确定") { _, _ ->
-                        SettingUtil.goAutoStartSetting(this)
-                    }.show()
-            }
+            AlertDialog.Builder(this)
+                .setTitle("启动管理设置")
+                .setMessage(SettingUtil.getAutoStartSettingStr(this))
+                .setPositiveButton("确定") { _, _ ->
+                    SettingUtil.goAutoStartSetting(this)
+                }.show()
         }
         btn_power.setOnClickListener {
-            if (SettingUtil.isHuawei) {
-                AlertDialog.Builder(this)
-                    .setTitle("电源设置")
-                    .setMessage("关闭省电模式，更多电池设置->休眠时始终保持网络连接，打开")
-                    .setPositiveButton("确定") { _, _ ->
-                        SettingUtil.goHuaweiPowerKeeperSetting(this)
-                    }.show()
-            } else if (SettingUtil.isXiaomi) {
-                AlertDialog.Builder(this)
-                    .setTitle("电源设置")
-                    .setMessage("找到${resources.getString(R.string.app_name)}，点击打开省电策略，选择无限制")
-                    .setPositiveButton("确定") { _, _ ->
-                        SettingUtil.goXiaomiPowerKeeperSetting(this)
-                    }.show()
-            } else {
-                AlertDialog.Builder(this)
-                    .setTitle("电源设置")
-                    .setMessage("找到电池，设置为无限制或未优化")
-                    .setPositiveButton("确定") { _, _ ->
-                        SettingUtil.goPowerKeeperSetting(this)
-                    }.show()
-            }
+            AlertDialog.Builder(this)
+                .setTitle("电源设置")
+                .setMessage(SettingUtil.getBatterySettingStr(this))
+                .setPositiveButton("确定") { _, _ ->
+                    SettingUtil.goBatterySetting(this)
+                }.show()
         }
         btn_start_service.setOnClickListener {
             startService(Intent(this, MyService::class.java))

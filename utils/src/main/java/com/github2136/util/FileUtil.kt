@@ -363,106 +363,6 @@ object FileUtil {
     }
 
     /**
-     * 保存文字至指定文件
-     *
-     * @param path
-     * @param text
-     */
-    @JvmStatic
-    fun saveFile(path: String, text: String) {
-        saveFile(path, text.toByteArray())
-    }
-
-    /**
-     * 内容追加
-     *
-     * @param path
-     * @param text
-     */
-    @JvmStatic
-    fun appendFile(path: String, text: String) {
-        appendFile(path, text.toByteArray())
-    }
-
-    /**
-     * 存文字至指定文件
-     *
-     * @param path
-     * @param bytes
-     */
-    @JvmStatic
-    fun saveFile(path: String, bytes: ByteArray) {
-        try {
-            val file = File(path)
-            if (!file.parentFile.exists()) {
-                file.parentFile.mkdirs()
-            }
-            if (!file.exists()) {
-                file.createNewFile()
-            }
-            val outputStream = FileOutputStream(file)
-            outputStream.write(bytes)
-            outputStream.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-    }
-
-    /**
-     * 内容追加
-     *
-     * @param path
-     * @param bytes
-     */
-    @JvmStatic
-    fun appendFile(path: String, bytes: ByteArray) {
-        try {
-            val file = File(path)
-            if (!file.parentFile.exists()) {
-                file.parentFile.mkdirs()
-            }
-            if (!file.exists()) {
-                file.createNewFile()
-            }
-            val outputStream = FileOutputStream(file, true)
-            outputStream.write(bytes)
-            outputStream.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    /**
-     * 文件读取
-     *
-     * @param path
-     * @return
-     */
-    @JvmStatic
-    fun readFile(path: String): String? {
-        try {
-            val file = File(path)
-            if (file.exists()) {
-                val inputStream = FileInputStream(file)
-                val bytes = ByteArray(file.length().toInt())
-                inputStream.read(bytes)
-                inputStream.close()
-                return String(bytes, charset("UTF-8"))
-            } else {
-                return null
-            }
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-            return null
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return null
-        }
-
-    }
-
-    /**
      * 清理文件件
      *
      * @param path
@@ -477,23 +377,6 @@ object FileUtil {
             true
         } else {
             false
-        }
-    }
-
-    /**
-     * 删除文件
-     *
-     * @param path
-     * @return
-     */
-    @JvmStatic
-    fun deleteFile(path: String): Boolean {
-        val file = File(path)
-        if (file.exists()) {
-            file.delete()
-            return true
-        } else {
-            return false
         }
     }
 }
