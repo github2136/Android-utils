@@ -57,8 +57,8 @@ object SymmetricEncryptionUtil {
     fun encrypt(mKey: ByteArray,
                 @EncryptType mEncryptType: String,
                 mData: ByteArray,
-                @EncryptMode mMode: String = "",
-                @EncryptPadding mPadding: String = "",
+                @EncryptMode mMode: String,
+                @EncryptPadding mPadding: String,
                 mIV: ByteArray? = null): ByteArray? {
         return try {
             val key = SecretKeySpec(mKey, mEncryptType)//生成密钥
@@ -83,8 +83,8 @@ object SymmetricEncryptionUtil {
     fun decrypt(mKey: ByteArray,
                 @EncryptType mEncryptType: String,
                 mData: ByteArray,
-                @EncryptMode mMode: String = "",
-                @EncryptPadding mPadding: String = "",
+                @EncryptMode mMode: String,
+                @EncryptPadding mPadding: String,
                 mIV: ByteArray? = null): ByteArray? {
         return try {
             val key = SecretKeySpec(mKey, mEncryptType)//生成密钥

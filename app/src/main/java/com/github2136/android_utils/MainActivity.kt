@@ -13,6 +13,7 @@ import androidx.collection.ArrayMap
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
 import com.github2136.android_utils.load_more.ListActivity
+import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
 import com.github2136.android_utils.service.ServiceActivity
 import com.github2136.android_utils.util.SSLUtil
@@ -259,6 +260,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.btn_list_adapter -> {
                 intent = Intent(this, ListActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.btn_list_view_adapter -> {
+                intent = Intent(this, ListViewActivity::class.java)
                 startActivity(intent)
             }
             R.id.btn_service      -> {
