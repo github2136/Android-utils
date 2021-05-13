@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable
 import android.text.TextPaint
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.github2136.util.CommonUtil
+import com.github2136.util.dp2px
 import kotlin.math.roundToInt
 
 /**
@@ -32,12 +32,12 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
     private var lineHeightTop2: Int//上方线高度的一半
     private var lineHeightBottom2: Int//下方线高度的一半
 
-    var leftPadding = CommonUtil.dp2px(context, 8f)
-    var rightPadding = CommonUtil.dp2px(context, 8f)
-    var topPadding = CommonUtil.dp2px(context, 12f)
-    var bottomPadding = CommonUtil.dp2px(context, 12f)
+    var leftPadding = 8f.dp2px
+    var rightPadding = 8f.dp2px
+    var topPadding = 12f.dp2px
+    var bottomPadding = 12f.dp2px
 
-    var textSize = CommonUtil.sp2px(context, 20f)
+    var textSize = 20f.dp2px
         set(value) {
             field = value
             txtPaint.textSize = value.toFloat()
@@ -59,7 +59,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
             txtPaint.textAlign = value
         }
 
-    var lineHeightBottom = CommonUtil.dp2px(context, 1f)
+    var lineHeightBottom = 1f.dp2px
         set(value) {
             field = value
             lineHeightBottom2 = value / 2
@@ -73,7 +73,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
             linePaintBottom.color = value
         }
 
-    var lineHeightTop = CommonUtil.dp2px(context, 1f)
+    var lineHeightTop = 1f.dp2px
         set(value) {
             field = value
             lineHeightTop2 = value / 2
@@ -207,9 +207,9 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                                 this
                             }
                             txtX = when (align) {
-                                Paint.Align.LEFT   -> left.toFloat() + leftPadding
+                                Paint.Align.LEFT -> left.toFloat() + leftPadding
                                 Paint.Align.CENTER -> left.toFloat() + leftPadding + txtWidth / 2
-                                Paint.Align.RIGHT  -> left.toFloat() + leftPadding + txtWidth
+                                Paint.Align.RIGHT -> left.toFloat() + leftPadding + txtWidth
                             }
                             //文字绘制
                             c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom - lineHeightBottom, txtPaint)
@@ -233,9 +233,9 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                                     this
                                 }
                                 txtX = when (align) {
-                                    Paint.Align.LEFT   -> left.toFloat() + leftPadding
+                                    Paint.Align.LEFT -> left.toFloat() + leftPadding
                                     Paint.Align.CENTER -> left.toFloat() + leftPadding + txtWidth / 2
-                                    Paint.Align.RIGHT  -> left.toFloat() + leftPadding + txtWidth
+                                    Paint.Align.RIGHT -> left.toFloat() + leftPadding + txtWidth
                                 }
                                 //文字绘制
                                 c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom - lineHeightBottom, txtPaint)
@@ -263,9 +263,9 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
                                 this
                             }
                             txtX = when (align) {
-                                Paint.Align.LEFT   -> left.toFloat() + leftPadding
+                                Paint.Align.LEFT -> left.toFloat() + leftPadding
                                 Paint.Align.CENTER -> left.toFloat() + leftPadding + txtWidth / 2
-                                Paint.Align.RIGHT  -> left.toFloat() + leftPadding + txtWidth
+                                Paint.Align.RIGHT -> left.toFloat() + leftPadding + txtWidth
                             }
                             //文字绘制
                             c.drawText(txt, txtX, groupTop + groupHeight.toFloat() - bottomPadding - txtBottom - lineHeightBottom, txtPaint)
