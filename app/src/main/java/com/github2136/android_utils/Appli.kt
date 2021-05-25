@@ -35,7 +35,7 @@ class Appli : Application() {
         //新实例操作，每次newInstance都会调用有新的对象
         val str2 = JsonUtil.newInstance().getGson().toJson(Date())
 
-        CrashHandler.getInstance(this, !BuildConfig.DEBUG)
+        CrashHandler.getInstance(this, BuildConfig.DEBUG)
             .setCallback(object : CrashHandler.CrashHandlerCallback {
                 override fun finishAll() {
                     this@Appli.finishAll()

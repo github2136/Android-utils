@@ -13,6 +13,7 @@ import androidx.collection.ArrayMap
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
 import com.github2136.android_utils.load_more.ListActivity
+import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
 import com.github2136.android_utils.service.ServiceActivity
 import com.github2136.android_utils.util.SSLUtil
@@ -30,20 +31,12 @@ import kotlin.concurrent.thread
  * Created by yb on 2018/10/30.
  */
 class MainActivity : BaseActivity(), View.OnClickListener {
+    override fun getViewResId() = R.layout.activity_main
 
     private val permissionArrayMap = ArrayMap<String, String>()
     val permissionUtil by lazy { PermissionUtil(this) }
 
-    override fun getViewResId(): Int {
-        return R.layout.activity_main
-    }
-
     override fun initData(savedInstanceState: Bundle?) {
-        val px = CommonUtil.dp2px(this, 10f)
-        val dp = CommonUtil.px2dp(this, px)
-
-        val px2 = CommonUtil.sp2px(this, 12f)
-        val dp2 = CommonUtil.px2sp(this, px2)
 
         btn_bitmap.setOnClickListener(this)
         btn_date.setOnClickListener(this)
@@ -51,11 +44,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         btn_list_view_adapter.setOnClickListener(this)
         btn_service.setOnClickListener(this)
 
-        val UTC = DateUtil.date2str(Date(), timeZone = TimeZone.getTimeZone("UTC").id)
-        val UTCDate = DateUtil.str2date(UTC, timeZone = TimeZone.getTimeZone("UTC").id)
-        val t = DateUtil.getDateNow(timeZone = TimeZone.getTimeZone("UTC").id)
-        Log.e("t", t)
-        val t2 = DateUtil.UTC2GMT(t, TimeZone.getDefault().id)
+        val UTC = Date().str(timeZone = TimeZone.getTimeZone("UTC").id)//获取UTC时间字符串
+        val UTCDate = UTC.date(timeZone = TimeZone.getTimeZone("UTC").id)//UTC字符串转Date对象
+        Log.e("utc time", UTC)
+        val t2 = DateUtil.timeZoneConversion(UTC, DateUtil.DATE_PATTERN_YMDHMS, TimeZone.getTimeZone("UTC").id, TimeZone.getTimeZone("GMT+8").id)//UTC字符转转换为指定时区字符串
+        val t3 = UTC.timeZoneConversion(DateUtil.DATE_PATTERN_YMDHMS, TimeZone.getTimeZone("UTC").id)//UTC字符转转换为指定时区字符串
         Log.e("t", t2)
         MessageDigestUtil.getMessageDigest("ttt".toByteArray(), "MD5")
 
@@ -203,7 +196,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     intent.putExtra("app_package", packageName)
                     intent.putExtra("app_uid", applicationInfo.uid)
                 }
-                else                        -> {
+                else -> {
                     // 其他
                     intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS"
                     intent.data = Uri.fromParts("package", packageName, null)
@@ -249,11 +242,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btn_bitmap       -> {
+            R.id.btn_bitmap -> {
                 intent = Intent(this, BitmapActivity::class.java)
                 startActivity(intent)
             }
-            R.id.btn_date         -> {
+            R.id.btn_date -> {
                 intent = Intent(this, DateActivity::class.java)
                 startActivity(intent)
             }
@@ -261,7 +254,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 intent = Intent(this, ListActivity::class.java)
                 startActivity(intent)
             }
-            R.id.btn_service      -> {
+            R.id.btn_list_view_adapter -> {
+                intent = Intent(this, ListViewActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.btn_service -> {
                 intent = Intent(this, ServiceActivity::class.java)
                 startActivity(intent)
             }

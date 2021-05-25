@@ -20,12 +20,16 @@ object DateUtil {
     const val DATE_PATTERN_YMDHMS = "yyyy-MM-dd HH:mm:ss"
     const val DATE_PATTERN_YMD = "yyyy-MM-dd"
 
-
     /**
      * 日期转文字
      */
     @JvmStatic
-    fun date2str(date: Date, pattern: String = DATE_PATTERN_YMDHMS, timeZone: String = TimeZone.getDefault().id): String {
+    fun date2str(date: Date, pattern: String): String {
+        return date2str(date, pattern, TimeZone.getDefault().id)
+    }
+
+    @JvmStatic
+    fun date2str(date: Date, pattern: String, timeZone: String): String {
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getTimeZone(timeZone)
         return sdf.format(date)
@@ -35,7 +39,12 @@ object DateUtil {
      * 文字转日期
      */
     @JvmStatic
-    fun str2date(dateStr: String, pattern: String = DATE_PATTERN_YMDHMS, timeZone: String = TimeZone.getDefault().id): Date? {
+    fun str2date(dateStr: String, pattern: String): Date? {
+        return str2date(dateStr, pattern, TimeZone.getDefault().id)
+    }
+
+    @JvmStatic
+    fun str2date(dateStr: String, pattern: String, timeZone: String): Date? {
         return try {
             val sdf = SimpleDateFormat(pattern, Locale.getDefault())
             sdf.timeZone = TimeZone.getTimeZone(timeZone)
@@ -50,21 +59,32 @@ object DateUtil {
      * 获取现在的时间
      */
     @JvmStatic
-    fun getDateNow(pattern: String = DATE_PATTERN_YMDHMS, timeZone: String = TimeZone.getDefault().id): String {
+    fun getDateNow(): String {
+        return getDateNow(DATE_PATTERN_YMDHMS)
+    }
+
+    @JvmStatic
+    fun getDateNow(pattern: String): String {
+        return getDateNow(pattern, TimeZone.getDefault().id)
+    }
+
+    @JvmStatic
+    fun getDateNow(pattern: String, timeZone: String): String {
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getTimeZone(timeZone)
         return sdf.format(Date())
     }
 
     /**
-     * UTC转换为指定时区时间格式
+     * 时区转换
+     * @param origin String 源时间
+     * @param pattern String 时间格式
+     * @param originZone String 源时区
+     * @param targetZone String 转换目标时区
      */
-    @JvmStatic
-    fun UTC2GMT(utc: String, timeZone: String = TimeZone.getDefault().id, pattern: String = DATE_PATTERN_YMDHMS): String {
-        val utcDate: Date? = str2date(utc, pattern, TimeZone.getTimeZone("UTC").id)
-        return utcDate?.let {
-            date2str(it, pattern, timeZone)
-        } ?: ""
+    fun timeZoneConversion(origin: String, pattern: String, originZone: String, targetZone: String): String {
+        val originDate: Date? = str2date(origin, pattern, originZone)
+        return originDate?.let { date2str(it, pattern, targetZone) } ?: ""
     }
 
     /**
@@ -80,19 +100,19 @@ object DateUtil {
         val absDiffTimeMil = Math.abs(diffTimeMil)//绝对时间
         when {
             absDiffTimeMil > DAY * 3 -> relativeTimeStr = date2str(date, DATE_PATTERN_YMD)
-            absDiffTimeMil > DAY     -> {
+            absDiffTimeMil > DAY -> {
                 interval = absDiffTimeMil / DAY
                 relativeTimeStr = String.format("%d 天%s", interval, if (diffTimeMil > 0) "前" else "后")
             }
-            absDiffTimeMil > HOUR    -> {
+            absDiffTimeMil > HOUR -> {
                 interval = absDiffTimeMil / HOUR
                 relativeTimeStr = String.format("%d 小时%s", interval, if (diffTimeMil > 0) "前" else "后")
             }
-            absDiffTimeMil > MINUTE  -> {
+            absDiffTimeMil > MINUTE -> {
                 interval = absDiffTimeMil / MINUTE
                 relativeTimeStr = String.format("%d 分钟%s", interval, if (diffTimeMil > 0) "前" else "后")
             }
-            else                     -> relativeTimeStr = if (diffTimeMil > 0) "刚刚" else "马上"
+            else -> relativeTimeStr = if (diffTimeMil > 0) "刚刚" else "马上"
         }
         return relativeTimeStr
     }
@@ -108,11 +128,11 @@ object DateUtil {
         val relativeTimeStr: String
 
         when {
-            diffTimeMil > DAY    -> {
+            diffTimeMil > DAY -> {
                 interval = diffTimeMil / DAY
                 relativeTimeStr = String.format("%d 天", interval)
             }
-            diffTimeMil > HOUR   -> {
+            diffTimeMil > HOUR -> {
                 interval = diffTimeMil / HOUR
                 relativeTimeStr = String.format("%d 小时", interval)
             }
@@ -120,7 +140,7 @@ object DateUtil {
                 interval = diffTimeMil / MINUTE
                 relativeTimeStr = String.format("%d 分钟", interval)
             }
-            else                 -> {
+            else -> {
                 interval = diffTimeMil / SECOND
                 relativeTimeStr = String.format("%d 秒", interval)
             }
@@ -160,4 +180,39 @@ object DateUtil {
         }
         return relativeTimeStr.toString()
     }
+}
+
+/**
+ * 日期转文字
+ */
+fun Date.str(pattern: String = DateUtil.DATE_PATTERN_YMDHMS, timeZone: String = TimeZone.getDefault().id): String {
+    val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+    sdf.timeZone = TimeZone.getTimeZone(timeZone)
+    return sdf.format(this)
+}
+
+/**
+ * 文字转日期
+ */
+fun String.date(pattern: String = DateUtil.DATE_PATTERN_YMDHMS, timeZone: String = TimeZone.getDefault().id): Date? {
+    return try {
+        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+        sdf.timeZone = TimeZone.getTimeZone(timeZone)
+        sdf.parse(this)
+    } catch (e: ParseException) {
+        e.printStackTrace()
+        null
+    }
+}
+
+/**
+ * 时间时区转换
+ * @receiver String
+ * @param pattern String 时间格式
+ * @param originZone String 源时区
+ * @param targetZone String 转换目标时区
+ */
+fun String.timeZoneConversion(pattern: String, originZone: String, targetZone: String = TimeZone.getDefault().id): String {
+    val originDate: Date? = this.date(pattern, originZone)
+    return originDate?.str(pattern, targetZone) ?: ""
 }

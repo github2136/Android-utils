@@ -3,8 +3,9 @@ package com.github2136.util
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
-
 
 /**
  * 通用工具类
@@ -58,15 +59,24 @@ object CommonUtil {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(activity.window.decorView.windowToken, 0)
     }
-
-    /**
-     * 获取状态栏高度
-     */
-    @JvmStatic
-    fun getStatusBarHeight(context: Context): Int {
-        val resources = context.resources
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        val height = resources.getDimensionPixelSize(resourceId)
-        return height
-    }
 }
+
+/**
+ * dp2px
+ */
+val Float.dp2px get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics).toInt()
+
+/**
+ * px2dp
+ */
+val Int.px2dp get() = this / Resources.getSystem().displayMetrics.density
+
+/**
+ * sp2px
+ */
+val Float.sp2px get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, Resources.getSystem().displayMetrics).toInt()
+
+/**
+ * px2sp
+ */
+val Int.px2sp get() = this / Resources.getSystem().displayMetrics.scaledDensity
