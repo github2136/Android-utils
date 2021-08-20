@@ -18,7 +18,7 @@ object GPSUtil {
     /**
      * 地球转火星
      */
-    fun wgs84_to_Gcj02(origin: UtilLatLng): UtilLatLng {
+    fun wgs84_to_gcj02(origin: UtilLatLng): UtilLatLng {
         var dLat = transformLat(origin.lng - 105.0, origin.lat - 35.0)
         var dLng = transformLng(origin.lng - 105.0, origin.lat - 35.0)
         val radLat = origin.lat / 180.0 * pi
@@ -33,9 +33,16 @@ object GPSUtil {
     }
 
     /**
+     * 地球转百度
+     */
+    fun wgs84_to_bd09(origin: UtilLatLng): UtilLatLng {
+        val gcj02 = wgs84_to_gcj02(origin)
+        return gcj02_to_bd09(gcj02)
+    }
+    /**
      * 火星转地球
      */
-    fun gcj02_To_Wgs84(origin: UtilLatLng): UtilLatLng {
+    fun gcj02_to_wgs84(origin: UtilLatLng): UtilLatLng {
         val gps = transform(origin)
         val latitude = origin.lat * 2 - gps.lat
         val longitude = origin.lng * 2 - gps.lng
@@ -45,7 +52,7 @@ object GPSUtil {
     /**
      * 火星转百度
      */
-    fun gcj02_To_Bd09(origin: UtilLatLng): UtilLatLng {
+    fun gcj02_to_bd09(origin: UtilLatLng): UtilLatLng {
         val z = sqrt(origin.lng * origin.lng + origin.lat * origin.lat) + 0.00002 * sin(origin.lat * pi)
         val theta = atan2(origin.lat, origin.lng) + 0.000003 * cos(origin.lng * pi)
         val bd_lon = z * cos(theta) + 0.0065
@@ -57,7 +64,7 @@ object GPSUtil {
     /**
      * 百度转火星
      */
-    fun bd09_To_Gcj02(origin: UtilLatLng): UtilLatLng {
+    fun bd09_to_gcj02(origin: UtilLatLng): UtilLatLng {
         val x = origin.lng - 0.0065
         val y = origin.lat - 0.006
         val z = sqrt(x * x + y * y) - 0.00002 * sin(y * pi)
@@ -70,9 +77,9 @@ object GPSUtil {
     /**
      * 百度转地球
      */
-    fun bd09_To_Wgs84(origin: UtilLatLng): UtilLatLng {
-        val gcj02 = bd09_To_Gcj02(origin)
-        return gcj02_To_Wgs84(gcj02)
+    fun bd09_to_wgs84(origin: UtilLatLng): UtilLatLng {
+        val gcj02 = bd09_to_gcj02(origin)
+        return gcj02_to_wgs84(gcj02)
     }
 
     /**
