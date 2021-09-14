@@ -24,15 +24,19 @@ object DateUtil {
      * 日期转文字
      */
     @JvmStatic
-    fun date2str(date: Date, pattern: String): String {
+    fun date2str(date: Date?, pattern: String): String {
         return date2str(date, pattern, TimeZone.getDefault().id)
     }
 
     @JvmStatic
-    fun date2str(date: Date, pattern: String, timeZone: String): String {
-        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
-        sdf.timeZone = TimeZone.getTimeZone(timeZone)
-        return sdf.format(date)
+    fun date2str(date: Date?, pattern: String, timeZone: String): String {
+        return if (date != null) {
+            val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+            sdf.timeZone = TimeZone.getTimeZone(timeZone)
+            sdf.format(date)
+        } else {
+            ""
+        }
     }
 
     /**

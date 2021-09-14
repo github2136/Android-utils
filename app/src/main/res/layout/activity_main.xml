@@ -11,6 +11,143 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.github2136.android_utils.MainActivity">
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TxtLightLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="large大号" />
+
+            <TextView
+                style="@style/TxtLightMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="medium中号" />
+
+            <TextView
+                style="@style/TxtLightSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="small小号" />
+
+            <TextView
+                style="@style/TxtLightMini"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mini迷你" />
+
+            <TextView
+                style="@style/TxtLightLargeSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SecondaryLight" />
+
+            <TextView
+                style="@style/TxtLightLargeDisable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DisableLight" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TxtDarkLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="large大号" />
+
+            <TextView
+                style="@style/TxtDarkMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="medium中号" />
+
+            <TextView
+                style="@style/TxtDarkSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="small小号" />
+
+            <TextView
+                style="@style/TxtDarkMini"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mini迷你" />
+
+            <TextView
+                style="@style/TxtDarkLargeSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SecondaryLight" />
+
+            <TextView
+                style="@style/TxtDarkLargeDisable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DisableLight" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TxtLightLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RED"
+                android:textColor="@color/colorTextRed" />
+
+            <TextView
+                style="@style/TxtLightLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YELLOW"
+                android:textColor="@color/colorTextYellow" />
+
+            <TextView
+                style="@style/TxtLightLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GREEN"
+                android:textColor="@color/colorTextGreen" />
+
+            <TextView
+                style="@style/TxtLightLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BLUE"
+                android:textColor="@color/colorTextBlue" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
     <Button
         android:id="@+id/btn_bitmap"
         android:layout_width="match_parent"

@@ -1,7 +1,9 @@
 package com.github2136.android_utils.util
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
-import java.math.RoundingMode
+import java.text.DecimalFormat
 import kotlin.math.*
 
 /**
@@ -16,129 +18,108 @@ object GPSUtil {
     /**
      * 地球转火星
      */
-    fun wgs84_to_Gcj02(lat: Double, lng: Double): Array<Double> {
-        var dLat = transformLat(lng - 105.0, lat - 35.0)
-        var dLng = transformLng(lng - 105.0, lat - 35.0)
-        val radLat = lat / 180.0 * pi
+    fun wgs84_to_gcj02(origin: UtilLatLng): UtilLatLng {
+        var dLat = transformLat(origin.lng - 105.0, origin.lat - 35.0)
+        var dLng = transformLng(origin.lng - 105.0, origin.lat - 35.0)
+        val radLat = origin.lat / 180.0 * pi
         var magic = sin(radLat)
         magic = 1 - ee * magic * magic
         val sqrtMagic = sqrt(magic)
         dLat = dLat * 180.0 / (a * (1 - ee) / (magic * sqrtMagic) * pi)
         dLng = dLng * 180.0 / (a / sqrtMagic * cos(radLat) * pi)
-        val mgLat = lat + dLat
-        val mgLng = lng + dLng
-        return arrayOf(mgLat, mgLng)
+        val mgLat = origin.lat + dLat
+        val mgLng = origin.lng + dLng
+        return UtilLatLng(mgLat, mgLng)
     }
 
     /**
+     * 地球转百度
+     */
+    fun wgs84_to_bd09(origin: UtilLatLng): UtilLatLng {
+        val gcj02 = wgs84_to_gcj02(origin)
+        return gcj02_to_bd09(gcj02)
+    }
+    /**
      * 火星转地球
      */
-    fun gcj02_To_Wgs84(lat: Double, lng: Double): Array<Double> {
-        val gps = transform(lat, lng)
-        val latitude = lat * 2 - gps[0]
-        val longitude = lng * 2 - gps[1]
-        return arrayOf(latitude, longitude)
+    fun gcj02_to_wgs84(origin: UtilLatLng): UtilLatLng {
+        val gps = transform(origin)
+        val latitude = origin.lat * 2 - gps.lat
+        val longitude = origin.lng * 2 - gps.lng
+        return UtilLatLng(latitude, longitude)
     }
 
     /**
      * 火星转百度
      */
-    fun gcj02_To_Bd09(gg_lat: Double, gg_lon: Double): Array<Double> {
-        val z = sqrt(gg_lon * gg_lon + gg_lat * gg_lat) + 0.00002 * sin(gg_lat * pi)
-        val theta = atan2(gg_lat, gg_lon) + 0.000003 * cos(gg_lon * pi)
+    fun gcj02_to_bd09(origin: UtilLatLng): UtilLatLng {
+        val z = sqrt(origin.lng * origin.lng + origin.lat * origin.lat) + 0.00002 * sin(origin.lat * pi)
+        val theta = atan2(origin.lat, origin.lng) + 0.000003 * cos(origin.lng * pi)
         val bd_lon = z * cos(theta) + 0.0065
         val bd_lat = z * sin(theta) + 0.006
-        return arrayOf(bd_lat, bd_lon)
+        return UtilLatLng(bd_lat, bd_lon)
     }
 
 
     /**
      * 百度转火星
      */
-    fun bd09_To_Gcj02(bd_lat: Double, bd_lon: Double): Array<Double> {
-        val x = bd_lon - 0.0065
-        val y = bd_lat - 0.006
+    fun bd09_to_gcj02(origin: UtilLatLng): UtilLatLng {
+        val x = origin.lng - 0.0065
+        val y = origin.lat - 0.006
         val z = sqrt(x * x + y * y) - 0.00002 * sin(y * pi)
         val theta = atan2(y, x) - 0.000003 * cos(x * pi)
         val gg_lon = z * cos(theta)
         val gg_lat = z * sin(theta)
-        return arrayOf(gg_lat, gg_lon)
+        return UtilLatLng(gg_lat, gg_lon)
     }
 
     /**
      * 百度转地球
      */
-    fun bd09_To_Wgs84(bd_lat: Double, bd_lon: Double): Array<Double> {
-        val gcj02 = bd09_To_Gcj02(bd_lat, bd_lon)
-        return gcj02_To_Wgs84(gcj02[0], gcj02[1])
+    fun bd09_to_wgs84(origin: UtilLatLng): UtilLatLng {
+        val gcj02 = bd09_to_gcj02(origin)
+        return gcj02_to_wgs84(gcj02)
     }
 
     /**
      * 将小数转换为度分秒，返回数组分别为度，分，秒
      */
-    fun convertToDegrees(num: String, scale: Int = 2): Array<String> {
+    fun convertToDegrees(num: String): Array<String> {
         val numBig = BigDecimal(num)
         val degree = numBig.setScale(0, BigDecimal.ROUND_DOWN).toString()
         val minuteBig = numBig.remainder(BigDecimal.ONE).multiply(BigDecimal(60))
         val minute = minuteBig.setScale(0, BigDecimal.ROUND_DOWN).toString()
-        val secondBig = minuteBig.remainder(BigDecimal.ONE).multiply(BigDecimal(60)).setScale(scale, RoundingMode.DOWN)
-        val second = secondBig.toString()
+        val secondBig = minuteBig.remainder(BigDecimal.ONE).multiply(BigDecimal(60))
+        val second = String.format("%.2f", secondBig.toDouble())
         return arrayOf(degree, minute, second)
     }
 
     /**
-     * 将度分秒转小数进制
+     * 将度分秒转小数进制15位小数精度
      */
-    fun convertToDecimal(degree: String, minute: String, second: String, scale: Int = 8): String {
+    fun convertToDecimal(degree: String, minute: String, second: String): String {
         val degreeBig = BigDecimal(degree)
         val minuteBig = BigDecimal(minute)
         val secondBig = BigDecimal(second)
 
-        val t1 = secondBig.divide(BigDecimal(60), scale, BigDecimal.ROUND_HALF_UP)
-        val t2 = t1.add(minuteBig).divide(BigDecimal(60), scale, BigDecimal.ROUND_HALF_UP)
+        val t1 = secondBig.divide(BigDecimal(60), 15, BigDecimal.ROUND_HALF_UP)
+        val t2 = t1.add(minuteBig).divide(BigDecimal(60), 15, BigDecimal.ROUND_HALF_UP)
         return degreeBig.add(t2).toString()
     }
 
-    /**
-     * 经纬度转瓦片图编号
-     */
-    fun getTileNumber(lat: Double, lon: Double, level: Int): String {
-        var xtile = floor((lon + 180) / 360 * (1 shl level)).toInt()
-        var ytile = floor((1 - ln(tan(Math.toRadians(lat)) + 1 / cos(Math.toRadians(lat))) / Math.PI) / 2 * (1 shl level)).toInt()
-        if (xtile < 0)
-            xtile = 0
-        if (xtile >= 1 shl level)
-            xtile = (1 shl level) - 1
-        if (ytile < 0)
-            ytile = 0
-        if (ytile >= 1 shl level)
-            ytile = (1 shl level) - 1
-        return "$xtile/$ytile"
-    }
-
-    /**
-     * 瓦片图坐标转经纬度
-     */
-    fun getLatLng(x: Int, y: Int, level: Double): String {
-        val n = 2.0.pow(level)
-        val lng = x / n * 360.0 - 180.0
-        var lat = atan(sinh(Math.PI * (1 - 2 * y / n)))
-        lat = lat * 180.0 / Math.PI
-        return "$lat/$lng"
-    }
-
-    private fun transform(lat: Double, lng: Double): Array<Double> {
-        var dLat = transformLat(lng - 105.0, lat - 35.0)
-        var dLng = transformLng(lng - 105.0, lat - 35.0)
-        val radLat = lat / 180.0 * pi
+    private fun transform(origin: UtilLatLng): UtilLatLng {
+        var dLat = transformLat(origin.lng - 105.0, origin.lat - 35.0)
+        var dLng = transformLng(origin.lng - 105.0, origin.lat - 35.0)
+        val radLat = origin.lat / 180.0 * pi
         var magic = sin(radLat)
         magic = 1 - ee * magic * magic
         val sqrtMagic = sqrt(magic)
         dLat = dLat * 180.0 / (a * (1 - ee) / (magic * sqrtMagic) * pi)
         dLng = dLng * 180.0 / (a / sqrtMagic * cos(radLat) * pi)
-        val mgLat = lat + dLat
-        val mgLng = lng + dLng
-        return arrayOf(mgLat, mgLng)
+        val mgLat = origin.lat + dLat
+        val mgLng = origin.lng + dLng
+        return UtilLatLng(mgLat, mgLng)
     }
 
     private fun transformLat(x: Double, y: Double): Double {
@@ -156,4 +137,25 @@ object GPSUtil {
         ret += (150.0 * sin(x / 12.0 * pi) + 300.0 * sin(x / 30.0 * pi)) * 2.0 / 3.0
         return ret
     }
+
+    private val latlngDecimalFormat by lazy { DecimalFormat("#0.000000") }
+
+    /**
+     * 返回不同格式经纬度字符串
+     */
+    fun getLatlngStr(latLng: UtilLatLng, type: Int = 0): String {
+        return when (type) {
+            0 -> {
+                "${latlngDecimalFormat.format(latLng.lng.absoluteValue)}${if (latLng.lng >= 0) "E" else "W"},${latlngDecimalFormat.format(latLng.lat.absoluteValue)}${if (latLng.lat >= 0) "N" else "S"}"
+            }
+            else -> {
+                val longitude = convertToDegrees(latLng.lng.absoluteValue.toString())
+                val latitude = convertToDegrees(latLng.lat.absoluteValue.toString())
+                "${longitude[0]}°${longitude[1]}′${longitude[2]}″${if (latLng.lng >= 0) "E" else "W"},${latitude[0]}°${latitude[1]}′${latitude[2]}″${if (latLng.lat >= 0) "N" else "S"}"
+            }
+        }
+    }
+
+    @Parcelize
+    data class UtilLatLng(val lat: Double, val lng: Double) : Parcelable
 }

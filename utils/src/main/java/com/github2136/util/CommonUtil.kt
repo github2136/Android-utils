@@ -12,26 +12,26 @@ import android.view.inputmethod.InputMethodManager
  */
 object CommonUtil {
     @JvmStatic
-    fun px2sp(context: Context, px: Int): Float {
-        val density = context.resources.displayMetrics.scaledDensity
+    fun px2sp(px: Int): Float {
+        val density = Resources.getSystem().displayMetrics.scaledDensity
         return px / density
     }
 
     @JvmStatic
-    fun sp2px(context: Context, sp: Float): Int {
-        val density = context.resources.displayMetrics.scaledDensity
+    fun sp2px(sp: Float): Int {
+        val density = Resources.getSystem().displayMetrics.scaledDensity
         return (sp * density).toInt()
     }
 
     @JvmStatic
-    fun px2dp(context: Context, px: Int): Float {
-        val density = context.resources.displayMetrics.density
+    fun px2dp(px: Int): Float {
+        val density = Resources.getSystem().displayMetrics.density
         return px / density
     }
 
     @JvmStatic
-    fun dp2px(context: Context, dp: Float): Int {
-        val density = context.resources.displayMetrics.density
+    fun dp2px(dp: Float): Int {
+        val density = Resources.getSystem().displayMetrics.density
         return (dp * density).toInt()
     }
 
