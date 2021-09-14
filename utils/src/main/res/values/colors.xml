@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--亮色主题文字颜色-->
     <color name="colorTextPrimaryLight">#DE000000</color>
     <color name="colorTextSecondaryLight">#8A000000</color>
     <color name="colorTextDisableLight">#61000000</color>
     <color name="colorDividersLight">#1F000000</color>
 
+    <!--亮色主题文字颜色无透明度-->
     <color name="colorTextPrimaryLightOpaque">#212121</color>
     <color name="colorTextSecondaryLightOpaque">#757575</color>
     <color name="colorTextDisableLightOpaque">#9E9E9E</color>
     <color name="colorDividersLightOpaque">#E0E0E0</color>
 
+    <!--暗色主题文字颜色-->
     <color name="colorTextPrimaryDark">#FFFFFFFF</color>
     <color name="colorTextSecondaryDark">#B3FFFFFF</color>
     <color name="colorTextDisableDark">#80FFFFFF</color>
     <color name="colorDividersDark">#1FFFFFFF</color>
 
+    <!--暗色主题文字颜色无透明度-->
     <color name="colorTextPrimaryDarkOpaque">#FFFFFF</color>
     <color name="colorTextSecondaryDarkOpaque">#B3B3B3</color>
     <color name="colorTextDisableDarkOpaque">#808080</color>
     <color name="colorDividersDarkOpaque">#1F1F1F</color>
+
+    <color name="colorTextRed">#FF2121</color>
+    <color name="colorTextYellow">#ffa631</color>
+    <color name="colorTextBlue">#003371</color>
+    <color name="colorTextGreen">#00bc12</color>
 </resources>

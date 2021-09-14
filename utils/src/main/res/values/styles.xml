@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--亮色主题-->
+    <!--Large-->
+    <style name="TxtLightLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryLight</item>
+    </style>
+
+    <style name="TxtLightLargeSecondary">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryLight</item>
+    </style>
+
+    <style name="TxtLightLargeDisable">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorTextDisableLight</item>
+    </style>
+    <!--Medium-->
+    <style name="TxtLightMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryLight</item>
+    </style>
+
+    <style name="TxtLightMediumSecondary">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryLight</item>
+    </style>
+
+    <style name="TxtLightMediumDisable">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorTextDisableLight</item>
+    </style>
+    <!--Small-->
+    <style name="TxtLightSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryLight</item>
+    </style>
+
+    <style name="TxtLightSmallSecondary">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryLight</item>
+    </style>
+
+    <style name="TxtLightSmallDisable">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextDisableLight</item>
+    </style>
+    <!--Mini-->
+    <style name="TxtLightMini">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryLight</item>
+    </style>
+
+    <style name="TxtLightMiniSecondary">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryLight</item>
+    </style>
+
+    <style name="TxtLightMiniDisable">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorTextDisableLight</item>
+    </style>
+
+    <!--暗色主题-->
+     <!--Large-->
+    <style name="TxtDarkLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryDark</item>
+    </style>
+
+    <style name="TxtDarkLargeSecondary">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryDark</item>
+    </style>
+
+    <style name="TxtDarkLargeDisable">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorTextDisableDark</item>
+    </style>
+    <!--Medium-->
+    <style name="TxtDarkMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryDark</item>
+    </style>
+
+    <style name="TxtDarkMediumSecondary">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryDark</item>
+    </style>
+
+    <style name="TxtDarkMediumDisable">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorTextDisableDark</item>
+    </style>
+    <!--Small-->
+    <style name="TxtDarkSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryDark</item>
+    </style>
+
+    <style name="TxtDarkSmallSecondary">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryDark</item>
+    </style>
+
+    <style name="TxtDarkSmallDisable">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextDisableDark</item>
+    </style>
+    <!--Mini-->
+    <style name="TxtDarkMini">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryDark</item>
+    </style>
+
+    <style name="TxtDarkMiniSecondary">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryDark</item>
+    </style>
+
+    <style name="TxtDarkMiniDisable">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorTextDisableDark</item>
+    </style>
+</resources>
