@@ -3,124 +3,124 @@
 
     <!--亮色主题-->
     <!--Large-->
-    <style name="TxtLightLarge">
+    <style name="TxtLarge">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorTextPrimaryLight</item>
     </style>
 
-    <style name="TxtLightLargeSecondary">
+    <style name="TxtLargeSecondary">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorTextSecondaryLight</item>
     </style>
 
-    <style name="TxtLightLargeDisable">
+    <style name="TxtLargeDisable">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorTextDisableLight</item>
     </style>
     <!--Medium-->
-    <style name="TxtLightMedium">
+    <style name="TxtMedium">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorTextPrimaryLight</item>
     </style>
 
-    <style name="TxtLightMediumSecondary">
+    <style name="TxtMediumSecondary">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorTextSecondaryLight</item>
     </style>
 
-    <style name="TxtLightMediumDisable">
+    <style name="TxtMediumDisable">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorTextDisableLight</item>
     </style>
     <!--Small-->
-    <style name="TxtLightSmall">
+    <style name="TxtSmall">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorTextPrimaryLight</item>
     </style>
 
-    <style name="TxtLightSmallSecondary">
+    <style name="TxtSmallSecondary">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorTextSecondaryLight</item>
     </style>
 
-    <style name="TxtLightSmallDisable">
+    <style name="TxtSmallDisable">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorTextDisableLight</item>
     </style>
     <!--Mini-->
-    <style name="TxtLightMini">
+    <style name="TxtMini">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorTextPrimaryLight</item>
     </style>
 
-    <style name="TxtLightMiniSecondary">
+    <style name="TxtMiniSecondary">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorTextSecondaryLight</item>
     </style>
 
-    <style name="TxtLightMiniDisable">
+    <style name="TxtMiniDisable">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorTextDisableLight</item>
     </style>
 
     <!--暗色主题-->
-     <!--Large-->
-    <style name="TxtDarkLarge">
+    <!--Large-->
+    <style name="TxtLargeDark">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorTextPrimaryDark</item>
     </style>
 
-    <style name="TxtDarkLargeSecondary">
+    <style name="TxtLargeSecondaryDark">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorTextSecondaryDark</item>
     </style>
 
-    <style name="TxtDarkLargeDisable">
+    <style name="TxtLargeDisableDark">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorTextDisableDark</item>
     </style>
     <!--Medium-->
-    <style name="TxtDarkMedium">
+    <style name="TxtMediumDark">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorTextPrimaryDark</item>
     </style>
 
-    <style name="TxtDarkMediumSecondary">
+    <style name="TxtMediumSecondaryDark">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorTextSecondaryDark</item>
     </style>
 
-    <style name="TxtDarkMediumDisable">
+    <style name="TxtMediumDisableDark">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorTextDisableDark</item>
     </style>
     <!--Small-->
-    <style name="TxtDarkSmall">
+    <style name="TxtSmallDark">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorTextPrimaryDark</item>
     </style>
 
-    <style name="TxtDarkSmallSecondary">
+    <style name="TxtSmallSecondaryDark">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorTextSecondaryDark</item>
     </style>
 
-    <style name="TxtDarkSmallDisable">
+    <style name="TxtSmallDisableDark">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorTextDisableDark</item>
     </style>
     <!--Mini-->
-    <style name="TxtDarkMini">
+    <style name="TxtMiniDark">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorTextPrimaryDark</item>
     </style>
 
-    <style name="TxtDarkMiniSecondary">
+    <style name="TxtMiniSecondaryDark">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorTextSecondaryDark</item>
     </style>
 
-    <style name="TxtDarkMiniDisable">
+    <style name="TxtMiniDisableDark">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorTextDisableDark</item>
     </style>
