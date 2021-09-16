@@ -7,10 +7,10 @@
     <color name="colorDividersLight">#1F000000</color>
 
     <!--亮色主题文字颜色无透明度-->
-    <color name="colorTextPrimaryLightOpaque">#212121</color>
-    <color name="colorTextSecondaryLightOpaque">#757575</color>
-    <color name="colorTextDisableLightOpaque">#9E9E9E</color>
-    <color name="colorDividersLightOpaque">#E0E0E0</color>
+    <color name="colorTextPrimaryLightOpaque">#202020</color>
+    <color name="colorTextSecondaryLightOpaque">#727272</color>
+    <color name="colorTextDisableLightOpaque">#9B9B9B</color>
+    <color name="colorDividersLightOpaque">#DCDCDC</color>
 
     <!--暗色主题文字颜色-->
     <color name="colorTextPrimaryDark">#FFFFFFFF</color>
@@ -26,6 +26,6 @@
 
     <color name="colorTextRed">#FF2121</color>
     <color name="colorTextYellow">#ffa631</color>
-    <color name="colorTextBlue">#003371</color>
+    <color name="colorTextBlue">#0055FF</color>
     <color name="colorTextGreen">#00bc12</color>
 </resources>

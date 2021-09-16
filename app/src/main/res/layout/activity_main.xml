@@ -22,37 +22,37 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/TxtLightLarge"
+                style="@style/TxtLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="large大号" />
 
             <TextView
-                style="@style/TxtLightMedium"
+                style="@style/TxtMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="medium中号" />
 
             <TextView
-                style="@style/TxtLightSmall"
+                style="@style/TxtSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="small小号" />
 
             <TextView
-                style="@style/TxtLightMini"
+                style="@style/TxtMini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="mini迷你" />
 
             <TextView
-                style="@style/TxtLightLargeSecondary"
+                style="@style/TxtLargeSecondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SecondaryLight" />
 
             <TextView
-                style="@style/TxtLightLargeDisable"
+                style="@style/TxtLargeDisable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DisableLight" />
@@ -71,40 +71,40 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/TxtDarkLarge"
+                style="@style/TxtLargeDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="large大号" />
 
             <TextView
-                style="@style/TxtDarkMedium"
+                style="@style/TxtMediumDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="medium中号" />
 
             <TextView
-                style="@style/TxtDarkSmall"
+                style="@style/TxtSmallDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="small小号" />
 
             <TextView
-                style="@style/TxtDarkMini"
+                style="@style/TxtMiniDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="mini迷你" />
 
             <TextView
-                style="@style/TxtDarkLargeSecondary"
+                style="@style/TxtLargeSecondaryDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SecondaryLight" />
+                android:text="SecondaryDark" />
 
             <TextView
-                style="@style/TxtDarkLargeDisable"
+                style="@style/TxtLargeDisableDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DisableLight" />
+                android:text="DisableDark" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -119,28 +119,28 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/TxtLightLarge"
+                style="@style/TxtLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RED"
                 android:textColor="@color/colorTextRed" />
 
             <TextView
-                style="@style/TxtLightLarge"
+                style="@style/TxtLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="YELLOW"
                 android:textColor="@color/colorTextYellow" />
 
             <TextView
-                style="@style/TxtLightLarge"
+                style="@style/TxtLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GREEN"
                 android:textColor="@color/colorTextGreen" />
 
             <TextView
-                style="@style/TxtLightLarge"
+                style="@style/TxtLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="BLUE"
