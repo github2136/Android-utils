@@ -108,6 +108,34 @@ object GPSUtil {
         return degreeBig.add(t2).toString()
     }
 
+    /**
+     * 经纬度转瓦片图编号（墨卡托）
+     */
+    fun getTileNumberW(lat: Double, lng: Double, zoom: Int): UtilTile {
+        var xtile = floor((lng + 180) / 360 * (1 shl zoom)).toInt()
+        var ytile = floor((1 - ln(tan(Math.toRadians(lat)) + 1 / cos(Math.toRadians(lat))) / Math.PI) / 2 * (1 shl zoom)).toInt()
+        if (xtile < 0)
+            xtile = 0
+        if (xtile >= 1 shl zoom)
+            xtile = (1 shl zoom) - 1
+        if (ytile < 0)
+            ytile = 0
+        if (ytile >= 1 shl zoom)
+            ytile = (1 shl zoom) - 1
+        return UtilTile(xtile, ytile, zoom)
+    }
+
+    /**
+     * 瓦片图坐标转经纬度（墨卡托）
+     */
+    fun getLatLngW(x: Int, y: Int, zoom: Int): UtilLatLng {
+        val n = 2.0.pow(zoom)
+        val lng = x / n * 360.0 - 180.0
+        var lat = atan(sinh(Math.PI * (1 - 2 * y / n)))
+        lat = lat * 180.0 / Math.PI
+        return UtilLatLng(lat, lng)
+    }
+
     private fun transform(origin: UtilLatLng): UtilLatLng {
         var dLat = transformLat(origin.lng - 105.0, origin.lat - 35.0)
         var dLng = transformLng(origin.lng - 105.0, origin.lat - 35.0)
@@ -158,4 +186,7 @@ object GPSUtil {
 
     @Parcelize
     data class UtilLatLng(val lat: Double, val lng: Double) : Parcelable
+
+    @Parcelize
+    data class UtilTile(val x: Int, val y: Int, val z: Int) : Parcelable
 }
