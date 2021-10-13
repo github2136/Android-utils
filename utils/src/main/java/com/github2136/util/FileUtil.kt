@@ -28,6 +28,7 @@ import java.util.*
 object FileUtil {
     private val PATH_LOG = "Log"
     private val PATH_DOC = "Documents"
+    private val ROOT by lazy { Environment.getExternalStorageDirectory().path }
 
     /**
      * 外部存储可写
@@ -52,7 +53,7 @@ object FileUtil {
      */
     @JvmStatic
     fun getExternalStorageRootPath(): String {
-        return Environment.getExternalStorageDirectory().absoluteFile.toString()
+        return ROOT
     }
 
     /**
@@ -71,7 +72,7 @@ object FileUtil {
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-        return Environment.getExternalStorageDirectory().absoluteFile.toString() + File.separator + projectPath
+        return ROOT + File.separator + projectPath
     }
 
 
@@ -169,7 +170,7 @@ object FileUtil {
                 val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 val type = split[0]
                 if ("primary".equals(type, ignoreCase = true)) {
-                    return Environment.getExternalStorageDirectory().toString() + File.separator + split[1]
+                    return ROOT + File.separator + split[1]
                 }
             } else if (isDownloadsDocument(imageUri)) {
                 val id = DocumentsContract.getDocumentId(imageUri)
@@ -200,19 +201,23 @@ object FileUtil {
     }
 
     private fun getDataColumn(context: Context, uri: Uri?, selection: String?, selectionArgs: Array<String>?): String? {
-        var cursor: Cursor? = null
-        val column = MediaStore.Images.Media.DATA
-        val projection = arrayOf(column)
-        try {
-            cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs, null)
-            if (cursor != null && cursor.moveToFirst()) {
-                val index = cursor.getColumnIndexOrThrow(column)
-                return cursor.getString(index)
+        if (uri!!.authority == "com.android.fileexplorer.myprovider") {
+            return uri.path.replaceFirst("/external_files", ROOT)
+        } else {
+            var cursor: Cursor? = null
+            val column = MediaStore.Images.Media.DATA
+            val projection = arrayOf(column)
+            try {
+                cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, null)
+                if (cursor != null && cursor.moveToFirst()) {
+                    val index = cursor.getColumnIndexOrThrow(column)
+                    return cursor.getString(index)
+                }
+            } finally {
+                cursor?.close()
             }
-        } finally {
-            cursor?.close()
+            return null
         }
-        return null
     }
 
     private fun isExternalStorageDocument(uri: Uri): Boolean {
@@ -284,7 +289,7 @@ object FileUtil {
             fileS < SIZETYPE_KB -> fileS.toDouble()
             fileS < SIZETYPE_MB -> fileS.toDouble() / SIZETYPE_KB
             fileS < SIZETYPE_GB -> fileS.toDouble() / SIZETYPE_MB
-            else                -> fileS.toDouble() / SIZETYPE_GB
+            else -> fileS.toDouble() / SIZETYPE_GB
         }
     }
 
@@ -297,7 +302,7 @@ object FileUtil {
             fileS < SIZETYPE_KB -> "B"
             fileS < SIZETYPE_MB -> "KB"
             fileS < SIZETYPE_GB -> "MB"
-            else                -> "GB"
+            else -> "GB"
         }
     }
 
