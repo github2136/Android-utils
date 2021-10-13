@@ -39,6 +39,7 @@ object GPSUtil {
         val gcj02 = wgs84_to_gcj02(origin)
         return gcj02_to_bd09(gcj02)
     }
+
     /**
      * 火星转地球
      */
@@ -136,6 +137,18 @@ object GPSUtil {
         return UtilLatLng(lat, lng)
     }
 
+    /**
+     * 经纬度转瓦片图编号（经纬度投影）
+     */
+    fun getTileNumberC(lat: Double, lng: Double, zoom: Int): UtilTile {
+        val n = 2.0.pow(zoom)
+        val pixel = 360 / (n * 256)
+        val xtile = floor((lng + 180) / pixel / 256).toInt()
+        val ytile = floor((90 - lat) / pixel / 256).toInt()
+        return UtilTile(xtile, ytile, zoom)
+    }
+
+
     private fun transform(origin: UtilLatLng): UtilLatLng {
         var dLat = transformLat(origin.lng - 105.0, origin.lat - 35.0)
         var dLng = transformLng(origin.lng - 105.0, origin.lat - 35.0)
@@ -185,7 +198,11 @@ object GPSUtil {
     }
 
     @Parcelize
-    data class UtilLatLng(val lat: Double, val lng: Double) : Parcelable
+    data class UtilLatLng(
+        /**纬度*/
+        val lat: Double,
+        /**经度*/
+        val lng: Double) : Parcelable
 
     @Parcelize
     data class UtilTile(val x: Int, val y: Int, val z: Int) : Parcelable
