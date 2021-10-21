@@ -16,6 +16,7 @@ import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
 import com.github2136.android_utils.service.ServiceActivity
+import com.github2136.android_utils.util.GPSUtil
 import com.github2136.android_utils.util.SSLUtil
 import com.github2136.util.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,17 +45,17 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         btn_list_view_adapter.setOnClickListener(this)
         btn_service.setOnClickListener(this)
 
-        val UTC = Date().str(timeZone = TimeZone.getTimeZone("UTC").id)//获取UTC时间字符串
-        val UTCDate = UTC.date(timeZone = TimeZone.getTimeZone("UTC").id)//UTC字符串转Date对象
+        val UTC = Date().str(timeZone = TimeZone.getTimeZone("UTC").id) //获取UTC时间字符串
+        val UTCDate = UTC.date(timeZone = TimeZone.getTimeZone("UTC").id) //UTC字符串转Date对象
         Log.e("utc time", UTC)
-        val t2 = DateUtil.timeZoneConversion(UTC, DateUtil.DATE_PATTERN_YMDHMS, TimeZone.getTimeZone("UTC").id, TimeZone.getTimeZone("GMT+8").id)//UTC字符转转换为指定时区字符串
-        val t3 = UTC.timeZoneConversion(DateUtil.DATE_PATTERN_YMDHMS, TimeZone.getTimeZone("UTC").id)//UTC字符转转换为指定时区字符串
+        val t2 = DateUtil.timeZoneConversion(UTC, DateUtil.DATE_PATTERN_YMDHMS, TimeZone.getTimeZone("UTC").id, TimeZone.getTimeZone("GMT+8").id) //UTC字符转转换为指定时区字符串
+        val t3 = UTC.timeZoneConversion(DateUtil.DATE_PATTERN_YMDHMS, TimeZone.getTimeZone("UTC").id) //UTC字符转转换为指定时区字符串
         Log.e("t", t2)
         MessageDigestUtil.getMessageDigest("ttt".toByteArray(), "MD5")
 
         val calendar1 = Calendar.getInstance()
         val calendar2 = Calendar.getInstance()
-//        calendar2.add(Calendar.DAY_OF_MONTH, 2)
+        //        calendar2.add(Calendar.DAY_OF_MONTH, 2)
         calendar2.add(Calendar.HOUR, 23)
         calendar2.add(Calendar.MINUTE, 10)
         calendar2.add(Calendar.SECOND, 15)
@@ -124,11 +125,16 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             AsymmetricEncryptionUtil.MODE_ECB,
             AsymmetricEncryptionUtil.PADDING_PKCS1)
         Log.e("rsaxxx", "decrypt ${String(decryptData3!!)}")
-        JsonUtil.dateFormat = "yyyy-MM-dd"
-        val json = JsonUtil.instance
-        val dStr = json.getGson().toJson(Date())
-        val d = json.getObjectByStr(dStr, Date::class.java)
 
+        val json = JsonUtil.instance
+        //默认实例操作
+        val str = JsonUtil.instance.toJson(JsonData("val1", 2, Date()))
+        val jdata = json.fromJson<JsonData>(str)
+
+        //新实例操作，每次newInstance都会调用有新的对象
+        val json2 = JsonUtil.newInstance()
+        val str2 = json2.toJson(JsonData("val1", 2, Date()))
+        val jdata2 = json2.fromJson<JsonData>(str2)
 
         permissionArrayMap[Manifest.permission.WRITE_EXTERNAL_STORAGE] = "读写手机存储"
         permissionArrayMap[Manifest.permission.READ_PHONE_STATE] = "获取手机信息"
@@ -143,7 +149,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             putInt("aaa", 111)
         }
         sp.getString("abc", "")
-//
+
         FileUtil.getExternalStoragePrivateRootPath(this, "abc")
 
         val n1 = FileUtil.createFileName("log", ".txt")
@@ -172,7 +178,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
         }
 
-//        Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getFileSize(File(FileUtil.getExternalStorageRootPath() + "/ForestAll"))))
+        // Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getFileSize(File(FileUtil.getExternalStorageRootPath() + "/ForestAll"))))
         Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getExternalStorageSize()))
         Log.e("fileSize", FileUtil.getAutoFileSizeStr(FileUtil.getExternalStorageFreeSize()))
 

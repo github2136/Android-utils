@@ -3,44 +3,36 @@ package com.github2136.util
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 /**
  * Created by yb on 2018/8/24.
  */
-class JsonUtil private constructor() {
-    private val mGson: Gson = Companion.mGson
-    fun getGson(): Gson {
-        return mGson
-    }
+class JsonUtil private constructor(val gson: Gson) {
 
-    @Synchronized
-    fun <T> getObjectByStr(json: String?, cls: Class<T>): T? {
+    inline fun <reified T> fromJson(json: String?): T? {
         return try {
-            mGson.fromJson<T>(json, cls)
+            gson.fromJson<T>(json, object : TypeToken<T>() {}.type)
         } catch (e: JsonSyntaxException) {
             null
         }
     }
 
-    @Synchronized
-    fun <T> getObjectByStr(json: String?, typeOf: Type): T? {
-        return try {
-            mGson.fromJson<T>(json, typeOf)
-        } catch (e: JsonSyntaxException) {
-            null
-        }
+    fun toJson(obj: Any): String {
+        return gson.toJson(obj)
     }
 
     companion object {
-        var dateFormat = "yyyy-MM-dd HH:mm:ss"
+        var dateFormat = DateUtil.DATE_PATTERN_YMDHMS
         var mGson = GsonBuilder().setDateFormat(dateFormat).create()
+
         val instance: JsonUtil by lazy {
-            JsonUtil()
+            JsonUtil(mGson)
         }
 
-        fun newInstance(): JsonUtil {
-            return JsonUtil()
+        fun newInstance(gson: Gson = GsonBuilder().setDateFormat(DateUtil.DATE_PATTERN_YMDHMS).create()): JsonUtil {
+            return JsonUtil(gson)
         }
     }
 }

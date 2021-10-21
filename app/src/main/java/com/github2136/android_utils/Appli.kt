@@ -20,20 +20,13 @@ class Appli : Application() {
         super.onCreate()
 
         //自定义Gson
+        JsonUtil.dateFormat = "yyyy/MM/dd-HH:mm:ss" //仅修改日期格式
+
+        //完全自定义gson
         JsonUtil.mGson = GsonBuilder()
             .serializeNulls()
-            .setDateFormat(DateUtil.DATE_PATTERN_YMDHMS)
+            .setDateFormat("yyyy/MM/dd-HH:mm:ss")
             .create()
-
-        //默认实例操作
-        val str = JsonUtil.instance.getGson().toJson(Date())
-
-        JsonUtil.mGson = GsonBuilder()
-            .serializeNulls()
-            .setDateFormat(DateUtil.DATE_PATTERN_YMD)
-            .create()
-        //新实例操作，每次newInstance都会调用有新的对象
-        val str2 = JsonUtil.newInstance().getGson().toJson(Date())
 
         CrashHandler.getInstance(this, BuildConfig.DEBUG)
             .setCallback(object : CrashHandler.CrashHandlerCallback {
