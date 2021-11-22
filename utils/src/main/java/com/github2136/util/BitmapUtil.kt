@@ -7,6 +7,7 @@ import android.media.ExifInterface
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
+import android.util.Log
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -55,14 +56,10 @@ class BitmapUtil private constructor(path: String) {
      * 获取图片
      */
     private fun getBitmap(filePath: String, scale: Int): Bitmap? {
-        return try {
-            val options = BitmapFactory.Options()
-            options.inPreferredConfig = Bitmap.Config.RGB_565
-            options.inSampleSize = scale
-            BitmapFactory.decodeFile(filePath, options)
-        } catch (e: Exception) {
-            null
-        }
+        val options = BitmapFactory.Options()
+        options.inPreferredConfig = Bitmap.Config.RGB_565
+        options.inSampleSize = scale
+        return BitmapFactory.decodeFile(filePath, options)
     }
 
     /**
@@ -304,11 +301,11 @@ class BitmapUtil private constructor(path: String) {
     /**
      * 保存图片
      */
-    fun save(filePath: String, callBack: (String) -> Unit) {
+    fun save(filePath: String, callBack: (String?) -> Unit) {
         executor.execute {
             val mBitmap = getBitmap()
             if (mBitmap == null) {
-                mHandler.post { callBack("") }
+                mHandler.post { callBack(null) }
             } else {
                 val isSave = saveBitmap(mBitmap, filePath)
                 mBitmap.recycle()
