@@ -7,6 +7,7 @@ import android.media.ExifInterface
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
+import android.util.Log
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -28,12 +29,16 @@ import java.util.concurrent.Executors
 class BitmapUtil private constructor(path: String) {
     //图片路径
     private var mFilePath: String = path
+
     //旋转角度
     private var mDegree: Int = 0
+
     //宽高最大值
     private var mMax: Int = 0
+
     //文件最大值
     private var mMaxSize: Int = 0
+
     //图片保存质量
     private var mQuality = 100
 
@@ -50,7 +55,7 @@ class BitmapUtil private constructor(path: String) {
     /**
      * 获取图片
      */
-    private fun getBitmap(filePath: String, scale: Int): Bitmap {
+    private fun getBitmap(filePath: String, scale: Int): Bitmap? {
         val options = BitmapFactory.Options()
         options.inPreferredConfig = Bitmap.Config.RGB_565
         options.inSampleSize = scale
@@ -77,27 +82,31 @@ class BitmapUtil private constructor(path: String) {
             }
             //使用inSampleSize压缩图片
             mBitmap = getBitmap(mFilePath, scaleSize)
-            //如果图片高宽比限制大则使用Matrix再次缩小
-            if (mBitmap.width > mMax || mBitmap.height > mMax) {
-                val scaleW = mMax.toFloat() / mBitmap.width
-                val scaleH = mMax.toFloat() / mBitmap.height
-                val scale = if (scaleW > scaleH) scaleH else scaleW
-                mBitmap = getBitmap(mBitmap, scale)
+            if (mBitmap != null) {
+                //如果图片高宽比限制大则使用Matrix再次缩小
+                if (mBitmap.width > mMax || mBitmap.height > mMax) {
+                    val scaleW = mMax.toFloat() / mBitmap.width
+                    val scaleH = mMax.toFloat() / mBitmap.height
+                    val scale = if (scaleW > scaleH) scaleH else scaleW
+                    mBitmap = getBitmap(mBitmap, scale)
+                }
             }
         } else {
             mBitmap = getBitmap(mFilePath, 1)
         }
-        if (mMaxSize != 0) {
-            val os = ByteArrayOutputStream()
-            mQuality = 110
-            do {
-                os.reset()
-                mQuality -= 10
-                mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, os)
-            } while (mQuality > 0 && os.toByteArray().size / 1024 > mMaxSize)
-        }
-        if (mDegree > 0) {
-            mBitmap = rotateBitmapByDegree(mBitmap, mDegree)
+        if (mBitmap != null) {
+            if (mMaxSize != 0) {
+                val os = ByteArrayOutputStream()
+                mQuality = 110
+                do {
+                    os.reset()
+                    mQuality -= 10
+                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, os)
+                } while (mQuality > 0 && os.toByteArray().size / 1024 > mMaxSize)
+            }
+            if (mDegree > 0) {
+                mBitmap = rotateBitmapByDegree(mBitmap, mDegree)
+            }
         }
         return mBitmap
     }
@@ -127,7 +136,7 @@ class BitmapUtil private constructor(path: String) {
             val orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface
                 .ORIENTATION_NORMAL)
             when (orientation) {
-                ExifInterface.ORIENTATION_ROTATE_90  -> degree = 90
+                ExifInterface.ORIENTATION_ROTATE_90 -> degree = 90
                 ExifInterface.ORIENTATION_ROTATE_180 -> degree = 180
                 ExifInterface.ORIENTATION_ROTATE_270 -> degree = 270
             }
@@ -251,17 +260,20 @@ class BitmapUtil private constructor(path: String) {
         executor.execute {
             var bytes: ByteArray? = null
             val mBitmap = getBitmap()
-            try {
-                val baos = ByteArrayOutputStream()
-                mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
-                baos.flush()
-                baos.close()
-                bytes = baos.toByteArray()
-            } catch (e: IOException) {
-                e.printStackTrace()
+            if (mBitmap == null) {
+                mHandler.post { callBack(null) }
+            } else {
+                try {
+                    val baos = ByteArrayOutputStream()
+                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
+                    baos.flush()
+                    baos.close()
+                    bytes = baos.toByteArray()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                mHandler.post { callBack(bytes) }
             }
-            mHandler.post { callBack(bytes) }
-
         }
     }
 
@@ -269,27 +281,31 @@ class BitmapUtil private constructor(path: String) {
         executor.execute {
             var base64: String? = null
             val mBitmap = getBitmap()
-            try {
-                val baos = ByteArrayOutputStream()
-                mBitmap!!.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
-                baos.flush()
-                baos.close()
-                base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
-            } catch (e: IOException) {
-                e.printStackTrace()
+            if (mBitmap == null) {
+                mHandler.post { callBack(null) }
+            } else {
+                try {
+                    val baos = ByteArrayOutputStream()
+                    mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
+                    baos.flush()
+                    baos.close()
+                    base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                mHandler.post { callBack(base64) }
             }
-            mHandler.post { callBack(base64) }
         }
     }
 
     /**
      * 保存图片
      */
-    fun save(filePath: String, callBack: (String) -> Unit) {
+    fun save(filePath: String, callBack: (String?) -> Unit) {
         executor.execute {
             val mBitmap = getBitmap()
             if (mBitmap == null) {
-                mHandler.post { callBack("") }
+                mHandler.post { callBack(null) }
             } else {
                 val isSave = saveBitmap(mBitmap, filePath)
                 mBitmap.recycle()

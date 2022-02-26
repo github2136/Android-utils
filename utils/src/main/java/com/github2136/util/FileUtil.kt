@@ -129,6 +129,15 @@ object FileUtil {
         }
         return path
     }
+
+    /**
+     * 获取文件名
+     */
+    @JvmStatic
+    fun getFileName(path: String): String {
+        val index = path.lastIndexOf("/") + 1
+        return path.substring(index)
+    }
     ///////////////////////////////////////////////////////////////////////////
     // 创建文件名称、创建文件
     ///////////////////////////////////////////////////////////////////////////

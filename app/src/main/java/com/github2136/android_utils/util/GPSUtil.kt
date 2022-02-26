@@ -192,7 +192,7 @@ object GPSUtil {
             else -> {
                 val longitude = convertToDegrees(latLng.lng.absoluteValue.toString())
                 val latitude = convertToDegrees(latLng.lat.absoluteValue.toString())
-                "${longitude[0]}°${longitude[1]}′${longitude[2]}″${if (latLng.lng >= 0) "E" else "W"},${latitude[0]}°${latitude[1]}′${latitude[2]}″${if (latLng.lat >= 0) "N" else "S"}"
+                "${longitude[0]}°${longitude[1]}'${longitude[2]}''${if (latLng.lng >= 0) "E" else "W"},${latitude[0]}°${latitude[1]}'${latitude[2]}''${if (latLng.lat >= 0) "N" else "S"}"
             }
         }
     }

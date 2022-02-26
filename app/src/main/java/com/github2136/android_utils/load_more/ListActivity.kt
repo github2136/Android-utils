@@ -56,13 +56,15 @@ class ListActivity : AppCompatActivity() {
         val adapter = ListAdapter(s)
         rv_content.adapter = adapter
         val d = Divider(this)
-//        d.lineColorTop = Color.parseColor("#ff0000")
-//        d.lineHeightTop = 50
+        d.backgroundColor = Color.parseColor("#987654")
+        d.lineColorTop = Color.parseColor("#ff0000")
+        d.lineHeightTop = 50
 
-//        d.lineColorBottom = Color.parseColor("#ffff00")
-//        d.lineHeightBottom = 50
+        d.lineColorBottom = Color.parseColor("#ffff00")
+        d.lineHeightBottom = 50
 
-//        d.sticky=false
+        d.sticky = false
+        d.showItemDivider = false
         rv_content.addItemDecoration(d)
         adapter.setOnItemClickListener { position -> Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show() }
         adapter.setOnItemLongClickListener { position -> Toast.makeText(this@ListActivity, "" + position, Toast.LENGTH_SHORT).show() }

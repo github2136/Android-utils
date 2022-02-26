@@ -18,25 +18,31 @@ import kotlin.math.roundToInt
  * text设置字体相关信息（颜色、大小）
  * align文字对齐方式（左、中、右）
  * sticky分割标题是否粘滞顶部
+ * backgroundColor 分组背景颜色
+ * lineColorTop 分组上方颜色
+ * lineHeightTop 分组上方颜色高度
+ * lineColorBottom 分组下方颜色
+ * lineHeightBottom 分组下方颜色高度
+ * showItemDivider 是否显示item之间的分割线
  */
 class Divider(context: Context) : RecyclerView.ItemDecoration() {
     private val ATTRS = intArrayOf(android.R.attr.listDivider)
-    private var mDivider: Drawable
+    private var mDivider: Drawable //item之间的分割线
     private val mBounds = Rect()
-    private val bgPaint = Paint()//背景图
-    private val txtPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)//文字
-    private val linePaintTop = Paint()//上方线
-    private val linePaintBottom = Paint()//底部线
-    private var groupHeight: Int//分组项总高度，填充+线高度+字体高度
-    private val txtBottom: Int//文字绘制底部距离
-    private var lineHeightTop2: Int//上方线高度的一半
-    private var lineHeightBottom2: Int//下方线高度的一半
+    private val bgPaint = Paint() //分组背景图
+    private val txtPaint = TextPaint(Paint.ANTI_ALIAS_FLAG) //文字
+    private val linePaintTop = Paint() //上方线
+    private val linePaintBottom = Paint() //底部线
+    private var groupHeight: Int //分组项总高度，填充+线高度+字体高度
+    private val txtBottom: Int //文字绘制底部距离
+    private var lineHeightTop2: Int //上方线高度的一半
+    private var lineHeightBottom2: Int //下方线高度的一半
 
     var leftPadding = 8f.dp2px
     var rightPadding = 8f.dp2px
     var topPadding = 12f.dp2px
     var bottomPadding = 12f.dp2px
-
+    var showItemDivider = true //显示item之间的分割线
     var textSize = 20f.dp2px
         set(value) {
             field = value
@@ -45,7 +51,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
     var textColor = Color.parseColor("#DE000000")
         set(value) {
             field = value
-            bgPaint.color = value
+            txtPaint.color = value
         }
     var backgroundColor = Color.parseColor("#FFFFFF")
         set(value) {
@@ -136,10 +142,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
             top = parent.paddingTop
             left = parent.paddingLeft
             right = parent.width - parent.paddingRight
-            c.clipRect(
-                left, parent.paddingTop, right,
-                parent.height - parent.paddingBottom
-            )
+            c.clipRect(left, parent.paddingTop, right, parent.height - parent.paddingBottom)
         } else {
             left = 0
             top = 0
@@ -153,23 +156,24 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
             var nextTxt: String?
             var currentTxt: String?
             var position: Int
-            for (i in 0 until childCount) {
-                val child = parent.getChildAt(i)
-                parent.getDecoratedBoundsWithMargins(child, mBounds)
-                position = parent.getChildAdapterPosition(child)
-
-                currentTxt = adapter.getShowTxt(position)
-                nextTxt = if (position + 2 < adapter.itemCount) adapter.getShowTxt(position + 1) else null
-
-                if (nextTxt == null || nextTxt == currentTxt) {
+            if (showItemDivider) {
+                for (i in 0 until childCount) {
+                    val child = parent.getChildAt(i)
                     parent.getDecoratedBoundsWithMargins(child, mBounds)
-                    val dividerBottom = mBounds.bottom + child.translationY.roundToInt()
-                    val dividerTop = dividerBottom - mDivider.intrinsicHeight
-                    mDivider.setBounds(left, dividerTop, right, dividerBottom)
-                    mDivider.draw(c)
+                    position = parent.getChildAdapterPosition(child)
+
+                    currentTxt = adapter.getShowTxt(position)
+                    nextTxt = if (position + 2 < adapter.itemCount) adapter.getShowTxt(position + 1) else null
+
+                    if (nextTxt == null || nextTxt == currentTxt) {
+                        parent.getDecoratedBoundsWithMargins(child, mBounds)
+                        val dividerBottom = mBounds.bottom + child.translationY.roundToInt()
+                        val dividerTop = dividerBottom - mDivider.intrinsicHeight
+                        mDivider.setBounds(left, dividerTop, right, dividerBottom)
+                        mDivider.draw(c)
+                    }
                 }
             }
-
 
             var txtWidth: Int
             var txt: String
@@ -293,9 +297,9 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
             val preTxt = if (position > 0) adapter.getShowTxt(position - 1) else null
             val currentTxt = adapter.getShowTxt(position)
             if (currentTxt != null && (position == 0 || currentTxt != preTxt)) {
-                outRect.set(0, groupHeight, 0, mDivider.intrinsicHeight)
+                outRect.set(0, groupHeight, 0, if (showItemDivider) mDivider.intrinsicHeight else 0)
             } else {
-                outRect.set(0, 0, 0, mDivider.intrinsicHeight)
+                outRect.set(0, 0, 0, if (showItemDivider) mDivider.intrinsicHeight else 0)
             }
         }
     }
