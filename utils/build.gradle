@@ -27,8 +27,9 @@ android {
         publishing {
             publications {
                 maven(MavenPublication) {
-                    afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
-                    groupId = 'com.github.github2136'
+                    artifact sourceJar // 增加上传源码的 task
+                    afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) } //生成aar包
+                    groupId = 'com.github.github2136.Android-utils'
                     artifactId = 'utils'
                     version = '1.0'
                 }
@@ -36,7 +37,10 @@ android {
         }
     }
 }
-
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier = "sources"
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation lib['kotlin-stdlib']
