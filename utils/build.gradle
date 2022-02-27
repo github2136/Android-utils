@@ -24,22 +24,13 @@ android {
         }
     }
     afterEvaluate {
-        publishing  {
-            def versionName = "1.0"
+        publishing {
             publications {
-                release(MavenPublication) {
+                maven(MavenPublication) {
+                    afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
                     groupId = 'com.github.github2136'
                     artifactId = 'utils'
-                    version = versionName
-                }
-            }
-            repositories {
-                maven {
-                    // change URLs to point to your repos, e.g. http://my.org/repo
-                    def baseUrl = buildDir.getParent()
-                    def releasesRepoUrl = "$baseUrl/repos/releases"
-                    def snapshotsRepoUrl = "$baseUrl/repos/snapshots"
-                    url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                    version = '1.0'
                 }
             }
         }
