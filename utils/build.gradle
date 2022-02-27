@@ -29,7 +29,7 @@ android {
             publications {
                 release(MavenPublication) {
                     groupId = 'com.github2136.util'
-                    artifactId = 'library'
+                    artifactId = 'utils'
                     version = versionName
                 }
             }
