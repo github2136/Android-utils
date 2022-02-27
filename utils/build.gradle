@@ -38,7 +38,7 @@ android {
     }
 }
 task sourceJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
+    from android.sourceSets.main.java.getSrcDirs() // 源码路径
     archiveClassifier = "sources"
 }
 
