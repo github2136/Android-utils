@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'maven-publish'
 
 def version = rootProject.ext.android
 def lib = rootProject.ext.dependencies
@@ -21,18 +20,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    afterEvaluate {
-        publishing {
-            def versionName = "1.0"
-            publications {
-                release(MavenPublication) {
-                    groupId = 'com.github2136.util'
-                    artifactId = 'utils'
-                    version = versionName
-                }
-            }
         }
     }
 }
