@@ -58,10 +58,10 @@ class ListActivity : AppCompatActivity() {
         val d = Divider(this)
         d.backgroundColor = Color.parseColor("#987654")
         d.lineColorTop = Color.parseColor("#ff0000")
-        d.lineHeightTop = 50
+        d.lineHeightTop = 0
 
         d.lineColorBottom = Color.parseColor("#ffff00")
-        d.lineHeightBottom = 50
+        d.lineHeightBottom = 0
 
         d.sticky = false
         d.showItemDivider = false
