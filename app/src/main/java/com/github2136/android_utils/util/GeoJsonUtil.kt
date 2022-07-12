@@ -1,4 +1,4 @@
-package com.github2136.android_utils.util
+package com.jxgis.wisdomforestfarm.common.map
 
 import android.util.Log
 import org.json.JSONObject
@@ -23,7 +23,7 @@ object GeoJsonUtil {
                 val geometry = when (geomet) {
                     is Coordinate.Point -> Geometry("Point", geomet)
                     is Coordinate.LineString -> Geometry("LineString", geomet)
-                    is Coordinate.Polygon -> Geometry("LineString", geomet)
+                    is Coordinate.Polygon -> Geometry("Polygon", geomet)
                     is Coordinate.MultiPoint -> Geometry("LineString", geomet)
                     is Coordinate.MultiLineString -> Geometry("MultiLineString", geomet)
                     is Coordinate.MultiPolygon -> Geometry("MultiPolygon", geomet)
@@ -61,7 +61,8 @@ object GeoJsonUtil {
                     val polygon = mutableListOf<Coordinate.Point>()
                     val polygonObj = coordinates.getJSONArray(i)
                     for (j in 0 until polygonObj.length()) {
-                        polygon.add(Coordinate.Point(polygonObj.getDouble(0), polygonObj.getDouble(1)))
+                        val point = polygonObj.getJSONArray(j)
+                        polygon.add(Coordinate.Point(point.getDouble(0), point.getDouble(1)))
                     }
                     polygons.add(Coordinate.LineString(polygon))
                 }
