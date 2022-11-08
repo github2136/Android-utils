@@ -13,6 +13,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.Executors
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  *       图片处理
@@ -76,7 +78,7 @@ class BitmapUtil private constructor(path: String) {
                 while (inSampleSize shl 1 < scaleFactor) {
                     inSampleSize = inSampleSize shl 1
                 }
-                scaleSize = inSampleSize
+                scaleSize = inSampleSize / 2
             } else {
                 scaleSize = scaleFactor
             }
@@ -87,7 +89,7 @@ class BitmapUtil private constructor(path: String) {
                 if (mBitmap.width > mMax || mBitmap.height > mMax) {
                     val scaleW = mMax.toFloat() / mBitmap.width
                     val scaleH = mMax.toFloat() / mBitmap.height
-                    val scale = if (scaleW > scaleH) scaleH else scaleW
+                    val scale = min(scaleW, scaleH)
                     mBitmap = getBitmap(mBitmap, scale)
                 }
             }

@@ -13,7 +13,7 @@ android {
         targetSdkVersion version.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -38,7 +38,8 @@ dependencies {
     implementation lib['android-recyclerview']
     implementation lib['gson']
 
-    androidTestImplementation lib['android-test']
-    testImplementation lib['junit']
-    androidTestImplementation lib['espresso']
+    androidTestImplementation lib["android-test"]
+    androidTestImplementation lib["android-test-ext"]
+    testImplementation lib["junit"]
+    androidTestImplementation lib["espresso"]
 }
