@@ -10,6 +10,7 @@ import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Created by yb on 2018/10/31.
@@ -30,11 +31,17 @@ class Appli : Application() {
 
         CrashHandler.getInstance(this, BuildConfig.DEBUG)
             .setCallback(object : CrashHandler.CrashHandlerCallback {
+                override fun addParam(info: HashMap<String, String>) {
+                    info.put("p1", "1111")
+                }
+
                 override fun finishAll() {
                     this@Appli.finishAll()
                 }
 
-                override fun submitLog(deviceInfo: Map<String, String>, exception: String) {
+                override fun submitLog(info: Map<String, String>, exception: String) {
+                    Log.e("info", info.toString())
+                    Log.e("info", exception)
                 }
             })
 
