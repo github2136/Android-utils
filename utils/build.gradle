@@ -36,6 +36,9 @@ android {
             }
         }
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 task sourceJar(type: Jar) {
     from android.sourceSets.main.java.getSrcDirs()
@@ -43,8 +46,7 @@ task sourceJar(type: Jar) {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation lib['kotlin-stdlib']
-    implementation lib['kotlin-ktx']
+    implementation lib['core-ktx']
     compileOnly lib['android-appcompat']
     compileOnly lib['android-recyclerview']
     compileOnly lib['gson']

@@ -26,14 +26,16 @@ android {
     androidExtensions {
         experimental = true
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':utils')
 
-    implementation lib['kotlin-stdlib']
-    implementation lib['kotlin-ktx']
+    implementation lib['core-ktx']
     implementation lib['android-appcompat']
     implementation lib['android-recyclerview']
     implementation lib['gson']
