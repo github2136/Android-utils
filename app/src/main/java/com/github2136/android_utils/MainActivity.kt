@@ -3,12 +3,17 @@ package com.github2136.android_utils
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.graphics.BlurMaskFilter
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.style.MaskFilterSpan
 import android.util.Base64
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.collection.ArrayMap
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
@@ -16,7 +21,6 @@ import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
 import com.github2136.android_utils.service.ServiceActivity
-import com.github2136.android_utils.util.GPSUtil
 import com.github2136.android_utils.util.SSLUtil
 import com.github2136.util.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -69,19 +73,23 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         val keyStr = Base64.encodeToString(keyData, Base64.NO_WRAP)
         Log.e("asexxx", "key $keyStr")
 
-        val encryptData = SymmetricEncryptionUtil.encrypt(Base64.decode(keyStr, Base64.NO_WRAP),
-                                                          SymmetricEncryptionUtil.AES,
-                                                          data.toByteArray(),
-                                                          SymmetricEncryptionUtil.MODE_ECB,
-                                                          SymmetricEncryptionUtil.PADDING_PKCS5)
+        val encryptData = SymmetricEncryptionUtil.encrypt(
+            Base64.decode(keyStr, Base64.NO_WRAP),
+            SymmetricEncryptionUtil.AES,
+            data.toByteArray(),
+            SymmetricEncryptionUtil.MODE_ECB,
+            SymmetricEncryptionUtil.PADDING_PKCS5
+        )
         val encryptStr = Base64.encodeToString(encryptData, Base64.NO_WRAP)
         Log.e("asexxx", "encrypt $encryptStr")
 
-        val decryptData = SymmetricEncryptionUtil.decrypt(Base64.decode(keyStr, Base64.NO_WRAP),
-                                                          SymmetricEncryptionUtil.AES,
-                                                          Base64.decode(encryptStr, Base64.NO_WRAP),
-                                                          SymmetricEncryptionUtil.MODE_ECB,
-                                                          SymmetricEncryptionUtil.PADDING_PKCS5)
+        val decryptData = SymmetricEncryptionUtil.decrypt(
+            Base64.decode(keyStr, Base64.NO_WRAP),
+            SymmetricEncryptionUtil.AES,
+            Base64.decode(encryptStr, Base64.NO_WRAP),
+            SymmetricEncryptionUtil.MODE_ECB,
+            SymmetricEncryptionUtil.PADDING_PKCS5
+        )
 
         Log.e("asexxx", "decrypt ${String(decryptData!!)}")
 
@@ -97,7 +105,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             keyData2.public.encoded,
             data2.toByteArray(),
             AsymmetricEncryptionUtil.MODE_ECB,
-            AsymmetricEncryptionUtil.PADDING_PKCS1)
+            AsymmetricEncryptionUtil.PADDING_PKCS1
+        )
 
 
         val encryptStr2 = Base64.encodeToString(encryptData2, Base64.NO_WRAP)
@@ -107,7 +116,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             keyData2.private.encoded,
             encryptData2!!,
             AsymmetricEncryptionUtil.MODE_ECB,
-            AsymmetricEncryptionUtil.PADDING_PKCS1)
+            AsymmetricEncryptionUtil.PADDING_PKCS1
+        )
         Log.e("rsaxxx", "decrypt ${String(decryptData2!!)}")
 
 
@@ -115,7 +125,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             keyData2.private.encoded,
             data2.toByteArray(),
             AsymmetricEncryptionUtil.MODE_ECB,
-            AsymmetricEncryptionUtil.PADDING_PKCS1)
+            AsymmetricEncryptionUtil.PADDING_PKCS1
+        )
         val encryptStr3 = Base64.encodeToString(encryptData3, Base64.NO_WRAP)
         Log.e("rsaxxx", "encrypt3 $encryptStr3")
 
@@ -123,7 +134,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             keyData2.public.encoded,
             encryptData3!!,
             AsymmetricEncryptionUtil.MODE_ECB,
-            AsymmetricEncryptionUtil.PADDING_PKCS1)
+            AsymmetricEncryptionUtil.PADDING_PKCS1
+        )
         Log.e("rsaxxx", "decrypt ${String(decryptData3!!)}")
 
         val json = JsonUtil.instance
@@ -211,6 +223,21 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
+        val tv = findViewById<TextView>(R.id.tvSp)
+        val spanUtil = SpanUtil()
+        spanUtil.append("红色").setTextColor(Color.RED)
+        spanUtil.append("20SP").setTextSize(20)
+        spanUtil.append("红色背景").setBackground(Color.RED)
+        spanUtil.append("加粗").setStyle(Typeface.BOLD)
+        spanUtil.append("删除线").setLine(SpanUtil.LINE_STRIKETHROUGH)
+        spanUtil.append("点击").setClick(tv, Color.MAGENTA) { v ->
+            showToast("点击")
+        }
+        spanUtil.append("链接").setLink("http://www.baidu.com").setTextColor(Color.BLACK)
+        spanUtil.append("其他").setSpan(MaskFilterSpan(BlurMaskFilter(5f, BlurMaskFilter.Blur.NORMAL)))
+
+        tv.text = spanUtil.build()
+
     }
 
     fun getHttps() {

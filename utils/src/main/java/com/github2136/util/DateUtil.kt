@@ -18,7 +18,11 @@ object DateUtil {
     const val WEEK = DAY * 7
 
     const val DATE_PATTERN_YMDHMS = "yyyy-MM-dd HH:mm:ss"
+    const val DATE_PATTERN_YMDHM = "yyyy-MM-dd HH:mm"
+    const val DATE_PATTERN_YMDH = "yyyy-MM-dd HH"
     const val DATE_PATTERN_YMD = "yyyy-MM-dd"
+    const val DATE_PATTERN_YM = "yyyy-MM"
+    const val DATE_PATTERN_Y = "yyyy"
 
     /**
      * 日期转文字
