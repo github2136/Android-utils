@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.collection.ArrayMap
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
+import com.github2136.android_utils.load_more.GridActivity
 import com.github2136.android_utils.load_more.ListActivity
 import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
@@ -46,6 +47,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         btn_bitmap.setOnClickListener(this)
         btn_date.setOnClickListener(this)
         btn_list_adapter.setOnClickListener(this)
+        btn_grid_adapter.setOnClickListener(this)
         btn_list_view_adapter.setOnClickListener(this)
         btn_service.setOnClickListener(this)
 
@@ -285,6 +287,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.btn_list_adapter -> {
                 intent = Intent(this, ListActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.btn_grid_adapter -> {
+                intent = Intent(this, GridActivity::class.java)
                 startActivity(intent)
             }
             R.id.btn_list_view_adapter -> {
