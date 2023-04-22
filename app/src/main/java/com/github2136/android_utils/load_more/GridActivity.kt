@@ -48,8 +48,8 @@ class GridActivity : AppCompatActivity() {
         val adapter = GridAdapter(s)
         rv_content.adapter = adapter
         val gid = GridItemDecoration()
-        // gid.spaceColor = Color.parseColor("#33ff00ff")
-        // gid.space = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, Resources.getSystem().displayMetrics).toInt()
+        gid.spaceColor = Color.parseColor("#33ff00ff")
+        gid.space = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, Resources.getSystem().displayMetrics).toInt()
         rv_content.addItemDecoration(gid)
     }
 }

@@ -31,7 +31,6 @@ class GridItemDecoration : RecyclerView.ItemDecoration() {
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         val childCount = parent.childCount
-        val itemCount = parent.adapter?.itemCount ?: 0
         var position: Int
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
@@ -46,7 +45,7 @@ class GridItemDecoration : RecyclerView.ItemDecoration() {
             //绘制左侧
             c.drawRect(mBounds.left.toFloat(), mBounds.top.toFloat(), (mBounds.left + left).toFloat(), mBounds.bottom.toFloat(), spacePaint)
             //绘制右侧
-            if (position + 1 == itemCount) {
+            if (i + 1 == childCount) {
                 //最后一个
                 c.drawRect((mBounds.right - right).toFloat(), mBounds.top.toFloat(), (mBounds.left + left + child.width + space).toFloat(), mBounds.bottom.toFloat(), spacePaint)
             } else {
