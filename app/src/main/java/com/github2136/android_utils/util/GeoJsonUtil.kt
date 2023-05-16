@@ -143,7 +143,7 @@ object GeoJsonUtil {
         val properties = if (jsonObject.has(KEY_PROPERTIES)) jsonObject.getJSONObject(KEY_PROPERTIES) else null
         val type = jsonObject.getString(KEY_TYPE)
         return getGeometry(jsonObject.getJSONObject(KEY_GEOMETRY))?.run {
-            GeoData.GeoDataFeature(type, this, jsonObject, properties)
+            GeoData.GeoDataFeature(type, this, properties)
         }
     }
 }
@@ -152,7 +152,6 @@ sealed class GeoData {
     data class GeoDataFeature(
         var type: String,
         var geometry: GeoDataGeometry,
-        var jsonObject: JSONObject,
         var properties: JSONObject?
     ) : GeoData()
 
