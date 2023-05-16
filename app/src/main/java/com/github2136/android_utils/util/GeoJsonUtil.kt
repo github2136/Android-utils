@@ -72,13 +72,14 @@ object GeoJsonUtil {
         val coordinates = jsonObject.getJSONArray(KEY_COORDINATES)
         when (type) {
             TYPE_POINT -> {
-                return GeoData.GeoDataGeometry(type, Coordinate.Point(coordinates.getDouble(0), coordinates.getDouble(1)))
+
+                return GeoData.GeoDataGeometry(type, Coordinate.Point(coordinates.getDouble(0), coordinates.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
             }
             TYPE_LINE_STRING -> {
                 val line = mutableListOf<Coordinate.Point>()
                 for (i in 0 until coordinates.length()) {
                     val p = coordinates.getJSONArray(i)
-                    line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
+                    line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
                 }
                 return GeoData.GeoDataGeometry(type, Coordinate.LineString(line))
             }
@@ -89,7 +90,7 @@ object GeoJsonUtil {
                     val polygonObj = coordinates.getJSONArray(i)
                     for (j in 0 until polygonObj.length()) {
                         val point = polygonObj.getJSONArray(j)
-                        polygon.add(Coordinate.Point(point.getDouble(0), point.getDouble(1)))
+                        polygon.add(Coordinate.Point(point.getDouble(0), point.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
                     }
                     polygons.add(Coordinate.LineString(polygon))
                 }
@@ -99,7 +100,7 @@ object GeoJsonUtil {
                 val points = mutableListOf<Coordinate.Point>()
                 for (i in 0 until coordinates.length()) {
                     val p = coordinates.getJSONArray(i)
-                    points.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
+                    points.add(Coordinate.Point(p.getDouble(0), p.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
                 }
                 return GeoData.GeoDataGeometry(type, Coordinate.MultiPoint(points))
             }
@@ -110,7 +111,7 @@ object GeoJsonUtil {
                     val line = mutableListOf<Coordinate.Point>()
                     for (j in 0 until lineObj.length()) {
                         val p = lineObj.getJSONArray(j)
-                        line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
+                        line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
                     }
                     lines.add(Coordinate.LineString(line))
                 }
@@ -126,7 +127,7 @@ object GeoJsonUtil {
                         val line = mutableListOf<Coordinate.Point>()
                         for (k in 0 until lineString.length()) {
                             val point = lineString.getJSONArray(k)
-                            line.add(Coordinate.Point(point.getDouble(0), point.getDouble(1)))
+                            line.add(Coordinate.Point(point.getDouble(0), point.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
                         }
                         polygon.add(Coordinate.LineString(line))
                     }
@@ -176,8 +177,11 @@ sealed class Coordinate {
 
     /**
      * 单点
+     * @param lon 经度
+     * @param lat 纬度
+     * @param alt 海拔
      */
-    data class Point(var x: Double, var y: Double) : Coordinate()
+    data class Point(var lon: Double, var lat: Double, var alt: Double?) : Coordinate()
 
     /**
      * 单线
