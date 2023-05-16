@@ -25,6 +25,7 @@ object GeoJsonUtil {
     private const val KEY_PROPERTIES = "properties"
     private const val KEY_COORDINATES = "coordinates"
     private const val KEY_FEATURES = "features"
+    private const val KEY_ID = "id"
 
     fun getData(geoJson: String): GeoData? {
         try {
@@ -72,14 +73,13 @@ object GeoJsonUtil {
         val coordinates = jsonObject.getJSONArray(KEY_COORDINATES)
         when (type) {
             TYPE_POINT -> {
-
-                return GeoData.GeoDataGeometry(type, Coordinate.Point(coordinates.getDouble(0), coordinates.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
+                return GeoData.GeoDataGeometry(type, Coordinate.Point(coordinates.getDouble(0), coordinates.getDouble(1)))
             }
             TYPE_LINE_STRING -> {
                 val line = mutableListOf<Coordinate.Point>()
                 for (i in 0 until coordinates.length()) {
                     val p = coordinates.getJSONArray(i)
-                    line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
+                    line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
                 }
                 return GeoData.GeoDataGeometry(type, Coordinate.LineString(line))
             }
@@ -90,7 +90,7 @@ object GeoJsonUtil {
                     val polygonObj = coordinates.getJSONArray(i)
                     for (j in 0 until polygonObj.length()) {
                         val point = polygonObj.getJSONArray(j)
-                        polygon.add(Coordinate.Point(point.getDouble(0), point.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
+                        polygon.add(Coordinate.Point(point.getDouble(0), point.getDouble(1)))
                     }
                     polygons.add(Coordinate.LineString(polygon))
                 }
@@ -100,7 +100,7 @@ object GeoJsonUtil {
                 val points = mutableListOf<Coordinate.Point>()
                 for (i in 0 until coordinates.length()) {
                     val p = coordinates.getJSONArray(i)
-                    points.add(Coordinate.Point(p.getDouble(0), p.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
+                    points.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
                 }
                 return GeoData.GeoDataGeometry(type, Coordinate.MultiPoint(points))
             }
@@ -111,7 +111,7 @@ object GeoJsonUtil {
                     val line = mutableListOf<Coordinate.Point>()
                     for (j in 0 until lineObj.length()) {
                         val p = lineObj.getJSONArray(j)
-                        line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
+                        line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
                     }
                     lines.add(Coordinate.LineString(line))
                 }
@@ -127,7 +127,7 @@ object GeoJsonUtil {
                         val line = mutableListOf<Coordinate.Point>()
                         for (k in 0 until lineString.length()) {
                             val point = lineString.getJSONArray(k)
-                            line.add(Coordinate.Point(point.getDouble(0), point.getDouble(1), if (coordinates.length() > 2) coordinates.getDouble(2) else null))
+                            line.add(Coordinate.Point(point.getDouble(0), point.getDouble(1)))
                         }
                         polygon.add(Coordinate.LineString(line))
                     }
@@ -141,9 +141,10 @@ object GeoJsonUtil {
 
     private fun getFeature(jsonObject: JSONObject): GeoData.GeoDataFeature? {
         val properties = if (jsonObject.has(KEY_PROPERTIES)) jsonObject.getJSONObject(KEY_PROPERTIES) else null
+        val id = if (jsonObject.has(KEY_ID)) jsonObject.getString(KEY_ID) else null
         val type = jsonObject.getString(KEY_TYPE)
         return getGeometry(jsonObject.getJSONObject(KEY_GEOMETRY))?.run {
-            GeoData.GeoDataFeature(type, this, properties)
+            GeoData.GeoDataFeature(type, this, id, properties)
         }
     }
 }
@@ -152,6 +153,7 @@ sealed class GeoData {
     data class GeoDataFeature(
         var type: String,
         var geometry: GeoDataGeometry,
+        var id: String?,
         var properties: JSONObject?
     ) : GeoData()
 
@@ -178,9 +180,8 @@ sealed class Coordinate {
      * 单点
      * @param lon 经度
      * @param lat 纬度
-     * @param alt 海拔
      */
-    data class Point(var lon: Double, var lat: Double, var alt: Double?) : Coordinate()
+    data class Point(var lon: Double, var lat: Double) : Coordinate()
 
     /**
      * 单线
