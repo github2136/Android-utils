@@ -1,4 +1,4 @@
-package com.jxgis.wisdomforestfarm.common.map
+package com.github2136.android_utils.util
 
 import android.util.Log
 import org.json.JSONObject
@@ -9,29 +9,56 @@ import java.io.StringWriter
  * Created by YB on 2022/5/12
  */
 object GeoJsonUtil {
+    private const val TYPE_POINT = "Point"
+    private const val TYPE_MULTI_POINT = "MultiPoint"
+    private const val TYPE_LINE_STRING = "LineString"
+    private const val TYPE_MULTI_LINE_STRING = "MultiLineString"
+    private const val TYPE_POLYGON = "Polygon"
+    private const val TYPE_MULTI_POLYGON = "MultiPolygon"
+    private const val TYPE_GEOMETRY_COLLECTION = "GeometryCollection"
+    private const val TYPE_FEATURE = "Feature"
+    private const val TYPE_FEATURE_COLLECTION = "FeatureCollection"
+
+    private const val KEY_TYPE = "type"
+    private const val KEY_GEOMETRY = "geometry"
+    private const val KEY_GEOMETRIES = "geometries"
+    private const val KEY_PROPERTIES = "properties"
+    private const val KEY_COORDINATES = "coordinates"
+    private const val KEY_FEATURES = "features"
+
     fun getData(geoJson: String): GeoData? {
         try {
             val jsonObject = JSONObject(geoJson)
-            val featuresObj = jsonObject.getJSONArray("features")
-            val geoType = jsonObject.getString("type")
-            val featurs = mutableListOf<Feature>()
-            for (i in 0 until featuresObj.length()) {
-                val featureObj = featuresObj.getJSONObject(i)
-                val featureType = featureObj.getString("type")
-                val geometryObj = featureObj.getJSONObject("geometry")
-                val geomet = getCoordinates(geometryObj)
-                val geometry = when (geomet) {
-                    is Coordinate.Point -> Geometry("Point", geomet)
-                    is Coordinate.LineString -> Geometry("LineString", geomet)
-                    is Coordinate.Polygon -> Geometry("Polygon", geomet)
-                    is Coordinate.MultiPoint -> Geometry("LineString", geomet)
-                    is Coordinate.MultiLineString -> Geometry("MultiLineString", geomet)
-                    is Coordinate.MultiPolygon -> Geometry("MultiPolygon", geomet)
-                    else -> throw  NullPointerException("unknown geometry type")
+            val geoType = jsonObject.getString(KEY_TYPE)
+            return when (geoType) {
+                TYPE_POINT, TYPE_MULTI_POINT, TYPE_LINE_STRING, TYPE_MULTI_LINE_STRING, TYPE_POLYGON, TYPE_MULTI_POLYGON -> {
+                    getGeometry(jsonObject)
                 }
-                featurs.add(Feature(featureType, geometry))
+                TYPE_GEOMETRY_COLLECTION -> {
+                    val geometrysArray = jsonObject.getJSONArray(KEY_GEOMETRIES)
+                    val geometrys = mutableListOf<GeoData.GeoDataGeometry>()
+                    for (i in 0 until geometrysArray.length()) {
+                        getGeometry(geometrysArray.getJSONObject(i))?.apply {
+                            geometrys.add(this)
+                        }
+                    }
+                    GeoData.GeoDataGeometryCollection(geoType, geometrys)
+                }
+                TYPE_FEATURE -> {
+                    getFeature(jsonObject)
+                }
+                TYPE_FEATURE_COLLECTION -> {
+                    val featuresArray = jsonObject.getJSONArray(KEY_FEATURES)
+                    val features = mutableListOf<GeoData.GeoDataFeature>()
+                    for (i in 0 until featuresArray.length()) {
+                        getFeature(featuresArray.getJSONObject(i))?.apply {
+                            features.add(this)
+                        }
+                    }
+                    GeoData.GeoDataFeatureCollection(geoType, features)
+                }
+                else -> null
             }
-            return GeoData(geoType, featurs)
         } catch (e: Exception) {
             val sw = StringWriter()
             e.printStackTrace(PrintWriter(sw))
@@ -40,22 +67,22 @@ object GeoJsonUtil {
         }
     }
 
-    private fun getCoordinates(jsonObject: JSONObject): Coordinate? {
-        val type = jsonObject.getString("type")
-        val coordinates = jsonObject.getJSONArray("coordinates")
+    private fun getGeometry(jsonObject: JSONObject): GeoData.GeoDataGeometry? {
+        val type = jsonObject.getString(KEY_TYPE)
+        val coordinates = jsonObject.getJSONArray(KEY_COORDINATES)
         when (type) {
-            "Point" -> {
-                return Coordinate.Point(coordinates.getDouble(0), coordinates.getDouble(1))
+            TYPE_POINT -> {
+                return GeoData.GeoDataGeometry(type, Coordinate.Point(coordinates.getDouble(0), coordinates.getDouble(1)))
             }
-            "LineString" -> {
+            TYPE_LINE_STRING -> {
                 val line = mutableListOf<Coordinate.Point>()
                 for (i in 0 until coordinates.length()) {
                     val p = coordinates.getJSONArray(i)
                     line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
                 }
-                return Coordinate.LineString(line)
+                return GeoData.GeoDataGeometry(type, Coordinate.LineString(line))
             }
-            "Polygon" -> {
+            TYPE_POLYGON -> {
                 val polygons = mutableListOf<Coordinate.LineString>()
                 for (i in 0 until coordinates.length()) {
                     val polygon = mutableListOf<Coordinate.Point>()
@@ -66,17 +93,17 @@ object GeoJsonUtil {
                     }
                     polygons.add(Coordinate.LineString(polygon))
                 }
-                return Coordinate.Polygon(polygons)
+                return GeoData.GeoDataGeometry(type, Coordinate.Polygon(polygons))
             }
-            "MultiPoint" -> {
+            TYPE_MULTI_POINT -> {
                 val points = mutableListOf<Coordinate.Point>()
                 for (i in 0 until coordinates.length()) {
                     val p = coordinates.getJSONArray(i)
                     points.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
                 }
-                return Coordinate.MultiPoint(points)
+                return GeoData.GeoDataGeometry(type, Coordinate.MultiPoint(points))
             }
-            "MultiLineString" -> {
+            TYPE_MULTI_LINE_STRING -> {
                 val lines = mutableListOf<Coordinate.LineString>()
                 for (i in 0 until coordinates.length()) {
                     val lineObj = coordinates.getJSONArray(i)
@@ -87,9 +114,9 @@ object GeoJsonUtil {
                     }
                     lines.add(Coordinate.LineString(line))
                 }
-                return Coordinate.MultiLineString(lines)
+                return GeoData.GeoDataGeometry(type, Coordinate.MultiLineString(lines))
             }
-            "MultiPolygon" -> {
+            TYPE_MULTI_POLYGON -> {
                 val polygons = mutableListOf<Coordinate.Polygon>()
                 for (i in 0 until coordinates.length()) {
                     val polygonObj = coordinates.getJSONArray(i)
@@ -105,27 +132,45 @@ object GeoJsonUtil {
                     }
                     polygons.add(Coordinate.Polygon(polygon))
                 }
-                return Coordinate.MultiPolygon(polygons)
+                return GeoData.GeoDataGeometry(type, Coordinate.MultiPolygon(polygons))
             }
             else -> return null
         }
     }
+
+    private fun getFeature(jsonObject: JSONObject): GeoData.GeoDataFeature? {
+        val properties = if (jsonObject.has(KEY_PROPERTIES)) jsonObject.getJSONObject(KEY_PROPERTIES) else null
+        val type = jsonObject.getString(KEY_TYPE)
+        return getGeometry(jsonObject.getJSONObject(KEY_GEOMETRY))?.run {
+            GeoData.GeoDataFeature(type, this, jsonObject, properties)
+        }
+    }
 }
 
-data class GeoData(
-    var type: String,
-    var features: List<Feature>
-)
+sealed class GeoData {
+    data class GeoDataFeature(
+        var type: String,
+        var geometry: GeoDataGeometry,
+        var jsonObject: JSONObject,
+        var properties: JSONObject?
+    ) : GeoData()
 
-data class Feature(
-    var type: String,
-    var geometry: Geometry
-)
+    data class GeoDataFeatureCollection(
+        var type: String,
+        var features: MutableList<GeoDataFeature>
+    ) : GeoData()
 
-data class Geometry(
-    var type: String,
-    var coordinates: Coordinate
-)
+    data class GeoDataGeometry(
+        var type: String,
+        var coordinates: Coordinate
+
+    ) : GeoData()
+
+    data class GeoDataGeometryCollection(
+        var type: String,
+        var geometrys: MutableList<GeoDataGeometry>
+    ) : GeoData()
+}
 
 sealed class Coordinate {
 
