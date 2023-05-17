@@ -20,6 +20,7 @@ object GeoJsonUtil {
     private const val TYPE_FEATURE_COLLECTION = "FeatureCollection"
 
     private const val KEY_TYPE = "type"
+    private const val KEY_BBOX = "bbox"
     private const val KEY_GEOMETRY = "geometry"
     private const val KEY_GEOMETRIES = "geometries"
     private const val KEY_PROPERTIES = "properties"
@@ -43,7 +44,7 @@ object GeoJsonUtil {
                             geometrys.add(this)
                         }
                     }
-                    GeoData.GeoDataGeometryCollection(geoType, geometrys)
+                    GeoData.GeoDataGeometryCollection(geoType, geometrys, getBBox(jsonObject))
                 }
                 TYPE_FEATURE -> {
                     getFeature(jsonObject)
@@ -56,7 +57,7 @@ object GeoJsonUtil {
                             features.add(this)
                         }
                     }
-                    GeoData.GeoDataFeatureCollection(geoType, features)
+                    GeoData.GeoDataFeatureCollection(geoType, features, getBBox(jsonObject))
                 }
                 else -> null
             }
@@ -73,7 +74,7 @@ object GeoJsonUtil {
         val coordinates = jsonObject.getJSONArray(KEY_COORDINATES)
         when (type) {
             TYPE_POINT -> {
-                return GeoData.GeoDataGeometry(type, Coordinate.Point(coordinates.getDouble(0), coordinates.getDouble(1)))
+                return GeoData.GeoDataGeometry(type, Coordinate.Point(coordinates.getDouble(0), coordinates.getDouble(1)), getBBox(jsonObject))
             }
             TYPE_LINE_STRING -> {
                 val line = mutableListOf<Coordinate.Point>()
@@ -81,7 +82,7 @@ object GeoJsonUtil {
                     val p = coordinates.getJSONArray(i)
                     line.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
                 }
-                return GeoData.GeoDataGeometry(type, Coordinate.LineString(line))
+                return GeoData.GeoDataGeometry(type, Coordinate.LineString(line), getBBox(jsonObject))
             }
             TYPE_POLYGON -> {
                 val polygons = mutableListOf<Coordinate.LineString>()
@@ -94,7 +95,7 @@ object GeoJsonUtil {
                     }
                     polygons.add(Coordinate.LineString(polygon))
                 }
-                return GeoData.GeoDataGeometry(type, Coordinate.Polygon(polygons))
+                return GeoData.GeoDataGeometry(type, Coordinate.Polygon(polygons), getBBox(jsonObject))
             }
             TYPE_MULTI_POINT -> {
                 val points = mutableListOf<Coordinate.Point>()
@@ -102,7 +103,7 @@ object GeoJsonUtil {
                     val p = coordinates.getJSONArray(i)
                     points.add(Coordinate.Point(p.getDouble(0), p.getDouble(1)))
                 }
-                return GeoData.GeoDataGeometry(type, Coordinate.MultiPoint(points))
+                return GeoData.GeoDataGeometry(type, Coordinate.MultiPoint(points), getBBox(jsonObject))
             }
             TYPE_MULTI_LINE_STRING -> {
                 val lines = mutableListOf<Coordinate.LineString>()
@@ -115,7 +116,7 @@ object GeoJsonUtil {
                     }
                     lines.add(Coordinate.LineString(line))
                 }
-                return GeoData.GeoDataGeometry(type, Coordinate.MultiLineString(lines))
+                return GeoData.GeoDataGeometry(type, Coordinate.MultiLineString(lines), getBBox(jsonObject))
             }
             TYPE_MULTI_POLYGON -> {
                 val polygons = mutableListOf<Coordinate.Polygon>()
@@ -133,7 +134,7 @@ object GeoJsonUtil {
                     }
                     polygons.add(Coordinate.Polygon(polygon))
                 }
-                return GeoData.GeoDataGeometry(type, Coordinate.MultiPolygon(polygons))
+                return GeoData.GeoDataGeometry(type, Coordinate.MultiPolygon(polygons), getBBox(jsonObject))
             }
             else -> return null
         }
@@ -144,8 +145,18 @@ object GeoJsonUtil {
         val id = if (jsonObject.has(KEY_ID)) jsonObject.getString(KEY_ID) else null
         val type = jsonObject.getString(KEY_TYPE)
         return getGeometry(jsonObject.getJSONObject(KEY_GEOMETRY))?.run {
-            GeoData.GeoDataFeature(type, this, id, properties)
+            GeoData.GeoDataFeature(type, this, id, properties, getBBox(jsonObject))
         }
+    }
+
+    private fun getBBox(jsonObject: JSONObject): BBox? {
+        if (jsonObject.has(KEY_BBOX)) {
+            val jsonArray = jsonObject.getJSONArray(KEY_BBOX)
+            if (jsonArray.length() == 4) {
+                return BBox(jsonArray.getDouble(0), jsonArray.getDouble(1), jsonArray.getDouble(2), jsonArray.getDouble(3))
+            }
+        }
+        return null
     }
 }
 
@@ -154,25 +165,30 @@ sealed class GeoData {
         var type: String,
         var geometry: GeoDataGeometry,
         var id: String?,
-        var properties: JSONObject?
+        var properties: JSONObject?,
+        var bbox: BBox?
     ) : GeoData()
 
     data class GeoDataFeatureCollection(
         var type: String,
-        var features: MutableList<GeoDataFeature>
+        var features: MutableList<GeoDataFeature>,
+        var bbox: BBox?
     ) : GeoData()
 
     data class GeoDataGeometry(
         var type: String,
-        var coordinates: Coordinate
-
+        var coordinates: Coordinate,
+        var bbox: BBox?
     ) : GeoData()
 
     data class GeoDataGeometryCollection(
         var type: String,
-        var geometrys: MutableList<GeoDataGeometry>
+        var geometrys: MutableList<GeoDataGeometry>,
+        var bbox: BBox?
     ) : GeoData()
 }
+
+data class BBox(var west: Double, var south: Double, var east: Double, var north: Double)
 
 sealed class Coordinate {
 

@@ -2,7 +2,6 @@ package com.github2136.android_utils
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github2136.android_utils.util.GeoData
 import com.github2136.android_utils.util.GeoJsonUtil
 import com.github2136.util.JsonUtil
 import org.junit.Assert
@@ -27,7 +26,7 @@ class ExampleInstrumentedTest {
         GeoJsonUtil.getData("{\"type\": \"LineString\", \"coordinates\": [[100.0, 0.0 ], [101.0, 1.0 ] ] }")?.apply {
             Log.e("GeoData", this.toString())
         }
-        GeoJsonUtil.getData("{\"type\": \"Polygon\", \"coordinates\": [[[100.0, 0.0 ], [101.0, 0.0 ], [101.0, 1.0 ], [100.0, 1.0 ], [100.0, 0.0 ] ], [[100.8, 0.8 ], [100.8, 0.2 ], [100.2, 0.2 ], [100.2, 0.8 ], [100.8, 0.8 ] ] ] }")
+        GeoJsonUtil.getData("{\"type\": \"Polygon\", \"bbox\": [-10.0, -10.0, 10.0, 10.0 ], \"coordinates\": [[[100.0, 0.0 ], [101.0, 0.0 ], [101.0, 1.0 ], [100.0, 1.0 ], [100.0, 0.0 ] ], [[100.8, 0.8 ], [100.8, 0.2 ], [100.2, 0.2 ], [100.2, 0.8 ], [100.8, 0.8 ] ] ] }")
             ?.apply {
                 Log.e("GeoData", this.toString())
             }
