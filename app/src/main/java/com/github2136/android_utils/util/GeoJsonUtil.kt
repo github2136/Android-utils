@@ -194,10 +194,10 @@ sealed class Coordinate {
 
     /**
      * 单点
-     * @param lon 经度
+     * @param lng 经度
      * @param lat 纬度
      */
-    data class Point(var lon: Double, var lat: Double) : Coordinate()
+    data class Point(var lng: Double, var lat: Double) : Coordinate()
 
     /**
      * 单线
