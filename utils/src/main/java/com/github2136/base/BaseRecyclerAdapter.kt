@@ -55,14 +55,14 @@ abstract class BaseRecyclerAdapter<T>(protected var list: MutableList<T>? = null
         this.itemLongClickListener = itemLongClickListener
     }
 
-    fun setData(list: MutableList<T>) {
-        this.list = list
+    fun setData(list: List<T>) {
+        this.list = list.toMutableList()
         notifyDataSetChanged()
     }
 
-    fun appendData(list: MutableList<T>) {
+    fun appendData(list: List<T>) {
         if (this.list == null) {
-            this.list = list
+            this.list = list.toMutableList()
         }
         this.list?.let {
             it.addAll(list)
