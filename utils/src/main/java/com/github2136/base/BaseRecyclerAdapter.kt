@@ -60,7 +60,10 @@ abstract class BaseRecyclerAdapter<T>(protected var list: MutableList<T>? = null
         notifyDataSetChanged()
     }
 
-    fun appendData(list: List<T>) {
+    fun appendData(list: MutableList<T>) {
+        if (this.list == null) {
+            this.list = list
+        }
         this.list?.let {
             it.addAll(list)
             notifyDataSetChanged()
