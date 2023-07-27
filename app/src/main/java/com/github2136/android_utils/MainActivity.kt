@@ -9,6 +9,7 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
 import android.text.style.MaskFilterSpan
 import android.util.Base64
 import android.util.Log
@@ -23,6 +24,7 @@ import com.github2136.android_utils.load_more.ListViewActivity
 import com.github2136.android_utils.proguard_class.ProguardClass
 import com.github2136.android_utils.service.ServiceActivity
 import com.github2136.android_utils.util.SSLUtil
+import com.github2136.android_utils.util.totp.TOTP
 import com.github2136.util.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.ByteArrayOutputStream
@@ -240,6 +242,16 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         tv.text = spanUtil.build()
 
+        mHandler.sendEmptyMessage(0)
+    }
+
+    override fun handleMessage(msg: Message) {
+        when (msg.what) {
+            0 -> {
+                Log.e("TotpUtil",   TOTP.generateMyTOTP("account01","12345"))
+                mHandler.sendEmptyMessageDelayed(0,10000)
+            }
+        }
     }
 
     fun getHttps() {

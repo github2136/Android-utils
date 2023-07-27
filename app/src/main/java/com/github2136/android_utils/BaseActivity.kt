@@ -48,14 +48,14 @@ abstract class BaseActivity : AppCompatActivity() {
     class Handler(activity: BaseActivity) : android.os.Handler() {
         private var weakReference: WeakReference<BaseActivity> = WeakReference(activity)
 
-        override fun handleMessage(msg: Message?) {
+        override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             val activity: BaseActivity? = weakReference.get()
             activity?.also { it.handleMessage(msg) }
         }
     }
 
-    protected fun handleMessage(msg: Message?) {}
+    open protected fun handleMessage(msg: Message) {}
     //布局ID
     protected abstract fun getViewResId(): Int
 
