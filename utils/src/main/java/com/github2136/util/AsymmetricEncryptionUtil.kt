@@ -48,8 +48,8 @@ object AsymmetricEncryptionUtil {
     @JvmStatic
     fun encryptByPublicKey(mKey: ByteArray,
                            mData: ByteArray,
-                           @EncryptMode mMode: String = "",
-                           @EncryptPadding mPadding: String = "",
+                           @EncryptMode mMode: String,
+                           @EncryptPadding mPadding: String,
                            @EncryptType mEncryptType: String = RSA,
                            mKeySize: Int = 1024): ByteArray? {
         return try {
@@ -94,8 +94,8 @@ object AsymmetricEncryptionUtil {
     @JvmStatic
     fun decryptByPrivateKey(mKey: ByteArray,
                             mData: ByteArray,
-                            @EncryptMode mMode: String = "",
-                            @EncryptPadding mPadding: String = "",
+                            @EncryptMode mMode: String,
+                            @EncryptPadding mPadding: String,
                             @EncryptType mEncryptType: String = RSA,
                             mKeySize: Int = 1024): ByteArray? {
         return try {
@@ -139,8 +139,8 @@ object AsymmetricEncryptionUtil {
     @JvmStatic
     fun encryptByPrivateKey(mKey: ByteArray,
                             mData: ByteArray,
-                            @EncryptMode mMode: String = "",
-                            @EncryptPadding mPadding: String = "",
+                            @EncryptMode mMode: String,
+                            @EncryptPadding mPadding: String,
                             @EncryptType mEncryptType: String = RSA,
                             mKeySize: Int = 1024): ByteArray? {
         return try {
@@ -186,8 +186,8 @@ object AsymmetricEncryptionUtil {
     @JvmStatic
     fun decryptByPublicKey(mKey: ByteArray,
                            mData: ByteArray,
-                           @EncryptMode mMode: String = "",
-                           @EncryptPadding mPadding: String = "",
+                           @EncryptMode mMode: String,
+                           @EncryptPadding mPadding: String,
                            @EncryptType mEncryptType: String = RSA,
                            mKeySize: Int = 1024): ByteArray? {
         return try {
