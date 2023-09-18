@@ -2,11 +2,16 @@ package com.github2136.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Rect
 import android.media.ExifInterface
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
+import androidx.annotation.IntDef
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -29,18 +34,24 @@ import kotlin.math.min
 class BitmapUtil private constructor(path: String) {
     //图片路径
     private var mFilePath: String = path
-
     //旋转角度
     private var mDegree: Int = 0
-
     //宽高最大值
     private var mMaxPixel: Int = 0
-
     //文件最大值
     private var mMaxSize: Int = 0
-
     //图片保存质量
     private var mQuality = 100
+    //水印位置
+    private var markGravity = BOTTOM_LEFT
+    //水印文字
+    private var markTxt = arrayOf<String>()
+    //水印边距px
+    private var markPadding = 100f
+    //水印文字大小px
+    private var markTextSize = 80f //文字大小
+    //水印文字间距
+    private var markTextSpace = 20f //文字间距
 
     private val mHandler: Handler by lazy {
         Handler(Looper.getMainLooper())
@@ -252,6 +263,68 @@ class BitmapUtil private constructor(path: String) {
         return this
     }
 
+    @IntDef(TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT)
+    internal annotation class MarkGravity
+
+    /**
+     * 添加水印文字
+     * @param txt 文字
+     * @param gravity 水印位置
+     * @param padding 水印边距
+     * @param textSize 文字大小
+     * @param textSpace 文字间空白
+     */
+    fun addWaterMark(txt: Array<String>, @MarkGravity gravity: Int = TOP_LEFT, padding: Float = 100f, textSize: Float = 80f, textSpace: Float = 20f): BitmapUtil {
+        markTxt = txt
+        markGravity = gravity
+        markPadding = padding
+        markTextSize = textSize
+        markTextSpace = textSpace
+        return this
+    }
+
+    /**
+     * 水印添加
+     */
+    private fun addWaterMark(bitmap: Bitmap) {
+        val canvas = Canvas(bitmap)
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.style = Paint.Style.FILL
+        paint.color = Color.WHITE
+        paint.setShadowLayer(3f, 0f, 0f, Color.BLACK)
+        paint.textSize = markTextSize
+        paint.strokeWidth = 5f
+        val textSize = markTxt.size
+        markTxt.forEachIndexed { index, str ->
+            val rect = Rect()
+            paint.getTextBounds(str, 0, str.lastIndex, rect)
+            var x = 0f
+            var y = 0f
+            when (markGravity) {
+                TOP_LEFT -> {
+                    x = markPadding
+                    y = markPadding + rect.height() + index * (rect.height() + markTextSpace)
+                }
+
+                TOP_RIGHT -> {
+                    x = bitmap.width - markPadding - rect.width()
+                    y = markPadding + rect.height() + index * (rect.height() + markTextSpace)
+                }
+
+                BOTTOM_LEFT -> {
+                    x = markPadding
+                    y = bitmap.height - markPadding - (textSize - index - 1) * (rect.height() + markTextSpace)
+                }
+
+                BOTTOM_RIGHT -> {
+                    x = bitmap.width - markPadding - rect.width()
+                    y = bitmap.height - markPadding - (textSize - index - 1) * (rect.height() + markTextSpace)
+                }
+            }
+            canvas.drawText(str, x, y, paint)
+        }
+    }
+
     /**
      * 获取图片
      */
@@ -264,6 +337,9 @@ class BitmapUtil private constructor(path: String) {
             } else {
                 try {
                     val baos = ByteArrayOutputStream()
+                    if (markTxt.isNotEmpty()) {
+                        addWaterMark(mBitmap)
+                    }
                     mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
                     baos.flush()
                     baos.close()
@@ -287,6 +363,9 @@ class BitmapUtil private constructor(path: String) {
             } else {
                 try {
                     val baos = ByteArrayOutputStream()
+                    if (markTxt.isNotEmpty()) {
+                        addWaterMark(mBitmap)
+                    }
                     mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
                     baos.flush()
                     baos.close()
@@ -308,6 +387,9 @@ class BitmapUtil private constructor(path: String) {
                 mHandler.post { callBack(null) }
             } else {
                 mHandler.post {
+                    if (markTxt.isNotEmpty()) {
+                        addWaterMark(mBitmap)
+                    }
                     callBack(mBitmap.copy(Bitmap.Config.RGB_565, true))
                     mBitmap.recycle()
                     System.gc()
@@ -325,6 +407,9 @@ class BitmapUtil private constructor(path: String) {
             if (mBitmap == null) {
                 mHandler.post { callBack(null) }
             } else {
+                if (markTxt.isNotEmpty()) {
+                    addWaterMark(mBitmap)
+                }
                 val isSave = saveBitmap(mBitmap, filePath)
                 mBitmap.recycle()
                 System.gc()
@@ -334,6 +419,11 @@ class BitmapUtil private constructor(path: String) {
     }
 
     companion object {
+        const val TOP_LEFT = 0
+        const val TOP_RIGHT = 1
+        const val BOTTOM_LEFT = 2
+        const val BOTTOM_RIGHT = 3
+
         fun getInstance(path: String): BitmapUtil = BitmapUtil(path)
     }
 }

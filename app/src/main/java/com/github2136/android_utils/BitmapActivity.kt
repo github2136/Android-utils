@@ -46,6 +46,7 @@ class BitmapActivity : BaseActivity(), View.OnClickListener {
                         BitmapUtil.getInstance(it).run {
                             limitPixel(1080)
                             limitSize(1024)
+                            addWaterMark(arrayOf("水印1", "000001113"))
                             rotation()
                             getBitmap { bitmap -> iv_image.setImageBitmap(bitmap) }
                         }
