@@ -255,7 +255,6 @@ class BitmapUtil private constructor(path: String) {
     /**
      * 获取图片
      */
-
     fun getByte(callBack: (ByteArray?) -> Unit) {
         executor.execute {
             var bytes: ByteArray? = null
@@ -308,9 +307,11 @@ class BitmapUtil private constructor(path: String) {
             if (mBitmap == null) {
                 mHandler.post { callBack(null) }
             } else {
-                mHandler.post { callBack(mBitmap.copy(Bitmap.Config.RGB_565, true)) }
-                mBitmap.recycle()
-                System.gc()
+                mHandler.post {
+                    callBack(mBitmap.copy(Bitmap.Config.RGB_565, true))
+                    mBitmap.recycle()
+                    System.gc()
+                }
             }
         }
     }
