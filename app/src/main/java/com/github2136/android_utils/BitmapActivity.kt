@@ -44,10 +44,10 @@ class BitmapActivity : BaseActivity(), View.OnClickListener {
                     }
                     path?.let {
                         BitmapUtil.getInstance(it).run {
-                            limit(1080)
+                            limitPixel(1080)
                             limitSize(1024)
                             rotation()
-                            get { bitmap -> iv_image.setImageBitmap(bitmap) }
+                            getBitmap { bitmap -> iv_image.setImageBitmap(bitmap) }
                         }
                     }
                 }

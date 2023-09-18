@@ -255,12 +255,6 @@ class BitmapUtil private constructor(path: String) {
     /**
      * 获取图片
      */
-    fun get(callBack: (Bitmap?) -> Unit) {
-        executor.execute {
-            val mBitmap = getBitmap()
-            mHandler.post { callBack(mBitmap) }
-        }
-    }
 
     fun getByte(callBack: (ByteArray?) -> Unit) {
         executor.execute {
