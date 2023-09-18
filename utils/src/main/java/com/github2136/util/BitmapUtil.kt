@@ -7,13 +7,11 @@ import android.media.ExifInterface
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
-import android.util.Log
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.Executors
-import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -21,7 +19,7 @@ import kotlin.math.min
  *       首先设置图片路径BitmapUtil.getInstance(filePath)
  *       然后就可以在通过其他方法来对图片进行处理
  *       rotation//图片旋转为正
- *       limit(int max)//显示图片最大宽高 0 表示不限制
+ *       limitPixel(int max)//显示图片最大宽高 0 表示不限制
  *       limitSize(int maxSize)//显示图片最大大小，单位为KB 0 表示不限制
  *       get***()//获取图片的bitmap、base64、byte[]
  *       correct()//图片是否为正的
@@ -36,7 +34,7 @@ class BitmapUtil private constructor(path: String) {
     private var mDegree: Int = 0
 
     //宽高最大值
-    private var mMax: Int = 0
+    private var mMaxPixel: Int = 0
 
     //文件最大值
     private var mMaxSize: Int = 0
@@ -50,7 +48,7 @@ class BitmapUtil private constructor(path: String) {
 
     init {
         mDegree = 0
-        mMax = 0
+        mMaxPixel = 0
         mMaxSize = 0
     }
 
@@ -69,9 +67,9 @@ class BitmapUtil private constructor(path: String) {
      */
     private fun getBitmap(): Bitmap? {
         var mBitmap: Bitmap?
-        if (mMax != 0) {
+        if (mMaxPixel != 0) {
             val values = getBitmapValue(mFilePath)
-            val scaleFactor = Math.max(Math.ceil(values[0].toDouble() / mMax), Math.ceil(values[1].toDouble() / mMax)).toInt()
+            val scaleFactor = Math.max(Math.ceil(values[0].toDouble() / mMaxPixel), Math.ceil(values[1].toDouble() / mMaxPixel)).toInt()
             val scaleSize: Int
             if (scaleFactor > 1) {
                 var inSampleSize = 1
@@ -86,9 +84,9 @@ class BitmapUtil private constructor(path: String) {
             mBitmap = getBitmap(mFilePath, scaleSize)
             if (mBitmap != null) {
                 //如果图片高宽比限制大则使用Matrix再次缩小
-                if (mBitmap.width > mMax || mBitmap.height > mMax) {
-                    val scaleW = mMax.toFloat() / mBitmap.width
-                    val scaleH = mMax.toFloat() / mBitmap.height
+                if (mBitmap.width > mMaxPixel || mBitmap.height > mMaxPixel) {
+                    val scaleW = mMaxPixel.toFloat() / mBitmap.width
+                    val scaleH = mMaxPixel.toFloat() / mBitmap.height
                     val scale = min(scaleW, scaleH)
                     mBitmap = getBitmap(mBitmap, scale)
                 }
@@ -135,8 +133,10 @@ class BitmapUtil private constructor(path: String) {
             // 从指定路径下读取图片，并获取其EXIF信息
             val exifInterface = ExifInterface(path)
             // 获取图片的旋转信息
-            val orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface
-                .ORIENTATION_NORMAL)
+            val orientation = exifInterface.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION, ExifInterface
+                    .ORIENTATION_NORMAL
+            )
             when (orientation) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> degree = 90
                 ExifInterface.ORIENTATION_ROTATE_180 -> degree = 180
@@ -158,8 +158,10 @@ class BitmapUtil private constructor(path: String) {
         val matrix = Matrix()
         matrix.postRotate(degree.toFloat())
         // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
-        retBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0,
-                                        sourceBitmap.width, sourceBitmap.height, matrix, true)
+        retBitmap = Bitmap.createBitmap(
+            sourceBitmap, 0, 0,
+            sourceBitmap.width, sourceBitmap.height, matrix, true
+        )
         sourceBitmap.recycle()
         return retBitmap
     }
@@ -177,8 +179,10 @@ class BitmapUtil private constructor(path: String) {
         val matrix = Matrix()
         matrix.setScale(scale, scale)
         // 将原始图片按照比例矩阵进行压缩，并得到新的图片
-        retBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0,
-                                        sourceBitmap.width, sourceBitmap.height, matrix, true)
+        retBitmap = Bitmap.createBitmap(
+            sourceBitmap, 0, 0,
+            sourceBitmap.width, sourceBitmap.height, matrix, true
+        )
         sourceBitmap.recycle()
         return retBitmap
     }
@@ -235,8 +239,8 @@ class BitmapUtil private constructor(path: String) {
     /**
      * 宽高的最大值
      */
-    fun limit(max: Int): BitmapUtil {
-        mMax = max
+    fun limitPixel(maxPixel: Int): BitmapUtil {
+        mMaxPixel = maxPixel
         return this
     }
 
@@ -271,6 +275,8 @@ class BitmapUtil private constructor(path: String) {
                     baos.flush()
                     baos.close()
                     bytes = baos.toByteArray()
+                    mBitmap.recycle()
+                    System.gc()
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -292,10 +298,25 @@ class BitmapUtil private constructor(path: String) {
                     baos.flush()
                     baos.close()
                     base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
+                    mBitmap.recycle()
+                    System.gc()
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
                 mHandler.post { callBack(base64) }
+            }
+        }
+    }
+
+    fun getBitmap(callBack: (Bitmap?) -> Unit) {
+        executor.execute {
+            val mBitmap = getBitmap()
+            if (mBitmap == null) {
+                mHandler.post { callBack(null) }
+            } else {
+                mHandler.post { callBack(mBitmap.copy(Bitmap.Config.RGB_565, true)) }
+                mBitmap.recycle()
+                System.gc()
             }
         }
     }
@@ -311,6 +332,7 @@ class BitmapUtil private constructor(path: String) {
             } else {
                 val isSave = saveBitmap(mBitmap, filePath)
                 mBitmap.recycle()
+                System.gc()
                 mHandler.post { callBack(if (isSave) filePath else "") }
             }
         }
