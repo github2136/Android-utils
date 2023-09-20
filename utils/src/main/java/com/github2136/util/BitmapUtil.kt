@@ -47,11 +47,13 @@ class BitmapUtil private constructor(path: String) {
     //水印文字
     private var markTxt = arrayOf<String>()
     //水印边距px
-    private var markPadding = 100f
+    private var markPadding = 0f
     //水印文字大小px
-    private var markTextSize = 80f //文字大小
+    private var markTextSize = 0f
     //水印文字间距
-    private var markTextSpace = 20f //文字间距
+    private var markTextSpace = 0f
+    //自定义绘制水印
+    private var markCustom: ((Bitmap) -> Unit)? = null
 
     private val mHandler: Handler by lazy {
         Handler(Looper.getMainLooper())
@@ -274,12 +276,20 @@ class BitmapUtil private constructor(path: String) {
      * @param textSize 文字大小
      * @param textSpace 文字间空白
      */
-    fun addWaterMark(txt: Array<String>, @MarkGravity gravity: Int = TOP_LEFT, padding: Float = 100f, textSize: Float = 80f, textSpace: Float = 20f): BitmapUtil {
+    fun addWaterMark(txt: Array<String>, @MarkGravity gravity: Int = TOP_LEFT, padding: Float = 100f, textSize: Float = 40f, textSpace: Float = 20f): BitmapUtil {
         markTxt = txt
         markGravity = gravity
         markPadding = padding
         markTextSize = textSize
         markTextSpace = textSpace
+        return this
+    }
+
+    /**
+     * 自定义绘制水印
+     */
+    fun addWaterMark(mark: ((Bitmap) -> Unit)?): BitmapUtil {
+        markCustom = mark
         return this
     }
 
@@ -337,7 +347,9 @@ class BitmapUtil private constructor(path: String) {
             } else {
                 try {
                     val baos = ByteArrayOutputStream()
-                    if (markTxt.isNotEmpty()) {
+                    if (markCustom != null) {
+                        markCustom?.invoke(mBitmap)
+                    } else if (markTxt.isNotEmpty()) {
                         addWaterMark(mBitmap)
                     }
                     mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
@@ -363,7 +375,9 @@ class BitmapUtil private constructor(path: String) {
             } else {
                 try {
                     val baos = ByteArrayOutputStream()
-                    if (markTxt.isNotEmpty()) {
+                    if (markCustom != null) {
+                        markCustom?.invoke(mBitmap)
+                    } else if (markTxt.isNotEmpty()) {
                         addWaterMark(mBitmap)
                     }
                     mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
@@ -387,7 +401,9 @@ class BitmapUtil private constructor(path: String) {
                 mHandler.post { callBack(null) }
             } else {
                 mHandler.post {
-                    if (markTxt.isNotEmpty()) {
+                    if (markCustom != null) {
+                        markCustom?.invoke(mBitmap)
+                    } else if (markTxt.isNotEmpty()) {
                         addWaterMark(mBitmap)
                     }
                     callBack(mBitmap.copy(Bitmap.Config.RGB_565, true))
@@ -407,7 +423,9 @@ class BitmapUtil private constructor(path: String) {
             if (mBitmap == null) {
                 mHandler.post { callBack(null) }
             } else {
-                if (markTxt.isNotEmpty()) {
+                if (markCustom != null) {
+                    markCustom?.invoke(mBitmap)
+                } else if (markTxt.isNotEmpty()) {
                     addWaterMark(mBitmap)
                 }
                 val isSave = saveBitmap(mBitmap, filePath)
