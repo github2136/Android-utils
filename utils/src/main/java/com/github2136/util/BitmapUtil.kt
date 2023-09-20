@@ -306,7 +306,7 @@ class BitmapUtil private constructor(path: String) {
         val textSize = markTxt.size
         markTxt.forEachIndexed { index, str ->
             val rect = Rect()
-            paint.getTextBounds(str, 0, str.lastIndex, rect)
+            paint.getTextBounds(str, 0, str.length, rect)
             var x = 0f
             var y = 0f
             when (markGravity) {
