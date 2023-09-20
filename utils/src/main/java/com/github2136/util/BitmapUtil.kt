@@ -303,7 +303,6 @@ class BitmapUtil private constructor(path: String) {
         paint.color = Color.WHITE
         paint.setShadowLayer(3f, 0f, 0f, Color.BLACK)
         paint.textSize = markTextSize
-        paint.strokeWidth = 5f
         val textSize = markTxt.size
         markTxt.forEachIndexed { index, str ->
             val rect = Rect()
