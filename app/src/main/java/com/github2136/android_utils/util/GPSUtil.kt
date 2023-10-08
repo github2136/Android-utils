@@ -148,6 +148,25 @@ object GPSUtil {
         return UtilTile(xtile, ytile, zoom)
     }
 
+    /**
+     * 3857转4326
+     */
+    fun mercator2latlng(latlng: UtilLatLng): UtilLatLng {
+        var lng = latlng.lng / 20037508.34 * 180
+        var lat = latlng.lat / 20037508.34 * 180
+        lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2)
+        return UtilLatLng(lat, lng)
+    }
+    /**
+     * 4326转3857
+     */
+    fun latlng2mercator(latlng: UtilLatLng): UtilLatLng {
+        var earthRad = 6378137.0
+        var lng = latlng.lng * Math.PI / 180 * earthRad
+        var a = latlng.lat * Math.PI / 180
+        var lat = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)))
+        return UtilLatLng(lat, lng)
+    }
 
     private fun transform(origin: UtilLatLng): UtilLatLng {
         var dLat = transformLat(origin.lng - 105.0, origin.lat - 35.0)
@@ -199,10 +218,11 @@ object GPSUtil {
 
     @Parcelize
     data class UtilLatLng(
-        /**纬度*/
-        val lat: Double,
-        /**经度*/
-        val lng: Double) : Parcelable
+        /**纬度-90,90*/
+        var lat: Double,
+        /**经度-180,180*/
+        var lng: Double
+    ) : Parcelable
 
     @Parcelize
     data class UtilTile(val x: Int, val y: Int, val z: Int) : Parcelable
