@@ -38,6 +38,7 @@ dependencies {
     implementation lib['core-ktx']
     implementation lib['android-appcompat']
     implementation lib['android-recyclerview']
+    implementation lib['android-exifinterface']
     implementation lib['gson']
 
     androidTestImplementation lib["android-test"]

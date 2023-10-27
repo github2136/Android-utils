@@ -113,7 +113,7 @@ class Divider(context: Context) : RecyclerView.ItemDecoration() {
         groupHeight = (lineHeightTop + topPadding + txtPaint.fontSpacing + bottomPadding + lineHeightBottom).toInt()
 
         val a = context.obtainStyledAttributes(ATTRS)
-        mDivider = a.getDrawable(0)
+        mDivider = a.getDrawable(0)!!
         a.recycle()
     }
 

@@ -4,6 +4,7 @@ android-utils
 **implementation "androidx.core:core-ktx:1.5.0"**
 **implementation "androidx.appcompat:appcompat:1.3.0"**
 **implementation "androidx.recyclerview:recyclerview:1.2.1"**
+**implementation "androidx.exifinterface:exifinterface:1.3.6"**
 **implementation "com.google.code.gson:gson:2.8.5"**
 
 一些常用工具类  

@@ -48,57 +48,53 @@ class BitmapActivity : BaseActivity(), View.OnClickListener {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_PIC -> {
-                    val path = data?.let {
-                        FileUtil.getFileAbsolutePath(mContext, it.data)
-                    }
-                    path?.let {
-                        BitmapUtil.getInstance(it).run {
-                            limitPixel(1080)
-                            limitSize(1024)
-                            // addWaterMark(arrayOf("水印1", "000001113"))
-                            addWaterMark { bitmap ->
-                                val txt = mutableListOf("水印1111", "水印2", "时间：${Date().str()}")
-                                val canvas = Canvas(bitmap)
-                                val paintTxt = Paint(Paint.ANTI_ALIAS_FLAG)
-                                paintTxt.style = Paint.Style.FILL
-                                paintTxt.color = Color.WHITE
-                                paintTxt.setShadowLayer(3f, 0f, 0f, Color.BLACK)
-                                paintTxt.textSize = 40f
+                    BitmapUtil.getInstance(this, data!!.data!!).run {
+                        limitPixel(1080)
+                        limitSize(1024)
+                        // addWaterMark(arrayOf("水印1", "000001113"))
+                        addWaterMark { bitmap ->
+                            val txt = mutableListOf("水印1111", "水印2", "时间：${Date().str()}")
+                            val canvas = Canvas(bitmap)
+                            val paintTxt = Paint(Paint.ANTI_ALIAS_FLAG)
+                            paintTxt.style = Paint.Style.FILL
+                            paintTxt.color = Color.WHITE
+                            paintTxt.setShadowLayer(3f, 0f, 0f, Color.BLACK)
+                            paintTxt.textSize = 40f
 
-                                val txtRects = mutableListOf<Rect>()
-                                var maxWidth = 0
-                                txt.forEach {
-                                    val txtRect = Rect()
-                                    paintTxt.getTextBounds(it, 0, it.length, txtRect)
-                                    maxWidth = max(maxWidth, txtRect.width())
-                                    txtRects.add(txtRect)
-                                }
+                            val txtRects = mutableListOf<Rect>()
+                            var maxWidth = 0
+                            txt.forEach {
+                                val txtRect = Rect()
+                                paintTxt.getTextBounds(it, 0, it.length, txtRect)
+                                maxWidth = max(maxWidth, txtRect.width())
+                                txtRects.add(txtRect)
+                            }
 
-                                val paddingBg = 100
-                                val paddingTxt = 20
-                                val txtSpace = 20
-                                val paintBg = Paint(Paint.ANTI_ALIAS_FLAG)
-                                paintBg.style = Paint.Style.FILL
-                                paintBg.color = Color.parseColor("#99FFFFFF")
+                            val paddingBg = 100
+                            val paddingTxt = 20
+                            val txtSpace = 20
+                            val paintBg = Paint(Paint.ANTI_ALIAS_FLAG)
+                            paintBg.style = Paint.Style.FILL
+                            paintBg.color = Color.parseColor("#99FFFFFF")
 
-                                val rectTxt = Rect(
-                                    paddingBg,
-                                    canvas.height - paddingBg - txtRects[0].height() * txtRects.size - paddingTxt * 2 - txtSpace * txtRects.size,
-                                    paddingBg + maxWidth + paddingTxt * 2,
-                                    canvas.height - paddingBg
+                            val rectTxt = Rect(
+                                paddingBg,
+                                canvas.height - paddingBg - txtRects[0].height() * txtRects.size - paddingTxt * 2 - txtSpace * txtRects.size,
+                                paddingBg + maxWidth + paddingTxt * 2,
+                                canvas.height - paddingBg
+                            )
+                            canvas.drawRect(rectTxt, paintBg)
+                            txt.forEachIndexed { index, s ->
+                                canvas.drawText(
+                                    s,
+                                    (paddingBg + paddingTxt).toFloat(),
+                                    (rectTxt.top + paddingTxt + txtRects[0].height() + index * (txtRects[0].height() + txtSpace)).toFloat(),
+                                    paintTxt
                                 )
-                                canvas.drawRect(rectTxt, paintBg)
-                                txt.forEachIndexed { index, s ->
-                                    canvas.drawText(
-                                        s,
-                                        (paddingBg + paddingTxt).toFloat(),
-                                        (rectTxt.top + paddingTxt + txtRects[0].height() + index * (txtRects[0].height() + txtSpace)).toFloat(),
-                                        paintTxt
-                                    )
-                                }  }
-                            rotation()
-                            getBitmap { bitmap -> iv_image.setImageBitmap(bitmap) }
+                            }
                         }
+                        rotation()
+                        getBitmap { bitmap -> iv_image.setImageBitmap(bitmap) }
                     }
                 }
             }

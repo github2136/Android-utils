@@ -1,5 +1,6 @@
 package com.github2136.util
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -7,11 +8,12 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Rect
-import android.media.ExifInterface
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
 import androidx.annotation.IntDef
+import androidx.exifinterface.media.ExifInterface
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -31,9 +33,7 @@ import kotlin.math.min
  *       values()//获取图片宽高[0]表示为宽[1]表示为高
  *       save(String filepath,callback)//保存至指定目录
  */
-class BitmapUtil private constructor(path: String) {
-    //图片路径
-    private var mFilePath: String = path
+class BitmapUtil private constructor(val context: Context, val uri: Uri) {
     //旋转角度
     private var mDegree: Int = 0
     //宽高最大值
@@ -68,11 +68,12 @@ class BitmapUtil private constructor(path: String) {
     /**
      * 获取图片
      */
-    private fun getBitmap(filePath: String, scale: Int): Bitmap? {
+    private fun getBitmap(scale: Int): Bitmap? {
         val options = BitmapFactory.Options()
         options.inPreferredConfig = Bitmap.Config.RGB_565
         options.inSampleSize = scale
-        return BitmapFactory.decodeFile(filePath, options)
+        val inputStream = context.contentResolver.openInputStream(uri)
+        return BitmapFactory.decodeStream(inputStream, null, options)
     }
 
     /**
@@ -81,7 +82,7 @@ class BitmapUtil private constructor(path: String) {
     private fun getBitmap(): Bitmap? {
         var mBitmap: Bitmap?
         if (mMaxPixel != 0) {
-            val values = getBitmapValue(mFilePath)
+            val values = getBitmapValue()
             val scaleFactor = Math.max(Math.ceil(values[0].toDouble() / mMaxPixel), Math.ceil(values[1].toDouble() / mMaxPixel)).toInt()
             val scaleSize: Int
             if (scaleFactor > 1) {
@@ -94,7 +95,7 @@ class BitmapUtil private constructor(path: String) {
                 scaleSize = scaleFactor
             }
             //使用inSampleSize压缩图片
-            mBitmap = getBitmap(mFilePath, scaleSize)
+            mBitmap = getBitmap(scaleSize)
             if (mBitmap != null) {
                 //如果图片高宽比限制大则使用Matrix再次缩小
                 if (mBitmap.width > mMaxPixel || mBitmap.height > mMaxPixel) {
@@ -105,7 +106,7 @@ class BitmapUtil private constructor(path: String) {
                 }
             }
         } else {
-            mBitmap = getBitmap(mFilePath, 1)
+            mBitmap = getBitmap(1)
         }
         if (mBitmap != null) {
             if (mMaxSize != 0) {
@@ -127,10 +128,11 @@ class BitmapUtil private constructor(path: String) {
     /**
      * 获得图片宽高信息 [0]:width [1]:height
      */
-    private fun getBitmapValue(filePath: String): IntArray {
+    private fun getBitmapValue(): IntArray {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(filePath, options)
+        val inputStream = context.contentResolver.openInputStream(uri)
+        BitmapFactory.decodeStream(inputStream, null, options)
         val value = IntArray(2)
         value[0] = options.outWidth
         value[1] = options.outHeight
@@ -140,11 +142,12 @@ class BitmapUtil private constructor(path: String) {
     /**
      * 获得图片的旋转角度
      */
-    private fun getBitmapRotateDegree(path: String): Int {
+    private fun getBitmapRotateDegree(): Int {
         var degree = 0
         try {
+            val inputStream = context.contentResolver.openInputStream(uri)!!
             // 从指定路径下读取图片，并获取其EXIF信息
-            val exifInterface = ExifInterface(path)
+            val exifInterface = ExifInterface(inputStream)
             // 获取图片的旋转信息
             val orientation = exifInterface.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION, ExifInterface
@@ -224,7 +227,7 @@ class BitmapUtil private constructor(path: String) {
      * 旋转为正确的方向
      */
     fun rotation(): BitmapUtil {
-        mDegree = getBitmapRotateDegree(mFilePath)
+        mDegree = getBitmapRotateDegree()
         return this
     }
 
@@ -232,21 +235,21 @@ class BitmapUtil private constructor(path: String) {
      * 图片是否为正的
      */
     fun correct(): Boolean {
-        return getBitmapRotateDegree(mFilePath) == 0
+        return getBitmapRotateDegree() == 0
     }
 
     /**
      * 获取图片旋转角度
      */
     fun degree(): Int {
-        return getBitmapRotateDegree(mFilePath)
+        return getBitmapRotateDegree()
     }
 
     /**
      * 获取图片宽高
      */
     fun values(): IntArray {
-        return getBitmapValue(mFilePath)
+        return getBitmapValue()
     }
 
     /**
@@ -441,7 +444,7 @@ class BitmapUtil private constructor(path: String) {
         const val BOTTOM_LEFT = 2
         const val BOTTOM_RIGHT = 3
 
-        fun getInstance(path: String): BitmapUtil = BitmapUtil(path)
+        fun getInstance(context: Context, uri: Uri): BitmapUtil = BitmapUtil(context, uri)
     }
 }
 

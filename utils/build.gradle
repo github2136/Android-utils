@@ -47,6 +47,7 @@ task sourceJar(type: Jar) {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation lib['core-ktx']
+    implementation 'androidx.exifinterface:exifinterface:1.3.6'
     compileOnly lib['android-appcompat']
     compileOnly lib['android-recyclerview']
     compileOnly lib['gson']

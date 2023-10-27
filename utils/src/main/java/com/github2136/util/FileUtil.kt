@@ -51,6 +51,7 @@ object FileUtil {
     /**
      * 外部存储根目录
      */
+    @Deprecated("api29无法读取")
     @JvmStatic
     fun getExternalStorageRootPath(): String {
         return ROOT
@@ -61,6 +62,7 @@ object FileUtil {
      *
      * @return
      */
+    @Deprecated("api29无法读取")
     @JvmStatic
     fun getExternalStorageProjectPath(context: Context): String {
         var projectPath = "AndroidUtil"
@@ -170,6 +172,7 @@ object FileUtil {
     /**
      * 根据Uri获取文件绝对路径，解决Android4.4以上版本Uri转换
      */
+    @Deprecated("api29无法读取")
     @TargetApi(19)
     @JvmStatic
     fun getFileAbsolutePath(context: Context, imageUri: Uri): String? {
@@ -211,7 +214,7 @@ object FileUtil {
 
     private fun getDataColumn(context: Context, uri: Uri?, selection: String?, selectionArgs: Array<String>?): String? {
         if (uri!!.authority == "com.android.fileexplorer.myprovider") {
-            return uri.path.replaceFirst("/external_files", ROOT)
+            return uri.path!!.replaceFirst("/external_files", ROOT)
         } else {
             var cursor: Cursor? = null
             val column = MediaStore.Images.Media.DATA
