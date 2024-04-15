@@ -48,6 +48,7 @@ class GridActivity : AppCompatActivity() {
         val adapter = GridAdapter(s)
         rv_content.adapter = adapter
         val gid = GridItemDecoration()
+        gid.includeEdge=false
         gid.spaceColor = Color.parseColor("#33ff00ff")
         gid.space = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, Resources.getSystem().displayMetrics).toInt()
         rv_content.addItemDecoration(gid)

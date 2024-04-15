@@ -20,7 +20,7 @@ class GridItemDecoration : RecyclerView.ItemDecoration() {
             field = value
             spacePaint.color = value
         }
-
+    var includeEdge = true //四周是否绘制分割线
     private val spacePaint = Paint()
     private var spanCount = 0
     private val mBounds = Rect()
@@ -36,27 +36,46 @@ class GridItemDecoration : RecyclerView.ItemDecoration() {
             val child = parent.getChildAt(i)
             parent.getDecoratedBoundsWithMargins(child, mBounds)
             position = parent.getChildAdapterPosition(child)
-
             val column = position % spanCount
-            val left = space - column * space / spanCount
-            val right = (column + 1) * space / spanCount
-            val top = if (position < spanCount) space else 0
-            val bottom = space
-            //绘制左侧
-            c.drawRect(mBounds.left.toFloat(), mBounds.top.toFloat(), (mBounds.left + left).toFloat(), mBounds.bottom.toFloat(), spacePaint)
-            //绘制右侧
-            if (i + 1 == childCount) {
-                //最后一个
-                c.drawRect((mBounds.right - right).toFloat(), mBounds.top.toFloat(), (mBounds.left + left + child.width + space).toFloat(), mBounds.bottom.toFloat(), spacePaint)
+            if (includeEdge) {
+                val left = space - column * space / spanCount
+                val right = (column + 1) * space / spanCount
+                val top = if (position < spanCount) space else 0
+                val bottom = space
+                //绘制左侧
+                c.drawRect(mBounds.left.toFloat(), mBounds.top.toFloat(), (mBounds.left + left).toFloat(), mBounds.bottom.toFloat(), spacePaint)
+                //绘制右侧
+                if (i + 1 == childCount) {
+                    //最后一个
+                    c.drawRect((mBounds.right - right).toFloat(), mBounds.top.toFloat(), (mBounds.left + left + child.width + space).toFloat(), mBounds.bottom.toFloat(), spacePaint)
+                } else {
+                    c.drawRect((mBounds.right - right).toFloat(), mBounds.top.toFloat(), mBounds.right.toFloat(), mBounds.bottom.toFloat(), spacePaint)
+                }
+                if (top != 0) {
+                    //绘制顶部
+                    c.drawRect(mBounds.left + left.toFloat(), mBounds.top.toFloat(), (mBounds.right - right).toFloat(), (mBounds.top + top).toFloat(), spacePaint)
+                }
+                //绘制底部
+                c.drawRect(mBounds.left + left.toFloat(), (mBounds.bottom - bottom).toFloat(), (mBounds.right - right).toFloat(), mBounds.bottom.toFloat(), spacePaint)
             } else {
-                c.drawRect((mBounds.right - right).toFloat(), mBounds.top.toFloat(), mBounds.right.toFloat(), mBounds.bottom.toFloat(), spacePaint)
+                val left = column * space / spanCount
+                val right = space - (column + 1) * space / spanCount
+                var bottom = 0
+                if (position < parent.adapter!!.itemCount - (spanCount - column)) {
+                    bottom = space
+                }
+                //绘制左侧
+                c.drawRect(mBounds.left.toFloat(), mBounds.top.toFloat(), (mBounds.left + left).toFloat(), mBounds.bottom.toFloat(), spacePaint)
+                //绘制右侧
+                if (i + 1 == childCount) {
+                    //最后一个
+                    c.drawRect((mBounds.right - right).toFloat(), mBounds.top.toFloat(), (mBounds.left + left + child.width + space).toFloat(), mBounds.bottom.toFloat(), spacePaint)
+                } else {
+                    c.drawRect((mBounds.right - right).toFloat(), mBounds.top.toFloat(), mBounds.right.toFloat(), mBounds.bottom.toFloat(), spacePaint)
+                }
+                //绘制底部
+                c.drawRect(mBounds.left + left.toFloat(), (mBounds.bottom - bottom).toFloat(), (mBounds.right - right).toFloat(), mBounds.bottom.toFloat(), spacePaint)
             }
-            if (top != 0) {
-                //绘制顶部
-                c.drawRect(mBounds.left + left.toFloat(), mBounds.top.toFloat(), (mBounds.right - right).toFloat(), (mBounds.top + top).toFloat(), spacePaint)
-            }
-            //绘制底部
-            c.drawRect(mBounds.left + left.toFloat(), (mBounds.bottom - bottom).toFloat(), (mBounds.right - right).toFloat(), mBounds.bottom.toFloat(), spacePaint)
         }
     }
 
@@ -70,11 +89,20 @@ class GridItemDecoration : RecyclerView.ItemDecoration() {
         }
         val position = parent.getChildAdapterPosition(view)
         val column = position % spanCount
-        outRect.left = space - column * space / spanCount
-        outRect.right = (column + 1) * space / spanCount
-        if (position < spanCount) {
-            outRect.top = space
+        if (includeEdge) {
+            outRect.left = space - column * space / spanCount
+            outRect.right = (column + 1) * space / spanCount
+            if (position < spanCount) {
+                outRect.top = space
+            }
+            outRect.bottom = space
+        } else {
+            outRect.left = column * space / spanCount
+            outRect.right = space - (column + 1) * space / spanCount
+            outRect.bottom = 0
+            if (position < parent.adapter!!.itemCount - (spanCount - column)) {
+                outRect.bottom = space
+            }
         }
-        outRect.bottom = space
     }
 }
