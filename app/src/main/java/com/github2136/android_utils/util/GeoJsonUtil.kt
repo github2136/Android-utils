@@ -205,7 +205,7 @@ sealed class Coordinate {
     data class LineString(var line: List<Point>) : Coordinate()
 
     /**
-     * 多边形
+     * 多边形，当有两个以上的LineString时则表示是绘制一个空心多边形，
      */
     data class Polygon(var polygon: List<LineString>) : Coordinate()
 
