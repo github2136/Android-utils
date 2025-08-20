@@ -1,11 +1,18 @@
 package com.github2136.android_utils
 
 import android.Manifest
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.BlurMaskFilter
 import android.graphics.Color
 import android.graphics.Typeface
+import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +23,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.collection.ArrayMap
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
 import com.github2136.android_utils.load_more.GridActivity
@@ -43,7 +51,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     private val permissionArrayMap = ArrayMap<String, String>()
     val permissionUtil by lazy { PermissionUtil(this) }
-
+    val notificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
     override fun initData(savedInstanceState: Bundle?) {
 
         btn_bitmap.setOnClickListener(this)
@@ -52,6 +60,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         btn_grid_adapter.setOnClickListener(this)
         btn_list_view_adapter.setOnClickListener(this)
         btn_service.setOnClickListener(this)
+        btn_notification.setOnClickListener(this)
 
         val UTC = Date().str(timeZone = TimeZone.getTimeZone("UTC").id) //获取UTC时间字符串
         val UTCDate = UTC.date(timeZone = TimeZone.getTimeZone("UTC").id) //UTC字符串转Date对象
@@ -243,13 +252,18 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         tv.text = spanUtil.build()
 
         mHandler.sendEmptyMessage(0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //下载
+            NotificationManagerCompat.from(this).createNotificationChannel(NotificationChannel("aaa", "下载", NotificationManager.IMPORTANCE_DEFAULT))
+        }
+
     }
 
     override fun handleMessage(msg: Message) {
         when (msg.what) {
             0 -> {
-                Log.e("TotpUtil",   TOTP.generateMyTOTP("account01","12345"))
-                mHandler.sendEmptyMessageDelayed(0,10000)
+                Log.e("TotpUtil", TOTP.generateMyTOTP("account01", "12345"))
+                mHandler.sendEmptyMessageDelayed(0, 10000)
             }
         }
     }
@@ -312,6 +326,47 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             R.id.btn_service -> {
                 intent = Intent(this, ServiceActivity::class.java)
                 startActivity(intent)
+            }
+            R.id.btn_notification -> {
+
+                val intent = Intent(this@MainActivity, BitmapActivity::class.java).apply {
+                }
+                val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+                val notification = NotificationCompat.Builder(this, "aaa")
+                    .setSmallIcon(R.mipmap.aaa) //通知图标，大部分手机这个字段无效，显示APP默认图标；必填项
+                    .setContentTitle("标题1")
+                    .setContentText("说明")
+                notification.color = Color.parseColor("#FF00FF00")
+                // .setPriority(NotificationCompat.PRIORITY_HIGH) // 必须设置高优先级
+                // .setCategory(NotificationCompat.CATEGORY_CALL) // 适用于通话类通知
+                // .setColorized(true)
+                // .setLargeIcon(BitmapFactory.decodeResource(resources,R.mipmap.aaa))
+                // .setFullScreenIntent(pendingIntent,true)
+                // .setProgress(100,12,false)
+                // .setSilent(true)
+                //     .setWhen(System.currentTimeMillis() + 1000 * 60) //通知发生时间，使用当前参数会显示1分钟前
+                //
+                //
+                // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                //     notification.setUsesChronometer(true)
+                //         .setChronometerCountDown(true)
+                // }
+
+
+                // .setContentTitle(activity.getString(R.string.app_name))
+                // .setContentText("视频通话来电")
+                // .setSmallIcon(R.drawable.btn_startcall_normal)
+                // .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.btn_startcall_normal))
+                // .setDefaults(NotificationCompat.DEFAULT_ALL)
+                // .setOnlyAlertOnce(false)
+                // .setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.basic_ring))
+                // .setContentIntent(pendingIntent)
+                // .setTimeoutAfter(20 * 1000)
+
+                notificationManager.notify(99, notification.build().apply {
+                    // flags = flags or Notification.FLAG_INSISTENT/
+                })
             }
         }
     }

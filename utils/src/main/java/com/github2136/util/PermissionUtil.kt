@@ -12,6 +12,7 @@ import androidx.collection.ArrayMap
 /**
  * Created by YB on 2019/8/21
  */
+@Deprecated("推荐使用Permissionx")
 class PermissionUtil(private val activity: Activity) {
     private var mPermissionArrayMap = ArrayMap<String, String>()
     private var mCallback: () -> Unit = {}
