@@ -2,6 +2,21 @@
 <resources>
 
     <!--亮色主题-->
+    <!--SuperLarge-->
+    <style name="TxtSuperLarge">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryLight</item>
+    </style>
+
+    <style name="TxtSuperLargeSecondary">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryLight</item>
+    </style>
+
+    <style name="TxtSuperLargeDisable">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorTextDisableLight</item>
+    </style>
     <!--Large-->
     <style name="TxtLarge">
         <item name="android:textSize">18sp</item>
@@ -64,6 +79,21 @@
     </style>
 
     <!--暗色主题-->
+    <!--SuperLarge-->
+    <style name="TxtSuperLargeDark">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorTextPrimaryDark</item>
+    </style>
+
+    <style name="TxtSuperLargeSecondaryDark">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorTextSecondaryDark</item>
+    </style>
+
+    <style name="TxtSuperLargeDisableDark">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorTextDisableDark</item>
+    </style>
     <!--Large-->
     <style name="TxtLargeDark">
         <item name="android:textSize">18sp</item>
