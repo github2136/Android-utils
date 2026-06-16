@@ -368,6 +368,32 @@ class BitmapUtil private constructor(val context: Context, val uri: Uri) {
         }
     }
 
+    fun getByteSync(): ByteArray? {
+        var bytes: ByteArray? = null
+        val mBitmap = getBitmap()
+        if (mBitmap == null) {
+            return null
+        } else {
+            try {
+                val baos = ByteArrayOutputStream()
+                if (markCustom != null) {
+                    markCustom?.invoke(mBitmap)
+                } else if (markTxt.isNotEmpty()) {
+                    addWaterMark(mBitmap)
+                }
+                mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
+                baos.flush()
+                baos.close()
+                bytes = baos.toByteArray()
+                mBitmap.recycle()
+                System.gc()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            return bytes
+        }
+    }
+
     fun getBase64(callBack: (String?) -> Unit) {
         executor.execute {
             var base64: String? = null
@@ -396,6 +422,32 @@ class BitmapUtil private constructor(val context: Context, val uri: Uri) {
         }
     }
 
+    fun getBase64Sync(): String? {
+        var base64: String? = null
+        val mBitmap = getBitmap()
+        if (mBitmap == null) {
+            return null
+        } else {
+            try {
+                val baos = ByteArrayOutputStream()
+                if (markCustom != null) {
+                    markCustom?.invoke(mBitmap)
+                } else if (markTxt.isNotEmpty()) {
+                    addWaterMark(mBitmap)
+                }
+                mBitmap.compress(Bitmap.CompressFormat.JPEG, mQuality, baos)
+                baos.flush()
+                baos.close()
+                base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
+                mBitmap.recycle()
+                System.gc()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            return base64
+        }
+    }
+
     fun getBitmap(callBack: (Bitmap?) -> Unit) {
         executor.execute {
             val mBitmap = getBitmap()
@@ -413,6 +465,22 @@ class BitmapUtil private constructor(val context: Context, val uri: Uri) {
                     System.gc()
                 }
             }
+        }
+    }
+
+    fun getBitmapSync(): Bitmap? {
+        val mBitmap = getBitmap()
+        if (mBitmap == null) {
+            return null
+        } else {
+            if (markCustom != null) {
+                markCustom?.invoke(mBitmap)
+            } else if (markTxt.isNotEmpty()) {
+                addWaterMark(mBitmap)
+            }
+            return mBitmap.copy(Bitmap.Config.RGB_565, true)
+            // mBitmap.recycle()
+            // System.gc()
         }
     }
 
@@ -435,6 +503,23 @@ class BitmapUtil private constructor(val context: Context, val uri: Uri) {
                 System.gc()
                 mHandler.post { callBack(if (isSave) filePath else "") }
             }
+        }
+    }
+
+    fun saveSync(filePath: String): String? {
+        val mBitmap = getBitmap()
+        if (mBitmap == null) {
+            return null
+        } else {
+            if (markCustom != null) {
+                markCustom?.invoke(mBitmap)
+            } else if (markTxt.isNotEmpty()) {
+                addWaterMark(mBitmap)
+            }
+            val isSave = saveBitmap(mBitmap, filePath)
+            mBitmap.recycle()
+            System.gc()
+            return if (isSave) filePath else ""
         }
     }
 
